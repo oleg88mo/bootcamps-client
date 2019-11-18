@@ -5,6 +5,13 @@
 /.pnp
 .pnp.js
 
+node_modules/
+.idea/
+/.sass-cache
+.sass-cache
+package-lock.json
+/src/configKey.js
+
 # testing
 /coverage
 
