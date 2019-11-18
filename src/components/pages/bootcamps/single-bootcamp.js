@@ -4,8 +4,8 @@ import {useHistory, Link} from "react-router-dom";
 import axios from "axios";
 import mapboxgl from 'mapbox-gl';
 import Pin from '../../../components/img/pin.png'
-import {computer, check} from '../../../components/img/iconSvg'
-import {PageHeader, Row, Col, Empty, Collapse, Icon, Tag, Skeleton} from 'antd';
+import {computer, check, checkCancel} from '../../../components/img/iconSvg'
+import {PageHeader, Row, Col, Empty, Collapse, Icon, Tag, Skeleton, Button} from 'antd';
 import {bootcampRatind} from '../../utils/usedFunctions'
 import {mapBoxKey, URL} from '../../../configKey';
 
@@ -159,7 +159,7 @@ function SingleBootcapm() {
                                 <Collapse
                                     bordered={false}
                                     accordion
-                                    defaultActiveKey={['1']}
+                                    defaultActiveKey={[`${bootcamp.courses[0]._id}`]}
                                     expandIcon={({isActive}) => <Icon type="caret-right" rotate={isActive ? 90 : 0}/>}
                                 >
                                     {bootcamp.courses.map(course => (
@@ -193,13 +193,65 @@ function SingleBootcapm() {
                             <hr/>
                         </>}
 
-                        {middleRating && (
-                            <span className="rating">
-                                <Tag color="green">Rating {middleRating}</Tag>
-                                <Link to={`/bootcamps/${bootcamp.slug}/reviews`}>
-                                    Review For Bootcamp
-                                </Link>
-                            </span>)}
+                        <div className="table">
+                            <header>
+                                <Row type="flex">
+                                    <Col span={8}>Key</Col>
+                                    <Col span={16}>Value</Col>
+                                </Row>
+                            </header>
+                            <main>
+                                {middleRating && (
+                                    <div className="rating">
+                                        <Row type="flex">
+                                            <Col span={8}>Rating:</Col>
+                                            <Col span={16}>
+                                                <Tag color="green">{middleRating}</Tag>
+                                            </Col>
+                                        </Row>
+                                        <Row type="flex">
+                                            <Col span={8}>Reviews:</Col>
+                                            <Col span={16}>
+                                                <Link to={`/bootcamps/${bootcamp.slug}/reviews`}>
+                                                    <Button type="primary">Read Reviews Bootcamp</Button>
+                                                </Link>
+                                            </Col>
+                                        </Row>
+                                    </div>)}
+
+                                {bootcamp.website && <div className="website">
+                                    <Row type="flex">
+                                        <Col span={8}>Website:</Col>
+                                        <Col span={16}>
+                                            <a href={bootcamp.website} target="_blank">
+                                                <Button type="primary">{bootcamp.website}</Button>
+                                            </a>
+                                        </Col>
+                                    </Row>
+                                </div>}
+
+                                <Row type="flex" style={{marginTop: 10}}>
+                                    <Col span={8}>Housing:</Col>
+                                    <Col span={16}>{bootcamp.housing ? check : checkCancel}</Col>
+                                </Row>
+                                 <Row type="flex" style={{marginTop: 10}}>
+                                    <Col span={8}>Job Assistance:</Col>
+                                    <Col span={16}>{bootcamp.jobAssistance ? check : checkCancel}</Col>
+                                </Row>
+                                <Row type="flex" style={{marginTop: 10}}>
+                                    <Col span={8}>Job Guarantee:</Col>
+                                    <Col span={16}>{bootcamp.jobGuarantee ? check : checkCancel}</Col>
+                                </Row>
+                                <Row type="flex" style={{marginTop: 10}}>
+                                    <Col span={8}>Accepts GI Bill:</Col>
+                                    <Col span={16}>{bootcamp.acceptGi ? check : checkCancel}</Col>
+                                </Row>
+
+
+                            </main>
+                        </div>
+
+
                     </Col>
                     <Col span={24}>
                         <div ref={mapContainer} className="map"/>

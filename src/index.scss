@@ -213,10 +213,43 @@ img {
         padding: 50px 0;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
       }
+
+      .table {
+        .ant-row-flex {
+          width: 100%;
+        }
+      }
+
+      .rating {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .ant-btn {
+          font-size: 15px;
+        }
+
+        .ant-tag {
+          font-size: 18px;
+          margin-bottom: 10px;
+          padding: 3px 7px 6px;
+        }
+      }
+
+      .website {
+        font-size: 16px;
+        margin-top: 10px;
+
+        .ant-btn {
+          font-size: 15px;
+          margin-top: 5px;
+        }
+      }
     }
 
     .map {
       height: 500px;
+      margin: 30px 0;
     }
 
     // *** END Single bootcamp***
