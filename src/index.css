@@ -1,0 +1,139 @@
+#root, #root > .ant-layout {
+  height: 100%; }
+
+img {
+  max-width: 100%; }
+
+.ant-layout-header {
+  height: 50px; }
+
+.ant-layout-footer {
+  background-color: #fff;
+  padding: 10px 50px; }
+
+.ant-menu-item, .ant-menu-submenu-title {
+  padding: 0 15px; }
+
+.content-container {
+  overflow: auto;
+  height: 100%; }
+
+.home-page {
+  height: 100%;
+  padding: 0 50px;
+  position: relative; }
+  .home-page .bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 90%;
+    background-image: url("./components/img/main.jpg");
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    filter: blur(3px); }
+  .home-page .search-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 55%;
+    text-align: center; }
+    .home-page .search-form h1 {
+      font-size: 2.5em;
+      margin: 0; }
+    .home-page .search-form input {
+      margin: 20px 5px 0;
+      width: calc(100% - 10px); }
+    .home-page .search-form button {
+      margin: 10px 5px 0;
+      width: calc(100% - 10px); }
+
+.bootcamp-page {
+  height: 100%;
+  padding: 0 50px;
+  display: flex;
+  flex: auto;
+  flex-direction: column; }
+  .bootcamp-page .filter {
+    background-color: #fff;
+    margin: 50px 0 20px;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    flex: 0 0 auto; }
+    .bootcamp-page .filter .action-panel {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end; }
+  .bootcamp-page .list {
+    flex: auto; }
+    .bootcamp-page .list .bootcamp-item {
+      padding: 0 5px; }
+      .bootcamp-page .list .bootcamp-item .wrap {
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        transition: box-shadow .2s ease-in; }
+        .bootcamp-page .list .bootcamp-item .wrap .link {
+          color: #1890ff;
+          font-size: 15px;
+          font-weight: 500;
+          display: inline-block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%; }
+          .bootcamp-page .list .bootcamp-item .wrap .link:hover {
+            opacity: .7; }
+        .bootcamp-page .list .bootcamp-item .wrap .rating {
+          position: absolute;
+          right: 5px; }
+        .bootcamp-page .list .bootcamp-item .wrap .city {
+          font-size: 13px;
+          font-weight: 700;
+          pointer-events: none; }
+        .bootcamp-page .list .bootcamp-item .wrap .description {
+          color: #bbb;
+          display: block;
+          line-height: 1.3;
+          font-size: 12px;
+          max-height: 40px;
+          overflow: hidden;
+          pointer-events: none; }
+        .bootcamp-page .list .bootcamp-item .wrap:hover {
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); }
+  .bootcamp-page .single-bootcamp .ant-page-header {
+    padding: 15px 0; }
+  .bootcamp-page .single-bootcamp .ant-page-header-heading-sub-title {
+    margin: 8px 0 0;
+    position: relative; }
+    .bootcamp-page .single-bootcamp .ant-page-header-heading-sub-title:before {
+      content: '/';
+      position: absolute;
+      left: -8px;
+      bottom: 1px; }
+  .bootcamp-page .single-bootcamp .ant-collapse-borderless {
+    background-color: transparent; }
+  .bootcamp-page .single-bootcamp .ant-collapse-item {
+    margin-bottom: 10px;
+    background-color: #fff; }
+    .bootcamp-page .single-bootcamp .ant-collapse-item .ant-collapse-header {
+      font-size: 16px;
+      font-weight: 600; }
+  .bootcamp-page .single-bootcamp .course svg {
+    vertical-align: middle;
+    margin-right: 10px; }
+  .bootcamp-page .single-bootcamp .column-right {
+    padding-left: 10px; }
+    .bootcamp-page .single-bootcamp .column-right .ant-empty-normal {
+      background-color: #fff;
+      padding: 50px 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); }
+  .bootcamp-page .single-bootcamp .map {
+    height: 500px; }
+
+/*# sourceMappingURL=index.css.map */
