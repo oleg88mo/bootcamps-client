@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {Input, Button, Row, Col} from 'antd';
-
+import {Button} from 'antd';
+import {setting} from '../../../components/img/iconSvg'
 // components
 import DetailMode from './mode-detail'
 import SmallMode from './mode-small'
@@ -15,7 +15,7 @@ function Filter() {
     return (
         <div className="filter">
             {!visible && <div className="action-panel">
-                <Button type="primary" onClick={() => handlerVisibleFilter(true)}>Filter</Button>
+                <Button type="primary" onClick={() => handlerVisibleFilter(true)}>{setting} Filter</Button>
             </div>}
             {visible && <DetailMode handlerVisibleFilter={handlerVisibleFilter}/>}
             {smallMode && <SmallMode/>}

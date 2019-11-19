@@ -5,15 +5,16 @@ import {Layout} from 'antd';
 // styles
 import 'antd/dist/antd.css';
 import './index.css';
-
+// components
 import MainPage from "./components/pages/home";
+import Login from './components/pages/login';
 import Bootcamps from "./components/pages/bootcamps";
 import SingleBootcamp from "./components/pages/bootcamps/single-bootcamp";
 import ReviewsSingleBootcamp from "./components/pages/bootcamps/reviews-single-bootcamp";
 import Contacts from "./components/pages/contacts";
 import Nav from "./components/nav";
 import Protected from './components/protected';
-import PageNotFound from './components/404';
+import PageNotFound from './components/pages/404';
 
 const {Content, Footer} = Layout;
 
@@ -30,7 +31,7 @@ function App() {
                 <Route exact path="/bootcamps/:slug" component={SingleBootcamp}/>
                 <Route exact path="/bootcamps/:slug/reviews" component={ReviewsSingleBootcamp}/>
                 <Route path="/contacts" component={Contacts}/>
-                {/*<Route path="/login" component={Login}/>*/}
+                <Route path="/login" component={Login}/>
                 {/*<Route path="/register" component={Register}/>*/}
 
                 <Protected exact path="/dashboard"/>

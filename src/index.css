@@ -14,6 +14,12 @@ img {
 .ant-menu-item, .ant-menu-submenu-title {
   padding: 0 15px; }
 
+.ant-menu-item.di-select {
+  background-color: transparent !important; }
+
+.review-modal .ant-row-flex {
+  margin-bottom: 10px; }
+
 .content-container {
   overflow: auto;
   height: 100%; }
@@ -67,6 +73,11 @@ img {
       display: flex;
       align-items: center;
       justify-content: flex-end; }
+      .bootcamp-page .filter .action-panel button svg {
+        width: 16px;
+        vertical-align: sub;
+        margin-right: 8px;
+        fill: #fff; }
   .bootcamp-page .list {
     flex: auto; }
     .bootcamp-page .list .bootcamp-item {
@@ -154,5 +165,61 @@ img {
   .bootcamp-page .single-bootcamp .map {
     height: 500px;
     margin: 30px 0; }
+  .bootcamp-page .single-bootcamp.__review-page .rating .ant-tag {
+    padding: 4px 10px 6px;
+    font-size: 18px; }
+  .bootcamp-page .single-bootcamp.__review-page .review header {
+    background-color: #bbb;
+    padding: 8px 20px;
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 20px; }
+  .bootcamp-page .single-bootcamp.__review-page .review main {
+    background-color: #fff;
+    padding: 20px; }
+    .bootcamp-page .single-bootcamp.__review-page .review main .rating {
+      margin-bottom: 10px; }
+      .bootcamp-page .single-bootcamp.__review-page .review main .rating span {
+        font-size: 15px;
+        font-weight: 500;
+        margin-right: 10px; }
+    .bootcamp-page .single-bootcamp.__review-page .review main .comment {
+      font-size: 16px;
+      margin-bottom: 10px; }
+  .bootcamp-page .single-bootcamp.__review-page .__no-data {
+    text-align: center;
+    margin-top: 50px; }
+    .bootcamp-page .single-bootcamp.__review-page .__no-data svg {
+      margin-bottom: 20px;
+      height: 250px; }
+
+.register-form-center, .login-form-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; }
+
+.login-form, .register-form {
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  padding: 40px;
+  border-radius: 3px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15); }
+  .login-form-forgot, .register-form-forgot {
+    float: right; }
+  .login-form-button, .register-form-button {
+    width: 100%; }
+  .login-form h2, .register-form h2 {
+    text-align: center;
+    margin-bottom: 30px; }
+  .login-form .full-center, .register-form .full-center {
+    text-align: center; }
+    .login-form .full-center > [class*="ant-col"], .register-form .full-center > [class*="ant-col"] {
+      width: 100% !important; }
+  .login-form .login-form-forgot, .register-form .login-form-forgot {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    color: #1890ff; }
 
 /*# sourceMappingURL=index.css.map */

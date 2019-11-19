@@ -56,7 +56,7 @@ function List() {
         }
     }, []);
 
-    const handlerSetBootcampId = id => window.localStorage.setItem('bootcampId', id);
+    const handlerSetBootcampId = id => window.localStorage.setItem('singleBootcampId', id);
 
     const bootcampRatind = bootcampId => {
         const review = reviews.find(f => f.bootcamp.id === bootcampId);

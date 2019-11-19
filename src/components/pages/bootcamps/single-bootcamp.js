@@ -20,7 +20,7 @@ import {
 const {Panel} = Collapse;
 
 function SingleBootcapm() {
-    const id = window.localStorage.getItem('bootcampId');
+    const id = window.localStorage.getItem('singleBootcampId');
     const [middleRating, setMiddleRating] = useState(null);
     const [loadingBootcampCourses, setLoadingBootcampCourses] = useState(true);
     const [loadingBootcamp, setLoadingBootcamp] = useState(true);

@@ -1,11 +1,11 @@
 $WHITE: #fff;
 $BLUE: #1890ff;
 $GREY: #bbb;
+$GREY_LIGHT: #f9f9f9;
 
 #root, #root > .ant-layout {
   height: 100%;
 }
-
 
 // *** global ***
 img {
@@ -23,6 +23,16 @@ img {
 
 .ant-menu-item, .ant-menu-submenu-title {
   padding: 0 15px;
+}
+
+.ant-menu-item.di-select {
+  background-color: transparent !important;
+}
+
+.review-modal {
+  .ant-row-flex{
+    margin-bottom: 10px;
+  }
 }
 
 // *** END global ***
@@ -100,6 +110,15 @@ img {
       display: flex;
       align-items: center;
       justify-content: flex-end;
+
+      button {
+        svg {
+          width: 16px;
+          vertical-align: sub;
+          margin-right: 8px;
+          fill: $WHITE;
+        }
+      }
     }
 
     // *** END bootcamp Filter ***
@@ -252,8 +271,106 @@ img {
       margin: 30px 0;
     }
 
+    // *** Reviews bootcamp***
+    &.__review-page {
+      .rating {
+        .ant-tag {
+          padding: 4px 10px 6px;
+          font-size: 18px;
+        }
+      }
+
+      .review {
+        header {
+          background-color: $GREY;
+          padding: 8px 20px;
+          font-size: 18px;
+          font-weight: 500;
+          margin-top: 20px;
+        }
+
+        main {
+          background-color: $WHITE;
+          padding: 20px;
+
+          .rating {
+            margin-bottom: 10px;
+
+            span {
+              font-size: 15px;
+              font-weight: 500;
+              margin-right: 10px;
+            }
+          }
+
+          .comment {
+            font-size: 16px;
+            margin-bottom: 10px;
+          }
+        }
+      }
+
+      .__no-data {
+        text-align: center;
+        margin-top: 50px;
+
+        svg {
+          margin-bottom: 20px;
+          height: 250px;
+        }
+      }
+
+      // *** END Reviews bootcamp***
+    }
+
     // *** END Single bootcamp***
   }
 
   // *** END bootcamp-page ***
+}
+
+// *** Login & Register pages ***
+.register-form-center, .login-form-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.login-form, .register-form {
+  margin: 0 auto;
+  background-color: $GREY_LIGHT;
+  padding: 40px;
+  border-radius: 3px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+
+  &-forgot {
+    float: right;
+  }
+
+  &-button {
+    width: 100%;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .full-center {
+    text-align: center;
+
+    & > [class*="ant-col"] {
+      width: 100% !important;
+    }
+  }
+
+  .login-form-forgot {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    color: $BLUE;
+  }
+
+  // *** END Login & Register pages ***
 }
