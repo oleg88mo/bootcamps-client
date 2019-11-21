@@ -11,7 +11,7 @@ import {
 import {URL} from '../../configKey';
 
 // actions
-import {setUser} from '../../redux/users/actions'
+import {setUser, changeLang} from '../../redux/users/actions'
 
 const {Header} = Layout;
 const openNotificationWithIcon = (type, description) => {
@@ -83,6 +83,10 @@ class Nav extends Component {
 
     handlerMenuClick = item => this.setState({activeMenu: item.key});
 
+    handlerChangeLocale = lang => {
+        this.props.changeLang(lang)
+    }
+
     render() {
         const menu = (
             <Menu>
@@ -112,8 +116,15 @@ class Nav extends Component {
                     <Menu.Item key="1"><Link to="/">Home</Link></Menu.Item>
                     <Menu.Item key="2"><Link to="/bootcamps">Bootcamps</Link></Menu.Item>
                     <Menu.Item key="3"><Link to="/contacts">Contacts</Link></Menu.Item>
+                    <Menu.Item key="4" style={{float: 'right'}}>
+                        <div className="lng-page">
+                            <Button onClick={() => this.handlerChangeLocale('ua')}>UA</Button>
+                            <Button onClick={() => this.handlerChangeLocale('en')}>EN</Button>
+                            <Button onClick={() => this.handlerChangeLocale('ru')}>RU</Button>
+                        </div>
+                    </Menu.Item>
                     {!this.state.isLoggin && <Menu.Item
-                        key="4"
+                        key="5"
                         style={{float: 'right'}}
                         className="ant-menu-item"
                     >
@@ -122,7 +133,7 @@ class Nav extends Component {
                     </Menu.Item>}
                     {!this.state.isLoggin &&
                     <Menu.Item
-                        key="5"
+                        key="6"
                         style={{float: 'right'}}
                         className="ant-menu-item"
                     >
@@ -130,7 +141,7 @@ class Nav extends Component {
                             <Link to="/register"><Icon type="user"/>Register</Link>}
                     </Menu.Item>}
                     {this.state.isLoggin && <Menu.Item
-                        key="6"
+                        key="7"
                         style={{float: 'right'}}
                         className="di-select"
                     >
@@ -156,6 +167,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchers = {
     setUser,
+    changeLang,
 };
 
 export default connect(

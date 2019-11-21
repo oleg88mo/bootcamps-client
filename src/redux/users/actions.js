@@ -8,4 +8,8 @@ export function getAllUsers(payload) {
     return async dispatch => await dispatch({type: TYPES.USER_ALL_GET, payload})
 }
 
+export function changeLang(payload) {
+    return async dispatch => await dispatch({type: TYPES.CHANGE_LANG, payload})
+}
+
 

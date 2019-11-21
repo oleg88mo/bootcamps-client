@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, Link} from "react-router-dom";
-import {PageHeader, Row, Col, Tag, Button, Empty, Rate, Modal, Slider, Input} from 'antd';
+import {PageHeader, Row, Col, Tag, Button, Empty, Rate, Modal, Slider, Input, notification} from 'antd';
 import axios from "axios";
 import {URL} from '../../../configKey';
 import {emptyData} from '../../../components/img/iconSvg'
@@ -15,6 +15,13 @@ import {
     getAllUsers,
 } from "../../../redux/users/actions";
 
+const openNotificationWithIcon = (type, description) => {
+    notification[type]({
+        message: 'Create New Review',
+        description
+    });
+};
+
 function ReviewsSingleBootcamp() {
     const id = window.localStorage.getItem('singleBootcampId');
 
@@ -25,6 +32,8 @@ function ReviewsSingleBootcamp() {
     const [middleRating, setMiddleRating] = useState(null);
     const [modal1Visible, setModal1Visible] = useState(false);
     const [ratingNewReview, setRatingNewReview] = useState(0);
+    const [titleNewReview, setTitleNewReview] = useState(null);
+    const [textNewReview, setTextNewReview] = useState(null);
 
     useEffect(() => {
         let mounted = true;
@@ -82,7 +91,7 @@ function ReviewsSingleBootcamp() {
         return () => {
             mounted = false;
         }
-    }, [id]);
+    }, [bootcamp.length, bootcamp.name, bootcamp.reviews, dispatch, id]);
 
 
     if (bootcamp) {
@@ -102,8 +111,66 @@ function ReviewsSingleBootcamp() {
 
     const handlerVisibleModal = visible => setModal1Visible(visible);
 
+    const refreshBootcamp = () => {
+        (async function () {
+            let response;
+            let responseReviews;
+
+            try {
+                response = await axios.get(`${URL}/bootcamps/${id}`);
+
+                if (!bootcamp.reviews && !bootcamp.length) {
+                    responseReviews = await axios.get(`${URL}/bootcamps/${id}/reviews`);
+                }
+
+                if (response && response.data.success) {
+                    dispatch(getSingleBootcamp(response.data));
+
+                }
+
+                if (responseReviews && responseReviews.data.success) {
+                    dispatch(getReviewsForSingleBootcamp(responseReviews.data));
+                    setRatingNewReview(0);
+                    setTitleNewReview(null);
+                    setTextNewReview(null);
+                }
+            } catch (e) {
+                openNotificationWithIcon('warning', e.response.data.error);
+            }
+        })();
+    };
+
     const handlerAddNewReview = () => {
-        handlerVisibleModal(false)
+        const sendReview = async () => {
+            const isLoggin = await window.localStorage.getItem('bootcampAuthToken');
+
+            try {
+                if (isLoggin !== null) {
+                    const tokenRemoveFirstChar = isLoggin.substr(1);
+                    const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+
+                    const responseUsers = await axios.post(`${URL}/bootcamps/${bootcamp.id}/reviews`, {
+                        "title": titleNewReview,
+                        "text": textNewReview,
+                        "rating": ratingNewReview
+                    }, {
+                        headers: {
+                            'content-type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                    });
+
+                    if (responseUsers.data.success) {
+                        await refreshBootcamp();
+                        await setModal1Visible(false)
+                    }
+                }
+            } catch (e) {
+                openNotificationWithIcon('warning', e.response.data.error);
+            }
+        };
+
+        sendReview();
     };
 
     const handlerChangeRatingReview = value => setRatingNewReview(value);
@@ -124,7 +191,7 @@ function ReviewsSingleBootcamp() {
                 />)}
 
                 <Row type="flex">
-                    <Col span={24}>
+                    <Col span={24} className="sticky-headr">
                         {bootcamp.name && <>
                             <h1>{bootcamp.name}</h1>
                             <hr/>
@@ -132,7 +199,8 @@ function ReviewsSingleBootcamp() {
 
                         {middleRating && (
                             <span className="rating">
-                                <Tag color="green">Rating {middleRating}</Tag> <span style={{marginRight: 12}}>|</span>
+                                <Tag color="green">Rating {middleRating.toFixed(2)}</Tag> <span
+                                style={{marginRight: 12}}>|</span>
                             </span>)}
                         {bootcamp.name &&
                         <Button type="primary" onClick={() => handlerVisibleModal(true)}>Add new Review</Button>}
@@ -147,7 +215,7 @@ function ReviewsSingleBootcamp() {
                                         <span>Rating:</span><Rate value={review.rating} count={10} disabled/>
                                     </div>
                                     {review.text && <div className="comment">{review.text}</div>}
-                                    <div className="author">Author: <b>{handlerGetAuthorReview(review.user)}</b></div>
+                                    {handlerGetAuthorReview(review.user) && <div className="author">Author: <b>{handlerGetAuthorReview(review.user)}</b></div>}
                                 </main>
                             </div>
                         ))}
@@ -183,7 +251,9 @@ function ReviewsSingleBootcamp() {
                             <b>Review Title:</b>
                         </Col>
                         <Col span={18}>
-                            <Input placeholder="Add review title here..."/>
+                            <Input placeholder="Add review title here..."
+                                   onChange={e => setTitleNewReview(e.target.value)}
+                            />
                         </Col>
                     </Row>
                     <Row type="flex">
@@ -191,7 +261,10 @@ function ReviewsSingleBootcamp() {
                             <b>Your Review:</b>
                         </Col>
                         <Col span={18}>
-                            <TextArea rows={6} placeholder="Add your review here..."/>
+                            <TextArea rows={6}
+                                      placeholder="Add your review here..."
+                                      onChange={e => setTextNewReview(e.target.value)}
+                            />
                         </Col>
                     </Row>
                 </div>

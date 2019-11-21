@@ -168,6 +168,12 @@ img {
   .bootcamp-page .single-bootcamp.__review-page .rating .ant-tag {
     padding: 4px 10px 6px;
     font-size: 18px; }
+  .bootcamp-page .single-bootcamp.__review-page .sticky-headr {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f0f2f5;
+    padding-bottom: 10px; }
   .bootcamp-page .single-bootcamp.__review-page .review header {
     background-color: #bbb;
     padding: 8px 20px;
@@ -186,6 +192,8 @@ img {
     .bootcamp-page .single-bootcamp.__review-page .review main .comment {
       font-size: 16px;
       margin-bottom: 10px; }
+  .bootcamp-page .single-bootcamp.__review-page .review:last-child {
+    margin-bottom: 20px; }
   .bootcamp-page .single-bootcamp.__review-page .__no-data {
     text-align: center;
     margin-top: 50px; }

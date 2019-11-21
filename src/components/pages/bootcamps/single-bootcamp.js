@@ -29,6 +29,7 @@ function SingleBootcapm() {
 
     const dispatch = useDispatch();
     const bootcamp = useSelector(state => state.Bootcamps.singleBootcamp);
+    const user = useSelector(state => state.Users.me);
 
     useEffect(() => {
         let mounted = true;
@@ -193,6 +194,11 @@ function SingleBootcapm() {
                             <hr/>
                         </>}
 
+                        {user && user.role === 'admin' && <>
+                            <Button type="primary">Create Course For this Bootcamp</Button>
+                            <hr/>
+                        </>}
+
                         <div className="table">
                             <header>
                                 <Row type="flex">
@@ -201,23 +207,22 @@ function SingleBootcapm() {
                                 </Row>
                             </header>
                             <main>
-                                {middleRating && (
-                                    <div className="rating">
-                                        <Row type="flex">
-                                            <Col span={8}>Rating:</Col>
-                                            <Col span={16}>
-                                                <Tag color="green">{middleRating}</Tag>
-                                            </Col>
-                                        </Row>
-                                        <Row type="flex">
-                                            <Col span={8}>Reviews:</Col>
-                                            <Col span={16}>
-                                                <Link to={`/bootcamps/${bootcamp.slug}/reviews`}>
-                                                    <Button type="primary">Read Reviews Bootcamp</Button>
-                                                </Link>
-                                            </Col>
-                                        </Row>
-                                    </div>)}
+                                {middleRating && (<div className="rating">
+                                    <Row type="flex">
+                                        <Col span={8}>Rating:</Col>
+                                        <Col span={16}>
+                                            <Tag color="green">{middleRating.toFixed(2)}</Tag>
+                                        </Col>
+                                    </Row>
+                                    <Row type="flex">
+                                        <Col span={8}>Reviews:</Col>
+                                        <Col span={16}>
+                                            <Link to={`/bootcamps/${bootcamp.slug}/reviews`}>
+                                                <Button type="primary">Read Reviews Bootcamp</Button>
+                                            </Link>
+                                        </Col>
+                                    </Row>
+                                </div>)}
 
                                 {bootcamp.website && <div className="website">
                                     <Row type="flex">
@@ -234,7 +239,7 @@ function SingleBootcapm() {
                                     <Col span={8}>Housing:</Col>
                                     <Col span={16}>{bootcamp.housing ? check : checkCancel}</Col>
                                 </Row>
-                                 <Row type="flex" style={{marginTop: 10}}>
+                                <Row type="flex" style={{marginTop: 10}}>
                                     <Col span={8}>Job Assistance:</Col>
                                     <Col span={16}>{bootcamp.jobAssistance ? check : checkCancel}</Col>
                                 </Row>
@@ -247,11 +252,8 @@ function SingleBootcapm() {
                                     <Col span={16}>{bootcamp.acceptGi ? check : checkCancel}</Col>
                                 </Row>
 
-
                             </main>
                         </div>
-
-
                     </Col>
                     <Col span={24}>
                         <div ref={mapContainer} className="map"/>

@@ -3,6 +3,7 @@ import * as TYPES from './types'
 const INIT_STATE = {
     data: [],
     me: null,
+    lang: 'ua'
 };
 
 export default function users(state = INIT_STATE, {type, payload}) {
@@ -23,6 +24,12 @@ export default function users(state = INIT_STATE, {type, payload}) {
             return {
                 ...state,
                 data: [...payload.data]
+            };
+        }
+        case TYPES.CHANGE_LANG: {
+            return {
+                ...state,
+                lang: payload
             };
         }
         default:

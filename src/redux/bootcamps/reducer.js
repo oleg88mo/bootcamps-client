@@ -3,7 +3,7 @@ import * as TYPES from './types'
 const INIT_STATE = {
     data: [],
     reviews: [],
-    count: null,
+    totalCount: null,
     pagination: null,
     singleBootcamp: [],
 };
@@ -14,7 +14,7 @@ export default function bootcamps(state = INIT_STATE, {type, payload}) {
             return {
                 ...state,
                 data: [...payload.data],
-                count: payload.count,
+                totalCount: payload.totalCount,
                 pagination: payload.pagination
             };
         }
