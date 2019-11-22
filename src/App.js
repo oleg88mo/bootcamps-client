@@ -8,6 +8,7 @@ import './index.css';
 // components
 import MainPage from "./components/pages/home";
 import Login from './components/pages/login';
+import Register from './components/pages/register';
 import Bootcamps from "./components/pages/bootcamps";
 import SingleBootcamp from "./components/pages/bootcamps/single-bootcamp";
 import ReviewsSingleBootcamp from "./components/pages/bootcamps/reviews-single-bootcamp";
@@ -32,7 +33,7 @@ function App() {
                 <Route exact path="/bootcamps/:slug/reviews" component={ReviewsSingleBootcamp}/>
                 <Route path="/contacts" component={Contacts}/>
                 <Route path="/login" component={Login}/>
-                {/*<Route path="/register" component={Register}/>*/}
+                <Route path="/register" component={Register}/>
 
                 <Protected exact path="/dashboard"/>
                 <Route component={PageNotFound}/>

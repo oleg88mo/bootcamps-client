@@ -1,24 +1,26 @@
 import React from 'react';
+import {Col, Icon, Result} from 'antd';
 
-import {Row, Col, Icon} from 'antd';
-
-function EmptyList() {
+function EmptyList(p) {
+    console.log('p', p)
     return (
         <>
-            {[1, 2, 3, 4, 5]
-                .map(i => (
-                    <Col
-                        key={i}
-                        span={6}
-                        className="bootcamp-item"
-                    >
-                        <div className='movie'>
-                            <Icon type="loading" className="loading"/>
-                            <div className="img"/>
-                            <span className="title">...</span>
-                        </div>
-                    </Col>
-                ))
+            {p.data === null ? [1, 2, 3, 4, 5].map(i => (
+                <Col
+                    key={i}
+                    span={6}
+                    className="bootcamp-item"
+                >
+                    <div className='movie'>
+                        <Icon type="loading" className="loading"/>
+                        <div className="img"/>
+                        <span className="title">...</span>
+                    </div>
+                </Col>
+            )) : <Result
+                status="403"
+                subTitle="Dara length === 0"
+            />
             }
         </>
     );

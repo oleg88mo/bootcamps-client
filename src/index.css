@@ -20,6 +20,20 @@ img {
 .review-modal .ant-row-flex {
   margin-bottom: 10px; }
 
+.ant-menu-item .ant-btn {
+  padding: 0;
+  height: 27px;
+  background-color: transparent;
+  border-color: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0 3px; }
+.ant-menu-item.header-locale {
+  background-color: transparent !important; }
+
+.map {
+  height: 500px;
+  margin: 30px 0; }
+
 .content-container {
   overflow: auto;
   height: 100%; }
@@ -63,11 +77,7 @@ img {
   flex: auto;
   flex-direction: column; }
   .bootcamp-page .filter {
-    background-color: #fff;
     margin: 50px 0 20px;
-    padding: 15px;
-    border-radius: 4px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     flex: 0 0 auto; }
     .bootcamp-page .filter .action-panel {
       display: flex;
@@ -78,6 +88,17 @@ img {
         vertical-align: sub;
         margin-right: 8px;
         fill: #fff; }
+    .bootcamp-page .filter .small-mode, .bootcamp-page .filter .detail-mode, .bootcamp-page .filter .action-panel {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 4px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); }
+    .bootcamp-page .filter .small-mode {
+      margin-top: 20px; }
+    .bootcamp-page .filter .filter-label {
+      margin-bottom: 0; }
+    .bootcamp-page .filter .price .price-container {
+      display: flex; }
   .bootcamp-page .list {
     flex: auto; }
     .bootcamp-page .list .bootcamp-item {
@@ -162,9 +183,6 @@ img {
       .bootcamp-page .single-bootcamp .column-right .website .ant-btn {
         font-size: 15px;
         margin-top: 5px; }
-  .bootcamp-page .single-bootcamp .map {
-    height: 500px;
-    margin: 30px 0; }
   .bootcamp-page .single-bootcamp.__review-page .rating .ant-tag {
     padding: 4px 10px 6px;
     font-size: 18px; }
@@ -200,6 +218,25 @@ img {
     .bootcamp-page .single-bootcamp.__review-page .__no-data svg {
       margin-bottom: 20px;
       height: 250px; }
+
+.contact-page {
+  height: 100%;
+  padding: 50px; }
+  .contact-page__container {
+    display: flex; }
+    .contact-page__container .about-me {
+      max-width: calc(100% - 300px);
+      margin-left: 50px;
+      font-size: 16px;
+      font-weight: 500; }
+      .contact-page__container .about-me i {
+        display: block;
+        margin-bottom: 10px; }
+        .contact-page__container .about-me i:first-letter {
+          color: #1890ff; }
+  .contact-page .ant-avatar {
+    width: 200px;
+    height: 200px; }
 
 .register-form-center, .login-form-center {
   display: flex;

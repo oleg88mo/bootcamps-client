@@ -8,8 +8,13 @@ import SmallMode from './mode-small'
 function Filter() {
     const [visible, setVisible] = useState(false);
     const [smallMode, setSmallMode] = useState(false);
-    const handlerVisibleFilter = (isVisible) => {
-        setVisible(isVisible)
+    const handlerVisibleFilter = isVisible => {
+        setVisible(isVisible);
+        setSmallMode(false);
+    };
+    const handlerVisibleSmallModeFilter = isVisible => {
+        setSmallMode(isVisible);
+        setVisible(false)
     };
 
     return (
@@ -17,7 +22,7 @@ function Filter() {
             {!visible && <div className="action-panel">
                 <Button type="primary" onClick={() => handlerVisibleFilter(true)}>{setting} Filter</Button>
             </div>}
-            {visible && <DetailMode handlerVisibleFilter={handlerVisibleFilter}/>}
+            {visible && <DetailMode handlerVisibleSmallModeFilter={handlerVisibleSmallModeFilter}/>}
             {smallMode && <SmallMode/>}
         </div>
     );

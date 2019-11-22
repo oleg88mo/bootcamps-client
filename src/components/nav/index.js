@@ -83,9 +83,7 @@ class Nav extends Component {
 
     handlerMenuClick = item => this.setState({activeMenu: item.key});
 
-    handlerChangeLocale = lang => {
-        this.props.changeLang(lang)
-    }
+    handlerChangeLocale = lang => this.props.changeLang(lang);
 
     render() {
         const menu = (
@@ -116,7 +114,7 @@ class Nav extends Component {
                     <Menu.Item key="1"><Link to="/">Home</Link></Menu.Item>
                     <Menu.Item key="2"><Link to="/bootcamps">Bootcamps</Link></Menu.Item>
                     <Menu.Item key="3"><Link to="/contacts">Contacts</Link></Menu.Item>
-                    <Menu.Item key="4" style={{float: 'right'}}>
+                    <Menu.Item key="4" style={{float: 'right'}} className="header-locale">
                         <div className="lng-page">
                             <Button onClick={() => this.handlerChangeLocale('ua')}>UA</Button>
                             <Button onClick={() => this.handlerChangeLocale('en')}>EN</Button>

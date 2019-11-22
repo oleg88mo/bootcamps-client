@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
-import {useDispatch} from 'react-redux';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
 import {Row, Col, Empty, Tag, ConfigProvider, Pagination} from 'antd';
 import {URL} from '../../../configKey';
 import ru_RU from 'antd/lib/locale-provider/ru_RU';
@@ -173,7 +172,7 @@ function List() {
                             />
                         </ConfigProvider>
                     </Row>
-                </> : <EmptyList/>}
+                </> : <EmptyList data={data}/>}
             </Row>
         </div>
     );

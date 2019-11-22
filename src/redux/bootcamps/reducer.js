@@ -1,11 +1,12 @@
 import * as TYPES from './types'
 
 const INIT_STATE = {
-    data: [],
+    data: null,
     reviews: [],
     totalCount: null,
     pagination: null,
     singleBootcamp: [],
+    filter: []
 };
 
 export default function bootcamps(state = INIT_STATE, {type, payload}) {
@@ -16,6 +17,29 @@ export default function bootcamps(state = INIT_STATE, {type, payload}) {
                 data: [...payload.data],
                 totalCount: payload.totalCount,
                 pagination: payload.pagination
+            };
+        }
+        case TYPES.BOOTCAMPS_SET_FILTER: {
+            const isIncludes = state.filter.find(el => el.name === payload.name);
+            const newFilter = isIncludes ? state.filter.map(el => el.name === payload.name ? payload : el) : [...state.filter, payload];
+
+            return {
+                ...state,
+                filter: [
+                    ...newFilter.filter(criteria =>
+                        Array.isArray(criteria.values)
+                            ? criteria.values.length
+                            : criteria.values,
+                    ),
+                ],
+            };
+        }
+        case TYPES.BOOTCAMPS_CLEAR_FILTER: {
+            return {
+                ...state,
+                filter: [
+                    ...state.filter.filter(el => el.name !== payload.name),
+                ],
             };
         }
         case TYPES.BOOTCAMPS_SET_REVIEWS_DATA: {

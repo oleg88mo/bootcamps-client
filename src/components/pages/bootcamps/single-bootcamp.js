@@ -84,7 +84,6 @@ function SingleBootcapm() {
     }, [id]);
 
     mapboxgl.accessToken = mapBoxKey;
-
     const mapContainer = useRef();
     let map;
 

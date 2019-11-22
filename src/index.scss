@@ -35,6 +35,26 @@ img {
   }
 }
 
+.ant-menu-item {
+  .ant-btn {
+    padding: 0;
+    height: 27px;
+    background-color: transparent;
+    border-color: transparent;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0 3px;
+  }
+
+  &.header-locale {
+    background-color: transparent !important;
+  }
+}
+
+.map {
+  height: 500px;
+  margin: 30px 0;
+}
+
 // *** END global ***
 
 
@@ -99,11 +119,7 @@ img {
 
   // *** bootcamp Filter ***
   .filter {
-    background-color: #fff;
     margin: 50px 0 20px;
-    padding: 15px;
-    border-radius: 4px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     flex: 0 0 auto;
 
     .action-panel {
@@ -118,6 +134,26 @@ img {
           margin-right: 8px;
           fill: $WHITE;
         }
+      }
+    }
+
+    .small-mode, .detail-mode, .action-panel {
+      background-color: $WHITE;
+      padding: 15px;
+      border-radius: 4px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    .small-mode{
+      margin-top: 20px;
+    }
+
+    .filter-label {
+      margin-bottom: 0;
+    }
+
+    .price {
+      .price-container {
+        display: flex;
       }
     }
 
@@ -266,11 +302,6 @@ img {
       }
     }
 
-    .map {
-      height: 500px;
-      margin: 30px 0;
-    }
-
     // *** Reviews bootcamp***
     &.__review-page {
       .rating {
@@ -341,6 +372,39 @@ img {
   // *** END bootcamp-page ***
 }
 
+// *** Contact pages ***
+.contact-page {
+  height: 100%;
+  padding: 50px;
+
+  &__container {
+    display: flex;
+
+    .about-me {
+      max-width: calc(100% - 300px);
+      margin-left: 50px;
+      font-size: 16px;
+      font-weight: 500;
+
+      i {
+        display: block;
+        margin-bottom: 10px;
+
+        &:first-letter {
+          color: $BLUE;
+        }
+      }
+    }
+  }
+
+  .ant-avatar {
+    width: 200px;
+    height: 200px;
+  }
+
+  // *** END Contact pages ***
+}
+
 // *** Login & Register pages ***
 .register-form-center, .login-form-center {
   display: flex;
@@ -386,3 +450,7 @@ img {
 
   // *** END Login & Register pages ***
 }
+
+
+
+
