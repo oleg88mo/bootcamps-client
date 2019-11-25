@@ -1,174 +1,150 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import {connect} from "react-redux";
+import {useDispatch} from 'react-redux';
 import axios from 'axios';
-import {
-    Layout, Menu, Icon,
-    Dropdown,
-    Button,
-    notification
-} from "antd";
+import {Layout, Menu, Icon, Dropdown, Button, notification} from "antd";
 import {URL} from '../../configKey';
-
 // actions
 import {setUser, changeLang} from '../../redux/users/actions'
 
-const {Header} = Layout;
-const openNotificationWithIcon = (type, description) => {
-    notification[type]({
+function Nav(p) {
+    const dispatch = useDispatch();
+    const {Header} = Layout;
+
+    const locale = p.locale;
+    const [activeMenu, setActiveMenu] = useState('1');
+    const [isLoggin, setIsLoggin] = useState(null);
+    const [isLoadingAuth, setIsLoadingAuth] = useState(false);
+    const [name, setName] = useState(null);
+
+    useEffect(() => {
+        let mounted = true;
+        const checkIsLoggin = async () => {
+            if (mounted) {
+                await handlerCheckIsLoggin()
+            }
+        };
+
+        checkIsLoggin();
+
+        return () => {
+            mounted = false;
+        }
+    }, []);
+
+    const openNotificationWithIcon = (type, description) => notification[type]({
         message: '/user/auth',
         description
     });
-};
 
-class Nav extends Component {
-    state = {
-        isLoggin: undefined,
-        email: undefined,
-        name: undefined,
-        role: undefined,
-        isLoadingAuth: false,
-        activeMenu: '1',
-    };
-
-    componentDidMount() {
-        this.handlerCheckIsLoggin()
-    }
-
-    handlerCheckIsLoggin = async () => {
+    const handlerCheckIsLoggin = async () => {
         const isLoggin = await window.localStorage.getItem('bootcampAuthToken');
 
         if (isLoggin !== null) {
             const tokenRemoveFirstChar = isLoggin.substr(1);
             const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
 
-            this.setState({isLoadingAuth: true}, () => {
-                    axios.get(`${URL}/auth/me`, {
-                        headers: {
-                            'content-type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
-                        .then(response => {
-                            if (response.data.success) {
-                                const {email, name, role} = response.data.data;
-                                this.props.setUser(response.data.data)
-                                this.setState({
-                                    isLoggin: true,
-                                    email,
-                                    name,
-                                    role,
-                                    isLoadingAuth: false
-                                })
-                            }
-                        })
-                        .catch(error => {
-                            openNotificationWithIcon('error', error.response.data.error)
-                        })
+            setIsLoadingAuth(true);
+
+            axios.get(`${URL}/auth/me`, {
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
-            )
+            })
+                .then(response => {
+                    if (response.data.success) {
+                        const {name} = response.data.data;
+
+                        dispatch(setUser(response.data.data));
+                        setIsLoadingAuth(false);
+                        setName(name);
+                        setIsLoggin(true);
+                    }
+                })
+                .catch(error => {
+                    openNotificationWithIcon('error', error.response.data.error)
+                })
         }
     };
 
-    handlerLogout = () => axios.get(`${URL}/auth/logout`)
-        .then(response => {
-            if (response.data.success) {
-                window.localStorage.removeItem('bootcampAuthToken');
-                window.location = '/';
-            }
-        })
-        .catch(error => {
-            openNotificationWithIcon('error', error.response.data.error)
-        });
+    const handlerLogout = () => axios.get(`${URL}/auth/logout`).then(response => {
+        if (response.data.success) {
+            window.localStorage.removeItem('bootcampAuthToken');
+            window.location = '/';
+        }
+    }).catch(error => {
+        openNotificationWithIcon('error', error.response.data.error)
+    });
 
-    handlerMenuClick = item => this.setState({activeMenu: item.key});
+    const handlerMenuClick = item => setActiveMenu(item.key);
 
-    handlerChangeLocale = lang => this.props.changeLang(lang);
+    const handlerChangeLocale = lang => dispatch(changeLang(lang));
 
-    render() {
-        const menu = (
-            <Menu>
-                <Menu.Item key="0">
-                    <Link to="/dashboard"><Icon type="user"/> Dashboard</Link>
+    const menu = (<Menu>
+        <Menu.Item key="0">
+            <Link to="/dashboard"><Icon type="user"/> {locale.dashboard}</Link>
+        </Menu.Item>
+        <Menu.Item key="1">
+            <Button onClick={handlerLogout}><Icon type="logout"/>{locale.logout}</Button>
+        </Menu.Item>
+    </Menu>);
+
+    return (
+        <Header style={{position: 'fixed', zIndex: 1, width: '100%'}}>
+            <div className="logo"/>
+            <Menu
+                theme="dark"
+                mode="horizontal"
+                selectedKeys={[activeMenu]}
+                style={{lineHeight: '50px'}}
+                onClick={(item) => handlerMenuClick(item)}
+            >
+                <Menu.Item key="1"><Link to="/">{locale.home_page}</Link></Menu.Item>
+                <Menu.Item key="2"><Link to="/bootcamps">{locale.bootcamps_page}</Link></Menu.Item>
+                <Menu.Item key="3"><Link to="/contacts">{locale.contacts_page}</Link></Menu.Item>
+                <Menu.Item key="4" style={{float: 'right'}} className="header-locale">
+                    <div className="lng-page">
+                        <Button onClick={() => handlerChangeLocale('ua')}>UA</Button>
+                        <Button onClick={() => handlerChangeLocale('en')}>EN</Button>
+                        <Button onClick={() => handlerChangeLocale('ru')}>RU</Button>
+                    </div>
                 </Menu.Item>
-                <Menu.Item key="1">
-                    <Button
-                        onClick={this.handlerLogout}
-                    >
-                        <Icon type="logout"/>Logout
-                    </Button>
-                </Menu.Item>
-            </Menu>
-        );
-
-        return (
-            <Header style={{position: 'fixed', zIndex: 1, width: '100%'}}>
-                <div className="logo"/>
-                <Menu
-                    theme="dark"
-                    mode="horizontal"
-                    selectedKeys={[this.state.activeMenu]}
-                    style={{lineHeight: '50px'}}
-                    onClick={(item) => this.handlerMenuClick(item)}
+                {!isLoggin && <Menu.Item
+                    key="5"
+                    style={{float: 'right'}}
+                    className="ant-menu-item"
                 >
-                    <Menu.Item key="1"><Link to="/">Home</Link></Menu.Item>
-                    <Menu.Item key="2"><Link to="/bootcamps">Bootcamps</Link></Menu.Item>
-                    <Menu.Item key="3"><Link to="/contacts">Contacts</Link></Menu.Item>
-                    <Menu.Item key="4" style={{float: 'right'}} className="header-locale">
-                        <div className="lng-page">
-                            <Button onClick={() => this.handlerChangeLocale('ua')}>UA</Button>
-                            <Button onClick={() => this.handlerChangeLocale('en')}>EN</Button>
-                            <Button onClick={() => this.handlerChangeLocale('ru')}>RU</Button>
-                        </div>
-                    </Menu.Item>
-                    {!this.state.isLoggin && <Menu.Item
-                        key="5"
-                        style={{float: 'right'}}
-                        className="ant-menu-item"
+                    {isLoadingAuth ? <Icon type="loading"/> :
+                        <Link to="/login"><Icon type="login"/>{locale.login}</Link>}
+                </Menu.Item>}
+                {!isLoggin &&
+                <Menu.Item
+                    key="6"
+                    style={{float: 'right'}}
+                    className="ant-menu-item"
+                >
+                    {isLoadingAuth ? <Icon type="loading"/> :
+                        <Link to="/register"><Icon type="user"/>{locale.register}</Link>}
+                </Menu.Item>}
+                {isLoggin && <Menu.Item
+                    key="7"
+                    style={{float: 'right'}}
+                    className="di-select"
+                >
+                    <Dropdown
+                        overlay={menu}
+                        trigger={['click']}
+                        placement="bottomRight"
                     >
-                        {this.state.isLoadingAuth ? <Icon type="loading"/> :
-                            <Link to="/login"><Icon type="login"/>Login</Link>}
-                    </Menu.Item>}
-                    {!this.state.isLoggin &&
-                    <Menu.Item
-                        key="6"
-                        style={{float: 'right'}}
-                        className="ant-menu-item"
-                    >
-                        {this.state.isLoadingAuth ? <Icon type="loading"/> :
-                            <Link to="/register"><Icon type="user"/>Register</Link>}
-                    </Menu.Item>}
-                    {this.state.isLoggin && <Menu.Item
-                        key="7"
-                        style={{float: 'right'}}
-                        className="di-select"
-                    >
-                        <Dropdown
-                            overlay={menu}
-                            trigger={['click']}
-                            placement="bottomRight"
-                        >
-                            <a className="ant-dropdown-link" href="#">
-                                <Icon type="user"/> {this.state.name} <Icon type="down"/>
-                            </a>
-                        </Dropdown>
-                    </Menu.Item>}
-                </Menu>
-            </Header>
-        )
-    }
+                        <a className="ant-dropdown-link" href="#">
+                            <Icon type="user"/> {name} <Icon type="down"/>
+                        </a>
+                    </Dropdown>
+                </Menu.Item>}
+            </Menu>
+        </Header>
+    )
 }
 
-const mapStateToProps = state => ({
-    me: state.Users.me,
-});
-
-const mapDispatchers = {
-    setUser,
-    changeLang,
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchers,
-)(Nav);
+export default Nav;

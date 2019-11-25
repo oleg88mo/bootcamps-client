@@ -30,6 +30,11 @@ img {
 .ant-menu-item.header-locale {
   background-color: transparent !important; }
 
+.ant-dropdown-menu-item {
+  font-size: 15px; }
+  .ant-dropdown-menu-item button {
+    width: 100%; }
+
 .map {
   height: 500px;
   margin: 30px 0; }

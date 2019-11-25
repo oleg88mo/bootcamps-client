@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 // components
 import Filter from './filter';
 import List from './list';

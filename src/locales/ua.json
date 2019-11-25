@@ -1,0 +1,16 @@
+{
+  "home_page": "Головна",
+  "bootcamps_page": "Bootcamps",
+  "contacts_page": "Контакти",
+  "dashboard": "Панель управління",
+  "login": "Увійти",
+  "logout": "Вийти",
+  "footer_created": "Created by Oleh Monastyrskyi",
+  "footer_dev": "2019 | Front End Developer",
+  "search": "Пошук",
+  "main_page": {
+    "title": "Find a Code Bootcamp",
+    "description": "Find, rate and read reviews on coding bootcamps"
+  },
+  "register": "Реєстрація"
+}

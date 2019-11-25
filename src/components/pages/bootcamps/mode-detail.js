@@ -3,7 +3,7 @@ import {Button} from 'antd';
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {URL} from "../../../configKey";
-import {setBootcampsData, setBootcampsReviewData} from "../../../redux/bootcamps/actions";
+import {setBootcampsData} from "../../../redux/bootcamps/actions";
 // components
 import DetailModePrice from './mode-detail-price';
 
@@ -45,18 +45,15 @@ function DetailMode(p) {
         }
     }, [onSearch]);
 
-    const handlerClickFilterSearch = () => {
-        setOnSearch(true);
-
-        p.handlerVisibleSmallModeFilter(true)
+    const handlerClickFilterSearch = async () => {
+        await setOnSearch(true);
+        await p.handlerVisibleSmallModeFilter(true);
     };
 
     return (
         <div className="detail-mode">
             <h3>Filter</h3>
-
             <DetailModePrice/>
-
             <Button type="primary" onClick={handlerClickFilterSearch} disabled={!filter.length}>Filter Search</Button>
         </div>
     );

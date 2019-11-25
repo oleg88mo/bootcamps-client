@@ -2,7 +2,6 @@ import React from 'react';
 import {Col, Icon, Result} from 'antd';
 
 function EmptyList(p) {
-    console.log('p', p)
     return (
         <>
             {p.data === null ? [1, 2, 3, 4, 5].map(i => (
