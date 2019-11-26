@@ -32,3 +32,7 @@ export function clearBootcampsFilter(payload) {
     return async dispatch => await dispatch({type: TYPES.BOOTCAMPS_CLEAR_FILTER, payload})
 }
 
+export function changeBootcampsFilterOption(payload) {
+    return async dispatch => await dispatch({type: TYPES.BOOTCAMPS_CHANGE_FILTER_OPTION, payload})
+}
+

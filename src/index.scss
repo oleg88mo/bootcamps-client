@@ -2,6 +2,8 @@ $WHITE: #fff;
 $BLUE: #1890ff;
 $GREY: #bbb;
 $GREY_LIGHT: #f9f9f9;
+$GREY_DARK: #5d5d5d;
+$MAIN_CONTAINER_BG: #f0f2f5;
 
 #root, #root > .ant-layout {
   height: 100%;
@@ -152,6 +154,37 @@ img {
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
+    .detail-mode {
+      .panel {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        i {
+          font-size: 24px;
+          color: $GREY;
+
+          &:hover {
+            color: $GREY_DARK;
+          }
+        }
+      }
+
+      footer {
+        margin-top: 10px;
+        text-align: right;
+      }
+
+      .ant-row-flex {
+        margin-left: -10px;
+        margin-right: -10px;
+
+        & > [class*="ant-col"] {
+          padding: 0 10px;
+        }
+      }
+    }
+
     .small-mode {
       margin-top: 20px;
     }
@@ -160,9 +193,16 @@ img {
       margin-bottom: 0;
     }
 
-    .price {
-      .price-container {
+    .price, .careers, .rating {
+      &-container {
         display: flex;
+      }
+    }
+
+    .checkbox-container {
+      .ant-checkbox-wrapper {
+        display: block;
+        margin: 10px 0 0;
       }
     }
 
@@ -173,6 +213,18 @@ img {
   // *** bootcamp List ***
   .list {
     flex: auto;
+    overflow: auto;
+    position: relative;
+    padding: 0 10px;
+    margin-left: -15px;
+    margin-right: -15px;
+
+    .bootcamp-pagination {
+      position: sticky;
+      bottom: 0;
+      padding: 5px;
+      background-color: $MAIN_CONTAINER_BG;
+    }
 
     .bootcamp-item {
       padding: 0 5px;
@@ -324,7 +376,7 @@ img {
         position: sticky;
         top: 0;
         z-index: 1;
-        background-color: #f0f2f5;
+        background-color: $MAIN_CONTAINER_BG;
         padding-bottom: 10px;
       }
 

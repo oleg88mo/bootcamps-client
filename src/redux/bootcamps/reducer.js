@@ -4,7 +4,12 @@ const INIT_STATE = {
     data: null,
     reviews: [],
     totalCount: null,
-    pagination: null,
+    pagination: {
+        next: {
+            limit: 10,
+            page: 2
+        }
+    },
     singleBootcamp: [],
     filter: []
 };
@@ -76,6 +81,19 @@ export default function bootcamps(state = INIT_STATE, {type, payload}) {
             return {
                 ...state,
                 singleBootcamp: []
+            };
+        }
+        case TYPES.BOOTCAMPS_CHANGE_FILTER_OPTION: {
+            const newFilter = [...state.filter.map(m => {
+                if(m.name === payload.prev){
+                    return payload.next
+                }
+                return m;
+            })];
+
+            return {
+                ...state,
+                filter: newFilter
             };
         }
         default:
