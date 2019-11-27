@@ -5,13 +5,29 @@ $GREY_LIGHT: #f9f9f9;
 $GREY_DARK: #5d5d5d;
 $MAIN_CONTAINER_BG: #f0f2f5;
 
-#root, #root > .ant-layout {
+#root, #root > .ant-layout, .dashboard {
   height: 100%;
 }
 
 // *** global ***
 img {
   max-width: 100%;
+}
+
+h1 {
+  font-size: 23px;
+}
+
+h2 {
+  font-size: 21px;
+}
+
+h3 {
+  font-size: 19px;
+}
+
+h4 {
+  font-size: 16px;
 }
 
 .ant-layout-header {
@@ -66,7 +82,6 @@ img {
 }
 
 // *** END global ***
-
 
 .content-container {
   overflow: auto;
@@ -512,6 +527,41 @@ img {
   // *** END Login & Register pages ***
 }
 
+// *** Dashboard page ***
+.dashboard {
+  .anticon.anticon-menu {
+    &-fold, &-unfold {
+      position: relative;
+      bottom: 6px;
+      left: 15px;
+    }
+  }
 
+  .ant-row-flex {
+    margin-left: -10px;
+    margin-right: -10px;
 
+    & > [class*="ant-col"] {
+      padding: 0 10px;
+    }
+  }
 
+  .ant-form-item-label {
+    line-height: 27px;
+  }
+
+  .ant-form-item-control {
+    line-height: 27px;
+  }
+
+  footer {
+    text-align: right;
+
+    &>span {
+      display: block;
+      margin-bottom: 10px;
+    }
+  }
+
+  // *** END Dashboard page ***
+}

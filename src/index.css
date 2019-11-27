@@ -1,8 +1,20 @@
-#root, #root > .ant-layout {
+#root, #root > .ant-layout, .dashboard {
   height: 100%; }
 
 img {
   max-width: 100%; }
+
+h1 {
+  font-size: 23px; }
+
+h2 {
+  font-size: 21px; }
+
+h3 {
+  font-size: 19px; }
+
+h4 {
+  font-size: 16px; }
 
 .ant-layout-header {
   height: 50px; }
@@ -301,5 +313,24 @@ img {
     padding: 0;
     background-color: transparent;
     color: #1890ff; }
+
+.dashboard .anticon.anticon-menu-fold, .dashboard .anticon.anticon-menu-unfold {
+  position: relative;
+  bottom: 6px;
+  left: 15px; }
+.dashboard .ant-row-flex {
+  margin-left: -10px;
+  margin-right: -10px; }
+  .dashboard .ant-row-flex > [class*="ant-col"] {
+    padding: 0 10px; }
+.dashboard .ant-form-item-label {
+  line-height: 27px; }
+.dashboard .ant-form-item-control {
+  line-height: 27px; }
+.dashboard footer {
+  text-align: right; }
+  .dashboard footer > span {
+    display: block;
+    margin-bottom: 10px; }
 
 /*# sourceMappingURL=index.css.map */

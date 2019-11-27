@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import {Row, Col, Empty, Tag, ConfigProvider, Pagination} from 'antd';
-import {URL} from '../../../configKey';
+import {URL, PHOTO_URL} from '../../../configKey';
 import ru_RU from 'antd/lib/locale-provider/ru_RU';
 import uk_UA from 'antd/lib/locale-provider/uk_UA';
 import en_US from 'antd/lib/locale-provider/en_US';
@@ -136,7 +136,7 @@ function List() {
                                         }
                                         <Link to={`/bootcamps/${bootcamp.slug}`}
                                               onClick={() => handlerSetBootcampId(bootcamp.id)}>
-                                            {bootcamp.photo !== 'no-photo.jpg' ? <img src={bootcamp.photo}/> :
+                                            {bootcamp.photo !== 'no-photo.jpg' ? <img src={`${PHOTO_URL}/${bootcamp.photo}`}/> :
                                                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
                                         </Link>
                                         <Link to={`/bootcamps/${bootcamp.slug}`}
