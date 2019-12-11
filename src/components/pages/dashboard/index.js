@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {Layout, Menu, Icon} from 'antd';
 import RenderComponents from './renderComponents';
-// import UserAvatar from './components/avatar';
 
 const {Header, Sider, Content} = Layout;
 const {SubMenu} = Menu;
@@ -15,7 +14,7 @@ class Dashboard extends Component {
     toggle = () => this.setState({collapsed: !this.state.collapsed});
 
     handlerRenderComponent = (e, componentName) => {
-        e.preventDefault();
+        e && e.preventDefault();
 
         this.setState({componentName})
     };
@@ -24,7 +23,6 @@ class Dashboard extends Component {
         return (
             <Layout className="dashboard">
                 <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-                    {/*<UserAvatar />*/}
                     <Menu
                         theme="dark"
                         mode="inline"
@@ -36,20 +34,28 @@ class Dashboard extends Component {
                             title={<span><Icon type="user"/><span>Bootcamp</span></span>}
                         >
                             <Menu.Item key="222">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'add-new-bootcamp')}>Add New Bootcamp</a>
+                                <a onClick={(e) => this.handlerRenderComponent(e, 'add-new-bootcamp')}>Add New
+                                    Bootcamp</a>
                             </Menu.Item>
-                            <Menu.Item key="3333">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'chat')}>Chat</a>
+                            <Menu.Item key="222-222">
+                                <a onClick={(e) => this.handlerRenderComponent(e, 'my-bootcamp')}>My Bootcamp</a>
                             </Menu.Item>
-                            <Menu.Item key="44444">Alex</Menu.Item>
                         </SubMenu>
-                        <Menu.Item key="2">
-                            <Icon type="picture" />
-                            <span onClick={(e) => this.handlerRenderComponent(e, 'photos')}>Photo</span>
-                        </Menu.Item>
-                        <Menu.Item key="3">
-                            <Icon type="upload"/>
-                            <span>nav 3</span>
+                        <SubMenu
+                            key="sub2"
+                            title={<span><Icon type="user"/><span>Courses</span></span>}
+                        >
+                            <Menu.Item key="sub2-1">
+                                <a onClick={(e) => this.handlerRenderComponent(e, 'add-new-course')}>Add New Course For
+                                    Bootcamp</a>
+                            </Menu.Item>
+                            <Menu.Item key="sub2-2">
+                                <a onClick={(e) => this.handlerRenderComponent(e, 'my-bootcamp')}>My Courses</a>
+                            </Menu.Item>
+                        </SubMenu>
+                        <Menu.Item key="3" onClick={() => this.handlerRenderComponent(null, 'my-information')}>
+                            <Icon type="user"/>
+                            <span>Me</span>
                         </Menu.Item>
                     </Menu>
                 </Sider>

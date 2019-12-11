@@ -29,11 +29,50 @@ function ReviewsSingleBootcamp() {
 
     const bootcamp = useSelector(state => state.Bootcamps.singleBootcamp);
     const users = useSelector(state => state.Users.data);
+    const me = useSelector(state => state.Users.me);
     const [middleRating, setMiddleRating] = useState(null);
-    const [modal1Visible, setModal1Visible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     const [ratingNewReview, setRatingNewReview] = useState(0);
     const [titleNewReview, setTitleNewReview] = useState(null);
     const [textNewReview, setTextNewReview] = useState(null);
+    const [deletedReview, setDeletedReview] = useState(false);
+    const [reloaded, setReloaded] = useState(false);
+    const [editedReview, setEditedReview] = useState(false);
+
+    //delete Review
+    useEffect(() => {
+        let mounted = true;
+
+        const loadData = async () => {
+            if (mounted) {
+                const isLoggin = await window.localStorage.getItem('bootcampAuthToken');
+
+                if (isLoggin !== null) {
+                    const tokenRemoveFirstChar = isLoggin.substr(1);
+                    const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+
+                    try {
+                        await axios.delete(`${URL}/reviews/${deletedReview}`, {
+                            headers: {
+                                'content-type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            }
+                        }).then(() => refreshBootcamp())
+                    } catch (e) {
+                        console.log('error:', e);
+                    }
+                }
+            }
+        };
+
+        if (id) {
+            loadData();
+        }
+
+        return () => {
+            mounted = false;
+        }
+    }, [deletedReview]);
 
     useEffect(() => {
         let mounted = true;
@@ -46,6 +85,8 @@ function ReviewsSingleBootcamp() {
                 const isLoggin = await window.localStorage.getItem('bootcampAuthToken');
 
                 try {
+                    setReloaded(false)
+
                     if (!bootcamp.name) {
                         response = await axios.get(`${URL}/bootcamps/${id}`);
 
@@ -53,14 +94,17 @@ function ReviewsSingleBootcamp() {
                             const tokenRemoveFirstChar = isLoggin.substr(1);
                             const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
 
-                            responseUsers = await axios.get(`${URL}/users`, {
-                                headers: {
-                                    'content-type': 'application/json',
-                                    'Authorization': `Bearer ${token}`
-                                }
-                            })
+                            try {
+                                responseUsers = await axios.get(`${URL}/users`, {
+                                    headers: {
+                                        'content-type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
+                                    }
+                                })
+                            } catch (e) {
+                                console.log('error:', e);
+                            }
                         }
-
                     }
 
                     if (!bootcamp.reviews && !bootcamp.length) {
@@ -91,7 +135,7 @@ function ReviewsSingleBootcamp() {
         return () => {
             mounted = false;
         }
-    }, [bootcamp.length, bootcamp.name, bootcamp.reviews, dispatch, id]);
+    }, [bootcamp.length, bootcamp.name, bootcamp.reviews, dispatch, id, reloaded]);
 
 
     if (bootcamp) {
@@ -105,11 +149,16 @@ function ReviewsSingleBootcamp() {
         const user = !!users.length && users.find(u => u._id === userId);
 
         if (user) {
+            // check if User have permission to delete Review
+
             return user.name
         }
     };
 
-    const handlerVisibleModal = visible => setModal1Visible(visible);
+    const handlerVisibleModal = async visible => {
+        await setModalVisible(visible);
+        await setEditedReview(false);
+    };
 
     const refreshBootcamp = () => {
         (async function () {
@@ -162,7 +211,10 @@ function ReviewsSingleBootcamp() {
 
                     if (responseUsers.data.success) {
                         await refreshBootcamp();
-                        await setModal1Visible(false)
+                        await setModalVisible(false);
+                        setRatingNewReview(0);
+                        setTitleNewReview(null);
+                        setTextNewReview(null);
                     }
                 }
             } catch (e) {
@@ -173,10 +225,46 @@ function ReviewsSingleBootcamp() {
         sendReview();
     };
 
-    const handlerChangeRatingReview = value => setRatingNewReview(value);
+    const handlerUpdateReview = () => {
+        const onEditReview = async () => {
+            const isLoggin = await window.localStorage.getItem('bootcampAuthToken');
 
-    console.log('single --- bootcamp ||||', bootcamp);
-    console.log(' --- getAllUsers ||||', users);
+            try {
+                if (isLoggin !== null) {
+                    const tokenRemoveFirstChar = isLoggin.substr(1);
+                    const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+
+                    const responseUsers = await axios.put(`${URL}/reviews/${editedReview._id}`, {
+                        "title": editedReview.title,
+                        "text": editedReview.text,
+                        "rating": editedReview.rating
+                    }, {
+                        headers: {
+                            'content-type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                    });
+
+                    if (responseUsers.data.success) {
+                        await refreshBootcamp();
+                        await setModalVisible(false);
+                        setRatingNewReview(0);
+                        setTitleNewReview(null);
+                        setTextNewReview(null);
+                    }
+                }
+            } catch (e) {
+                openNotificationWithIcon('warning', e.response.data.error);
+            }
+        };
+
+        onEditReview();
+    };
+
+    const handlerSetEditedReview = async review => {
+        await setEditedReview(review);
+        await setModalVisible(true);
+    };
 
     return (
         <div className="bootcamp-page">
@@ -196,45 +284,65 @@ function ReviewsSingleBootcamp() {
                             <h1>{bootcamp.name}</h1>
                             <hr/>
                         </>}
-
                         {middleRating && (
                             <span className="rating">
-                                <Tag color="green">Rating {middleRating.toFixed(2)}</Tag> <span
-                                style={{marginRight: 12}}>|</span>
+                                <Tag color="green">Rating {middleRating.toFixed(2)}</Tag>
+                                <span style={{marginRight: 12}}>|</span>
                             </span>)}
                         {bootcamp.name &&
                         <Button type="primary" onClick={() => handlerVisibleModal(true)}>Add new Review</Button>}
                     </Col>
 
-                    {bootcamp.reviews && !!bootcamp.reviews.length ? <Col span={24}>
-                        {bootcamp.reviews.map(review => (
-                            <div key={review._id} className="review">
-                                <header>{review.title}</header>
-                                <main>
-                                    <div className="rating">
-                                        <span>Rating:</span><Rate value={review.rating} count={10} disabled/>
-                                    </div>
-                                    {review.text && <div className="comment">{review.text}</div>}
-                                    {handlerGetAuthorReview(review.user) && <div className="author">Author: <b>{handlerGetAuthorReview(review.user)}</b></div>}
-                                </main>
-                            </div>
-                        ))}
-                    </Col> : bootcamp.name ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/> : <Col span={24}>
-                        <div className="__no-data">
-                            {emptyData}
-                            <h2>Sorry, but we didn't found any response in this page</h2>
-                            <Link to={`/`}>
-                                <Button type="primary">Go Home</Button>
-                            </Link>
-                        </div>
-                    </Col>}
+                    {bootcamp.reviews && !!bootcamp.reviews.length
+                        ? (<Col span={24}>
+                            {bootcamp.reviews.map(review => (
+                                <div key={review._id} className="review">
+                                    <header>
+                                        {review.title}
+                                        {me && me.id === review.user &&
+                                        <div>
+                                            <Button type="primary" onClick={() => handlerSetEditedReview(review)}
+                                                    style={{marginRight: 10}}>Edit
+                                                Review</Button>
+                                            <Button type="danger" onClick={() => setDeletedReview(review._id)}>Delete
+                                                Review</Button>
+                                        </div>
+                                        }
+                                    </header>
+                                    <main>
+                                        <div className="rating">
+                                            <span>Rating:</span><Rate value={review.rating} count={10} disabled/>
+                                        </div>
+                                        {review.text && <div className="comment">{review.text}</div>}
+                                        {handlerGetAuthorReview(review.user) &&
+                                        <div className="author">Author: <b>{handlerGetAuthorReview(review.user)}</b>
+                                        </div>}
+                                    </main>
+                                </div>
+                            ))}
+                        </Col>)
+                        :
+                        bootcamp.name
+                            ?
+                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+                            :
+                            (<Col span={24}>
+                                <div className="__no-data">
+                                    {emptyData}
+                                    <h2>Sorry, but we didn't found any response in this page</h2>
+                                    <Link to={`/`}>
+                                        <Button type="primary">Go Home</Button>
+                                    </Link>
+                                </div>
+                            </Col>)
+                    }
                 </Row>
             </div>
             <Modal
-                title={bootcamp.name ? `New Review for: ${bootcamp.name}` : 'New Review'}
+                title={bootcamp.name ? `${editedReview ? 'Edit review' : 'New review for'}: ${bootcamp.name}` : 'New Review'}
                 style={{top: 100}}
-                visible={modal1Visible}
-                onOk={handlerAddNewReview}
+                visible={modalVisible}
+                onOk={editedReview ? handlerUpdateReview : handlerAddNewReview}
                 onCancel={() => handlerVisibleModal(false)}
             >
                 <div className="review-modal">
@@ -243,7 +351,13 @@ function ReviewsSingleBootcamp() {
                             <b>Rating:</b>
                         </Col>
                         <Col span={18}>
-                            <Slider defaultValue={ratingNewReview} max={10} onChange={handlerChangeRatingReview}/>
+                            <Slider value={editedReview ? editedReview.rating : ratingNewReview}
+                                    max={10}
+                                    onChange={value => editedReview ? setEditedReview({
+                                        ...editedReview,
+                                        rating: value
+                                    }) : setRatingNewReview(value)}
+                            />
                         </Col>
                     </Row>
                     <Row type="flex">
@@ -252,7 +366,11 @@ function ReviewsSingleBootcamp() {
                         </Col>
                         <Col span={18}>
                             <Input placeholder="Add review title here..."
-                                   onChange={e => setTitleNewReview(e.target.value)}
+                                   onChange={e => editedReview ? setEditedReview({
+                                       ...editedReview,
+                                       title: e.target.value
+                                   }) : setTitleNewReview(e.target.value)}
+                                   value={editedReview ? editedReview.title : titleNewReview}
                             />
                         </Col>
                     </Row>
@@ -263,7 +381,11 @@ function ReviewsSingleBootcamp() {
                         <Col span={18}>
                             <TextArea rows={6}
                                       placeholder="Add your review here..."
-                                      onChange={e => setTextNewReview(e.target.value)}
+                                      onChange={e => editedReview ? setEditedReview({
+                                          ...editedReview,
+                                          text: e.target.value
+                                      }) : setTextNewReview(e.target.value)}
+                                      value={editedReview ? editedReview.text : textNewReview}
                             />
                         </Col>
                     </Row>

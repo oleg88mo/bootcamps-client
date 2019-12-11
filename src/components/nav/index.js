@@ -5,14 +5,13 @@ import axios from 'axios';
 import {Layout, Menu, Icon, Dropdown, Button, notification} from "antd";
 import {URL} from '../../configKey';
 // actions
-import {setUser, changeLang} from '../../redux/users/actions'
+import {setUser, changeLang, changePageName} from '../../redux/users/actions'
 
 function Nav(p) {
     const dispatch = useDispatch();
     const {Header} = Layout;
 
     const locale = p.locale;
-    const [activeMenu, setActiveMenu] = useState('1');
     const [isLoggin, setIsLoggin] = useState(null);
     const [isLoadingAuth, setIsLoadingAuth] = useState(false);
     const [name, setName] = useState(null);
@@ -63,7 +62,10 @@ function Nav(p) {
                     }
                 })
                 .catch(error => {
-                    openNotificationWithIcon('error', error.response.data.error)
+                    console.log('error.response', error);
+                    if (error) {
+                        openNotificationWithIcon('error', error.response.data.error)
+                    }
                 })
         }
     };
@@ -77,7 +79,10 @@ function Nav(p) {
         openNotificationWithIcon('error', error.response.data.error)
     });
 
-    const handlerMenuClick = item => setActiveMenu(item.key);
+    const handlerMenuClick = item => {
+        window.localStorage.setItem('bootcampPage', item.key);
+        dispatch(changePageName(item.key));
+    };
 
     const handlerChangeLocale = lang => dispatch(changeLang(lang));
 
@@ -96,7 +101,7 @@ function Nav(p) {
             <Menu
                 theme="dark"
                 mode="horizontal"
-                selectedKeys={[activeMenu]}
+                selectedKeys={[p.bootcampPage]}
                 style={{lineHeight: '50px'}}
                 onClick={(item) => handlerMenuClick(item)}
             >

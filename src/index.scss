@@ -397,6 +397,8 @@ h4 {
 
       .review {
         header {
+          display: flex;
+          justify-content: space-between;
           background-color: $GREY;
           padding: 8px 20px;
           font-size: 18px;
@@ -557,9 +559,37 @@ h4 {
   footer {
     text-align: right;
 
-    &>span {
+    & > span {
       display: block;
       margin-bottom: 10px;
+    }
+  }
+
+  .my-bootcamp {
+    height: 100%;
+
+    & > ul {
+      margin: 0;
+      padding: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: calc(100% - 60px);
+
+      li {
+        border-top: 1px solid $GREY;
+        padding-right: 5px;
+      }
+    }
+  }
+
+  .edit-bootcamp {
+    border-top: 1px solid $GREY_LIGHT;
+
+    .ant-upload.ant-upload-disabled {
+      .ant-btn {
+        pointer-events: none;
+        background-color: $GREY_LIGHT;
+      }
     }
   }
 

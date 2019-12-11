@@ -36,3 +36,7 @@ export function changeBootcampsFilterOption(payload) {
     return async dispatch => await dispatch({type: TYPES.BOOTCAMPS_CHANGE_FILTER_OPTION, payload})
 }
 
+export function setDisabledSearchForListComponent(payload) {
+    return async dispatch => await dispatch({type: TYPES.BOOTCAMPS_SET_DISABLED_SEARCH_PARAM_FOR_LIST_COMPONENT, payload})
+}
+

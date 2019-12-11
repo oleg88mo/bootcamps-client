@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Input, Select} from 'antd';
 import {setBootcampsFilter, clearBootcampsFilter, changeBootcampsFilterOption} from "../../../redux/bootcamps/actions";
 
-function DetailModeSearchByName() {
+function DetailModeSearchByName(p) {
     const dispatch = useDispatch();
 
     const filter = useSelector(state => state.Bootcamps.filter);
@@ -42,7 +42,7 @@ function DetailModeSearchByName() {
 
     return (
         <div className="price">
-            <p className='filter-label'>search by:</p>
+            {p.page !== 'home' && <p className='filter-label'>search by:</p>}
             <div className="price-container">
                 <Select
                     defaultValue={searchBy}

@@ -12,4 +12,16 @@ export function changeLang(payload) {
     return async dispatch => await dispatch({type: TYPES.CHANGE_LANG, payload})
 }
 
+export function changePageName(payload) {
+    return async dispatch => await dispatch({type: TYPES.CHANGE_PAGE_NAME, payload})
+}
+
+export function setMyBootcamps(payload) {
+    return async dispatch => await dispatch({type: TYPES.SET_MY_BOOTCAMPS, payload})
+}
+
+export function sortBootcamps(payload) {
+    return async dispatch => await dispatch({type: TYPES.SORT_BOOTCAMPS, payload})
+}
+
 

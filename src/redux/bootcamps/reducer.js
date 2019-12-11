@@ -11,7 +11,8 @@ const INIT_STATE = {
         }
     },
     singleBootcamp: [],
-    filter: []
+    filter: [],
+    disabledSearchParam: false
 };
 
 export default function bootcamps(state = INIT_STATE, {type, payload}) {
@@ -81,6 +82,12 @@ export default function bootcamps(state = INIT_STATE, {type, payload}) {
             return {
                 ...state,
                 singleBootcamp: []
+            };
+        }
+        case TYPES.BOOTCAMPS_SET_DISABLED_SEARCH_PARAM_FOR_LIST_COMPONENT: {
+            return {
+                ...state,
+                disabledSearchParam: payload
             };
         }
         case TYPES.BOOTCAMPS_CHANGE_FILTER_OPTION: {

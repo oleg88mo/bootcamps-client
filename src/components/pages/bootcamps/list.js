@@ -14,6 +14,7 @@ import EmptyList from './emptyList'
 import {
     setBootcampsReviewData,
     setBootcampsData,
+    setDisabledSearchForListComponent,
 } from '../../../redux/bootcamps/actions';
 
 const locales = {
@@ -27,6 +28,7 @@ function List() {
     const data = useSelector(state => state.Bootcamps.data);
     const totalCount = useSelector(state => state.Bootcamps.totalCount);
     const reviews = useSelector(state => state.Bootcamps.reviews);
+    const disabledSearchParam = useSelector(state => state.Bootcamps.disabledSearchParam);
     const lang = useSelector(state => state.Users.lang);
     const [pageSize, setPageSize] = useState(10);
     const [pageNumber, setPageNumber] = useState(1);
@@ -40,22 +42,6 @@ function List() {
                 let responseRating;
 
                 try {
-                    // name=Codemasters
-                    // averageCost[gte]=110000 >
-                    // averageCost[lte]=110000 <
-
-                    // 110000 ->    averageCost[gt]=120000  // 1 result
-                    // 120000 ->    averageCost[gt]=120000  // 0 result
-
-                    // 120000 ->    averageCost[lte]=120000  // 5 result
-                    // 120000 ->    averageCost[lt]=120000  // 4 result
-
-
-                    // 6340 ->    averageCost[in]=6340  // 1 result  ( === )
-
-
-                    // averageCost[gte]=110000&averageCost[lte]=120000 // 1 result
-
                     responseBootcamps = await axios.get(`${URL}/bootcamps?page=${pageNumber}&limit=${pageSize}`);
 
                     if (!reviews.length) {
@@ -75,8 +61,12 @@ function List() {
             }
         };
 
-        loadData();
-
+        if (!disabledSearchParam) {
+            loadData();
+        }
+        if (disabledSearchParam) {
+            dispatch(setDisabledSearchForListComponent(false));
+        }
         return () => {
             mounted = false;
         }
@@ -112,7 +102,6 @@ function List() {
         </div>
     );
 
-
     return (
         <div className="list">
             {data && data.length > 0
@@ -136,7 +125,8 @@ function List() {
                                         }
                                         <Link to={`/bootcamps/${bootcamp.slug}`}
                                               onClick={() => handlerSetBootcampId(bootcamp.id)}>
-                                            {bootcamp.photo !== 'no-photo.jpg' ? <img src={`${PHOTO_URL}/${bootcamp.photo}`}/> :
+                                            {bootcamp.photo !== 'no-photo.jpg' ?
+                                                <img src={`${PHOTO_URL}/${bootcamp.photo}`}/> :
                                                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
                                         </Link>
                                         <Link to={`/bootcamps/${bootcamp.slug}`}
@@ -156,6 +146,7 @@ function List() {
                         <ConfigProvider locale={locales.hasOwnProperty(lang) ? locales[lang] : locales.en}>
                             <Pagination
                                 showSizeChanger
+                                hideOnSinglePage
                                 showTotal={showTotal}
                                 onShowSizeChange={(e, item) => onShowSizeChange(item)}
                                 onChange={onChangePagination}

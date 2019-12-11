@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Icon, Row, Col} from 'antd';
+import {Button, Icon, Row, Col, Switch} from 'antd';
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {URL} from "../../../configKey";
@@ -10,6 +10,7 @@ import DetailModeRating from './mode-detail-rating';
 import DetailModeCareers from './mode-detail-careers';
 import DetailModeSearchByName from './mode-detail-search-by-name';
 import DetailModeWithCheckbox from './mode-detail-with-checkbox';
+import DetailModeSearchByRadius from './mode-detail-search-by-radius';
 
 function DetailMode(p) {
     const dispatch = useDispatch();
@@ -19,6 +20,12 @@ function DetailMode(p) {
     const [onSearch, setOnSearch] = useState(false);
     const [loaderSearch, setLoaderSearch] = useState(false);
     const [searchUrl, setSearchUrl] = useState('');
+    const [switchChecked, setSwitchChecked] = useState(false);
+    const [radiusSearchParam, setRadiusSearchParam] = useState({
+        zipCode: null,
+        distance: null
+    });
+    const [radiusSearch, setRadiusSearch] = useState(false);
 
     useEffect(() => {
         let mounted = true;
@@ -30,13 +37,6 @@ function DetailMode(p) {
                 try {
                     setLoaderSearch(true);
                     responseBootcamps = await axios.get(`${URL}/bootcamps?${searchUrl}`);
-
-                    // if (name) {
-                    //     await handlerCreatedUrl()
-                    //     responseBootcamps = await axios.get(`${URL}/bootcamps?page=1&limit=${pageSize}&averageCost[${priceFrom ? priceFrom.operator : 'gte'}]=${priceFrom ? priceFrom.values : '0'}&averageCost[${priceTo ? priceTo.operator : 'lte'}]=${priceTo ? priceTo.values : '0'}&name=${name.values}`);
-                    // } else {
-                    //     responseBootcamps = await axios.get(`${URL}/bootcamps?page=1&limit=${pageSize}&averageCost[${priceFrom ? priceFrom.operator : 'gte'}]=${priceFrom ? priceFrom.values : '0'}&averageCost[${priceTo ? priceTo.operator : 'lte'}]=${priceTo ? priceTo.values : '0'}`);
-                    // }
 
                     if (responseBootcamps && responseBootcamps.data.success) {
                         dispatch(setBootcampsData(responseBootcamps.data));
@@ -58,6 +58,39 @@ function DetailMode(p) {
             setOnSearch(false);
         }
     }, [onSearch]);
+
+    // search by Radius
+    useEffect(() => {
+        let mounted = true;
+
+        const loadData = async () => {
+            if (mounted) {
+                let responseBootcamps;
+
+                try {
+                    // setLoaderSearch(true);
+                    responseBootcamps = await axios.get(`${URL}/bootcamps/radius/${radiusSearchParam.zipCode}/${radiusSearchParam.distance}`);
+
+                    if (responseBootcamps && responseBootcamps.data.success) {
+                        dispatch(setBootcampsData(responseBootcamps.data));
+                        // setLoaderSearch(false);
+                    }
+                } catch (e) {
+                    // setLoaderSearch(false);
+                    console.log('error:', e);
+                }
+            }
+        };
+
+        if (radiusSearchParam.zipCode && radiusSearchParam.distance) {
+            loadData();
+        }
+
+        return () => {
+            mounted = false;
+            setRadiusSearch(false);
+        }
+    }, [radiusSearch]);
 
     let tempUrl;
 
@@ -101,33 +134,67 @@ function DetailMode(p) {
         await p.handlerVisibleSmallModeFilter(true);
     };
 
+    const changeSwitchChecked = val => setSwitchChecked(val);
+
+    const handlerClickFilterSearchWithRadius = () => setRadiusSearch(true);
+
+    const onChangeInputRadiusSearchParam = e => {
+        const {name, value} = e.target;
+
+        setRadiusSearchParam({
+            ...radiusSearchParam,
+            [name]: value ? value : null
+        });
+    };
+
     return (
         <div className="detail-mode">
             {loaderSearch && <p>Loading...</p>}
+
             <div className="panel">
                 <h3>Filter</h3>
                 <Icon type="close-circle" onClick={() => p.handlerVisibleSmallModeFilter(true)}/>
             </div>
             <Row type="flex">
-                <Col span={8}>
-                    <DetailModeSearchByName/>
-                </Col>
-                <Col span={8}>
-                    <DetailModePrice/>
-                </Col>
-                <Col span={8}>
-                    <DetailModeRating/>
-                </Col>
-                <Col span={8}>
-                    <DetailModeWithCheckbox/>
-                </Col>
-                <Col span={8}>
-                    <DetailModeCareers/>
+                <Col span={24}>
+                    <Switch onChange={changeSwitchChecked} checked={switchChecked}/> Search by ZipCode & Radius
                 </Col>
             </Row>
+            {!switchChecked ?
+                <Row type="flex">
+                    <Col span={8}>
+                        <DetailModeSearchByName/>
+                    </Col>
+                    <Col span={8}>
+                        <DetailModePrice/>
+                    </Col>
+                    <Col span={8}>
+                        <DetailModeRating/>
+                    </Col>
+                    <Col span={8}>
+                        <DetailModeWithCheckbox/>out
+                    </Col>
+                    <Col span={8}>
+                        <DetailModeCareers/>
+                    </Col>
+                </Row>
+
+                :
+                <Row type="flex">
+                    <Col span={24}>
+                        <DetailModeSearchByRadius onChangeInputRadiusSearchParam={onChangeInputRadiusSearchParam}/>
+                    </Col>
+                </Row>
+            }
             <footer>
-                <Button type="primary" onClick={handlerClickFilterSearch} disabled={!filter.length}>Filter
-                    Search</Button>
+                {!switchChecked ?
+                    <Button type="primary" onClick={handlerClickFilterSearch} disabled={!filter.length}>Filter
+                        Search</Button>
+                    :
+                    <Button type="primary" onClick={handlerClickFilterSearchWithRadius}
+                            disabled={!radiusSearchParam.zipCode || !radiusSearchParam.distance}>Filter Search
+                        2</Button>
+                }
             </footer>
         </div>
     );

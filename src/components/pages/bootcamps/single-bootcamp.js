@@ -7,7 +7,7 @@ import Pin from '../../../components/img/pin.png'
 import {computer, check, checkCancel} from '../../../components/img/iconSvg'
 import {PageHeader, Row, Col, Empty, Collapse, Icon, Tag, Skeleton, Button} from 'antd';
 import {bootcampRatind} from '../../utils/usedFunctions'
-import {mapBoxKey, URL} from '../../../configKey';
+import {mapBoxKey, PHOTO_URL, URL} from '../../../configKey';
 
 // actions
 import {
@@ -29,7 +29,7 @@ function SingleBootcapm() {
 
     const dispatch = useDispatch();
     const bootcamp = useSelector(state => state.Bootcamps.singleBootcamp);
-    const user = useSelector(state => state.Users.me);
+    // const user = useSelector(state => state.Users.me);
 
     useEffect(() => {
         let mounted = true;
@@ -132,7 +132,7 @@ function SingleBootcapm() {
         await history.push("/bootcamps");
     };
 
-    console.log('single --- bootcamp', bootcamp);
+    // console.log('single --- bootcamp', bootcamp);
 
     return (
         <div className="bootcamp-page">
@@ -185,16 +185,11 @@ function SingleBootcapm() {
                             </div> : null}
                     </Col>
                     <Col span={8} className="column-right">
-                        {bootcamp.photo !== 'no-photo.jpg' ? <img src={bootcamp.photo} alt={bootcamp.name}/> :
+                        {bootcamp.photo !== 'no-photo.jpg' ? <img src={`${PHOTO_URL}/${bootcamp.photo}`} alt={bootcamp.name}/>  :
                             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
 
                         {bootcamp.averageCost && <>
                             <h2>Average Course Cost: ${bootcamp.averageCost} USD</h2>
-                            <hr/>
-                        </>}
-
-                        {user && user.role === 'admin' && <>
-                            <Button type="primary">Create Course For this Bootcamp</Button>
                             <hr/>
                         </>}
 
