@@ -16,7 +16,7 @@ function AddNewCourseForBootcamp(p) {
     const myBootcamps = useSelector(state => state.Users.myBootcamps);
 
     const [loading, setLoading] = useState(false);
-    const [disabled, setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(true);
     const [selectedBootcamp, setSelectedBootcamp] = useState(false);
 
     const [reloadedData, setReloadedData] = useState(false);
@@ -28,7 +28,6 @@ function AddNewCourseForBootcamp(p) {
             if (mounted) {
                 try {
                     let responseBootcamps;
-
                     responseBootcamps = await axios.get(`${URL}/bootcamps?page=1&user=${id}`);
 
                     if (responseBootcamps && responseBootcamps.data.success) {
@@ -79,6 +78,7 @@ function AddNewCourseForBootcamp(p) {
 
                         return obj;
                     };
+
                     const data = removeEmpty(values);
 
                     data && axios.post(`${URL}/bootcamps/${selectedBootcamp}/courses`, data, {
@@ -104,7 +104,10 @@ function AddNewCourseForBootcamp(p) {
     };
     const handlerReset = () => p.form.resetFields();
 
-    const handlerChangeBootcamp = value => setSelectedBootcamp(value);
+    const handlerChangeBootcamp = value => {
+        setSelectedBootcamp(value);
+        setDisabled(false);
+    };
 
     return (
         <div className="new-course-for-bootcamp">
@@ -186,7 +189,7 @@ function AddNewCourseForBootcamp(p) {
                             loading={loading}
                             disabled={hasErrors(getFieldsError()) || disabled}
                     >
-                        Add New Bootcamp
+                        Add New Course
                     </Button>
                 </footer>
             </Form>

@@ -7,7 +7,7 @@ import {setMyBootcamps, sortBootcamps} from "../../../redux/users/actions";
 // components
 import EditBootcamp from './edit-bootcamp';
 
-function MyBootcamp() {
+function MyBootcamps() {
     const dispatch = useDispatch();
 
     const {id} = useSelector(state => state.Users.me);
@@ -39,7 +39,7 @@ function MyBootcamp() {
             }
         };
 
-        if (id && !myBootcamps) {
+        if (id) {
             loadData();
         }
 
@@ -110,6 +110,11 @@ function MyBootcamp() {
         }
     };
 
+    const handlerReloadBootcamp = () => {
+        setReloadedData(true);
+        setEditedBootcampId(null);
+    };
+
     return (
         <div className="my-bootcamp">
             <h1>My Bootcamp List</h1>
@@ -156,8 +161,7 @@ function MyBootcamp() {
                         {editedBootcampId && editedBootcampId === b.id && (
                             <EditBootcamp
                                 element={b}
-                                setEditedBootcampId={setEditedBootcampId}
-                                setReloadedData={setReloadedData}
+                                handlerReloadBootcamp={handlerReloadBootcamp}
                             />)
                         }
                     </li>
@@ -167,4 +171,4 @@ function MyBootcamp() {
     )
 }
 
-export default MyBootcamp;
+export default MyBootcamps;

@@ -334,20 +334,20 @@ h4 {
   .dashboard footer > span {
     display: block;
     margin-bottom: 10px; }
-.dashboard .my-bootcamp {
+.dashboard .my-bootcamp, .dashboard .my-course {
   height: 100%; }
-  .dashboard .my-bootcamp > ul {
+  .dashboard .my-bootcamp > ul, .dashboard .my-course > ul {
     margin: 0;
     padding: 0;
     overflow-y: auto;
     overflow-x: hidden;
     height: calc(100% - 60px); }
-    .dashboard .my-bootcamp > ul li {
+    .dashboard .my-bootcamp > ul li, .dashboard .my-course > ul li {
       border-top: 1px solid #bbb;
       padding-right: 5px; }
-.dashboard .edit-bootcamp {
+.dashboard .edit-bootcamp, .dashboard .edit-course {
   border-top: 1px solid #f9f9f9; }
-  .dashboard .edit-bootcamp .ant-upload.ant-upload-disabled .ant-btn {
+  .dashboard .edit-bootcamp .ant-upload.ant-upload-disabled .ant-btn, .dashboard .edit-course .ant-upload.ant-upload-disabled .ant-btn {
     pointer-events: none;
     background-color: #f9f9f9; }
 

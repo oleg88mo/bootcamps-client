@@ -4,7 +4,9 @@ const INIT_STATE = {
     data: [],
     me: null,
     myBootcamps: null,
+    myCourses: null,
     sort: 'DESC',
+    sortCourses: 'DESC',
     lang: 'ua',
     bootcampPage: '1'
 };
@@ -40,7 +42,7 @@ export default function users(state = INIT_STATE, {type, payload}) {
             return {
                 ...state,
                 myBootcamps: {
-                    data: payload.data.sort((a, b) => {
+                    data: payload.data && payload.data.sort((a, b) => {
                         const resA = a.name.toLowerCase();
                         const resB = b.name.toLowerCase();
 
@@ -70,6 +72,45 @@ export default function users(state = INIT_STATE, {type, payload}) {
                 ...state,
                 myBootcamps: {
                     ...state.myBootcamps,
+                    data: sortedData
+                },
+                sort: payload
+            };
+        }
+        case TYPES.SET_MY_COURSES: {
+            return {
+                ...state,
+                myCourses: {
+                    data: payload.data[0].courses && payload.data[0].courses.sort((a, b) => {
+                        const resA = a.title.toLowerCase();
+                        const resB = b.title.toLowerCase();
+
+                        return resA > resB ? 1 : resA === resB ? 0 : -1;
+                    }),
+                    totalCount: payload.totalCount,
+                    pagination: payload.pagination
+                }
+            };
+        }
+        case TYPES.SORT_COURSES: {
+            const sortedData = [...state.myCourses.data.sort((a, b) => {
+                let nameA = a.title.toUpperCase();
+                let nameB = b.title.toUpperCase();
+
+                if (nameA < nameB) {
+                    return payload === 'DESC' ? -1 : 1;
+                }
+                if (nameA > nameB) {
+                    return payload === 'DESC' ? 1 : -1;
+                }
+
+                return 0;
+            })];
+
+            return {
+                ...state,
+                myCourses: {
+                    ...state.myCourses,
                     data: sortedData
                 },
                 sort: payload

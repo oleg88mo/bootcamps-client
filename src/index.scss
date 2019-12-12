@@ -565,7 +565,7 @@ h4 {
     }
   }
 
-  .my-bootcamp {
+  .my-bootcamp, .my-course {
     height: 100%;
 
     & > ul {
@@ -582,7 +582,7 @@ h4 {
     }
   }
 
-  .edit-bootcamp {
+  .edit-bootcamp, .edit-course {
     border-top: 1px solid $GREY_LIGHT;
 
     .ant-upload.ant-upload-disabled {

@@ -24,4 +24,12 @@ export function sortBootcamps(payload) {
     return async dispatch => await dispatch({type: TYPES.SORT_BOOTCAMPS, payload})
 }
 
+export function setMyCourses(payload) {
+    return async dispatch => await dispatch({type: TYPES.SET_MY_COURSES, payload})
+}
+
+export function sortCourses(payload) {
+    return async dispatch => await dispatch({type: TYPES.SORT_COURSES, payload})
+}
+
 

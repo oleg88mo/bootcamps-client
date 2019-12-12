@@ -40,12 +40,11 @@ function EditBootcamp(p) {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-                    .then(response => {
+                    .then(() => {
+                        p.handlerReloadBootcamp()
                         setLoading(false);
                         setDisabled(false);
                         openNotificationWithIcon('success', 'Bootcamp was updated');
-                        p.setEditedBootcampId(null);
-                        p.setReloadedData(true);
                     })
                     .catch(error => {
                         openNotificationWithIcon('error', error.response.data.error);

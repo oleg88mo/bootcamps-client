@@ -34,11 +34,10 @@ class Dashboard extends Component {
                             title={<span><Icon type="user"/><span>Bootcamp</span></span>}
                         >
                             <Menu.Item key="222">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'add-new-bootcamp')}>Add New
-                                    Bootcamp</a>
+                                <a onClick={(e) => this.handlerRenderComponent(e, 'add-new-bootcamp')}>Add New Bootcamp</a>
                             </Menu.Item>
                             <Menu.Item key="222-222">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'my-bootcamp')}>My Bootcamp</a>
+                                <a onClick={(e) => this.handlerRenderComponent(e, 'my-bootcamps')}>My Bootcamps</a>
                             </Menu.Item>
                         </SubMenu>
                         <SubMenu
@@ -46,11 +45,10 @@ class Dashboard extends Component {
                             title={<span><Icon type="user"/><span>Courses</span></span>}
                         >
                             <Menu.Item key="sub2-1">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'add-new-course')}>Add New Course For
-                                    Bootcamp</a>
+                                <a onClick={(e) => this.handlerRenderComponent(e, 'add-new-course')}>Add New Course For Bootcamp</a>
                             </Menu.Item>
                             <Menu.Item key="sub2-2">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'my-bootcamp')}>My Courses</a>
+                                <a onClick={(e) => this.handlerRenderComponent(e, 'my-courses')}>My Courses</a>
                             </Menu.Item>
                         </SubMenu>
                         <Menu.Item key="3" onClick={() => this.handlerRenderComponent(null, 'my-information')}>
