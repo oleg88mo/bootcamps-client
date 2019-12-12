@@ -1,18 +1,17 @@
 import React, {useState} from "react";
 import axios from 'axios';
-import {Row, Col, Form, Input, Icon, Button, Select, notification} from 'antd';
+import {Row, Col, Form, Input, Button, Select, notification} from 'antd';
 import {URL} from '../../../configKey';
 import UpdatePassword from './updatePassword';
+import {useSelector} from "react-redux";
 
 function MyInformation(p) {
     const {getFieldDecorator, getFieldsError} = p.form;
-    const {Option} = Select;
-
+    const me = useSelector(state => state.Users.me);
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
-
+    const [userInformation, setUserInformation] = useState(me);
     const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
-
     const openNotificationWithIcon = (type, description) => {
         notification[type]({
             message: 'Create New Bootcamp',
@@ -40,7 +39,7 @@ function MyInformation(p) {
                 };
                 const data = removeEmpty(values);
 
-                data && axios.post(`${URL}/bootcamps`, data, {
+                data && axios.put(`${URL}/users/${userInformation.id}`, data, {
                     headers: {
                         'content-type': 'application/json',
                         'Authorization': `Bearer ${token}`
@@ -49,8 +48,7 @@ function MyInformation(p) {
                     .then(response => {
                         setLoading(false);
                         setDisabled(false);
-                        openNotificationWithIcon('success', 'Bootcamp created');
-                        handlerReset();
+                        openNotificationWithIcon('success', 'User Information was updated');
                     })
                     .catch(error => {
                         openNotificationWithIcon('error', error.response.data.error);
@@ -60,7 +58,6 @@ function MyInformation(p) {
             }
         });
     };
-    const handlerReset = () => p.form.resetFields();
 
     return (
         <div>
@@ -70,42 +67,45 @@ function MyInformation(p) {
                 <Row type="flex">
                     <Col span={24}>
                         <Form.Item label="role">
-                            <Select placeholder="Please select a Careers" disabled/>
-                        </Form.Item>
-                        <Form.Item label="name">
-                            {getFieldDecorator('name', {
-                                rules: [
-                                    {
-                                        type: 'name',
-                                        message: 'The input name .....',
-                                    }
-                                ],
-                                // initialValue: elementState.email,
-                            })(
-                                <Input
-                                    prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="name"
-                                    // onChange={(e) => setElementState({
-                                    //     ...elementState,
-                                    //     'email': e.target.value
-                                    // })}
-                                />,
-                            )}
-                        </Form.Item>
-                        <Form.Item label="email">
-                            <Input
-                                prefix={<Icon type="email" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                placeholder="email"
+                            <Select
+                                placeholder="Please select a Careers"
+                                disabled
+                                value={userInformation.role && userInformation.role}
                             />
+                        </Form.Item>
+                        <Form.Item label="Name">
+                            {getFieldDecorator('name', {
+                                rules: [{required: true, message: 'Please input your name!'}],
+                                initialValue: userInformation.name,
+                            })(<Input
+                                onChange={(e) => setUserInformation({
+                                    ...userInformation,
+                                    'name': e.target.value
+                                })}
+                            />)}
+                        </Form.Item>
+                        <Form.Item label="E-mail">
+                            {getFieldDecorator('email', {
+                                rules: [
+                                    {type: 'email', message: 'The input is not valid E-mail!'},
+                                    {required: true, message: 'Please input your E-mail!'},
+                                ],
+                                initialValue: userInformation.email,
+                            })(<Input
+                                onChange={(e) => setUserInformation({
+                                    ...userInformation,
+                                    'email': e.target.value
+                                })}
+                            />)}
                         </Form.Item>
                     </Col>
                 </Row>
                 <footer>
-                    <Button style={{marginRight: 8}} onClick={handlerReset}>Clear</Button>
-                    <Button type="primary"
-                            htmlType="submit"
-                            loading={loading}
-                            disabled={hasErrors(getFieldsError()) || disabled}
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={loading}
+                        disabled={hasErrors(getFieldsError()) || disabled}
                     >
                         Update Information
                     </Button>
@@ -119,5 +119,4 @@ function MyInformation(p) {
 }
 
 const WrappedNormalLoginForm = Form.create({name: 'normal_login'})(MyInformation);
-
 export default WrappedNormalLoginForm;
