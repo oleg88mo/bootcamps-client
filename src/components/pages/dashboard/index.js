@@ -1,84 +1,97 @@
-import React, {Component} from "react";
+import React, {useState} from "react";
 import {Layout, Menu, Icon} from 'antd';
+// components
 import RenderComponents from './renderComponents';
 
-const {Header, Sider, Content} = Layout;
-const {SubMenu} = Menu;
+function Dashboard({locale}) {
+    const {Header, Sider, Content} = Layout;
+    const {SubMenu} = Menu;
+    const [collapsed, setCollapsed] = useState(false);
+    const [componentName, setComponentName] = useState('add-new-bootcamp');
 
-class Dashboard extends Component {
-    state = {
-        collapsed: false,
-        componentName: 'add-new-bootcamp'
-    };
+    const toggle = () => setCollapsed(!collapsed);
 
-    toggle = () => this.setState({collapsed: !this.state.collapsed});
-
-    handlerRenderComponent = (e, componentName) => {
+    const handlerRenderComponent = (e, onSetComponentName) => {
         e && e.preventDefault();
 
-        this.setState({componentName})
+        setComponentName(onSetComponentName)
     };
 
-    render() {
-        return (
-            <Layout className="dashboard">
-                <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-                    <Menu
-                        theme="dark"
-                        mode="inline"
-                        defaultSelectedKeys={['222']}
-                        defaultOpenKeys={['sub1']}
-                    >
-                        <SubMenu
-                            key="sub1"
-                            title={<span><Icon type="user"/><span>Bootcamp</span></span>}
-                        >
-                            <Menu.Item key="222">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'add-new-bootcamp')}>Add New Bootcamp</a>
-                            </Menu.Item>
-                            <Menu.Item key="222-222">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'my-bootcamps')}>My Bootcamps</a>
-                            </Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="sub2"
-                            title={<span><Icon type="user"/><span>Courses</span></span>}
-                        >
-                            <Menu.Item key="sub2-1">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'add-new-course')}>Add New Course For Bootcamp</a>
-                            </Menu.Item>
-                            <Menu.Item key="sub2-2">
-                                <a onClick={(e) => this.handlerRenderComponent(e, 'my-courses')}>My Courses</a>
-                            </Menu.Item>
-                        </SubMenu>
-                        <Menu.Item key="3" onClick={() => this.handlerRenderComponent(null, 'my-information')}>
+    return (
+        <Layout className="dashboard">
+            <Sider
+                trigger={null}
+                collapsible
+                collapsed={collapsed}
+                width={260}
+            >
+                <Menu
+                    theme="dark"
+                    mode="inline"
+                    defaultSelectedKeys={['addNewBootcamp']}
+                    defaultOpenKeys={['sub1']}
+                >
+                    <SubMenu
+                        key="sub1"
+                        title={<span>
                             <Icon type="user"/>
-                            <span>Me</span>
-                        </Menu.Item>
-                    </Menu>
-                </Sider>
-                <Layout>
-                    <Header style={{background: '#fff', padding: 0}}>
-                        <Icon
-                            className="trigger"
-                            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                            onClick={this.toggle}
-                        />
-                    </Header>
-                    <Content
-                        style={{
-                            margin: '24px 16px',
-                            padding: 24,
-                            background: '#fff',
-                            minHeight: 280,
-                        }}
+                            <span>Bootcamp</span>
+                        </span>}
                     >
-                        <RenderComponents componentName={this.state.componentName}/>
-                    </Content>
-                </Layout>
+                        <Menu.Item key="addNewBootcamp">
+                            <a onClick={(e) => handlerRenderComponent(e, 'add-new-bootcamp')}>{locale.add_new_bootcamp} Bootcamp</a>
+                        </Menu.Item>
+                        <Menu.Item key="myBootcamps">
+                            <a onClick={(e) => handlerRenderComponent(e, 'my-bootcamps')}>{locale.my_bootcamps} Bootcamps</a>
+                        </Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                        key="sub2"
+                        title={<span>
+                            <Icon type="user"/>
+                            <span>Courses</span>
+                        </span>}
+                    >
+                        <Menu.Item key="addNewCourse">
+                            <a onClick={(e) => handlerRenderComponent(e, 'add-new-course')}>{locale.add_new_course} Course {locale.add_new_course_for} Bootcamp</a>
+                        </Menu.Item>
+                        <Menu.Item key="myCourses">
+                            <a onClick={(e) => handlerRenderComponent(e, 'my-courses')}>{locale.my_courses} Courses</a>
+                        </Menu.Item>
+                    </SubMenu>
+                    <Menu.Item
+                        key="myInformation"
+                        onClick={() => handlerRenderComponent(null, 'my-information')}
+                    >
+                        <Icon type="user"/>
+                        <span>{locale.my_information}</span>
+                    </Menu.Item>
+                </Menu>
+            </Sider>
+            <Layout>
+                <Header style={{background: '#fff', padding: 0}}>
+                    <Icon
+                        className="trigger"
+                        type={collapsed ? 'menu-unfold' : 'menu-fold'}
+                        onClick={toggle}
+                    />
+                </Header>
+                <Content
+                    style={{
+                        margin: '24px 16px',
+                        padding: 24,
+                        background: '#fff',
+                        minHeight: 280,
+                    }}
+                >
+                    <RenderComponents
+                        componentName={componentName}
+                        locale={locale}
+                    />
+                </Content>
             </Layout>
-        )
-    }
+        </Layout>
+    )
 }
 
 export default Dashboard;

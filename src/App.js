@@ -43,8 +43,8 @@ function App() {
                             <Route path="/login" component={Login}/>
                             <Route path="/register" component={Register}/>
 
-                            <Protected exact path="/dashboard"/>
-                            <Route component={PageNotFound}/>
+                            <Protected exact path="/dashboard" locale={Locale.Locales[locale]}/>
+                            <Route component={() => <PageNotFound locale={Locale.Locales[locale]}/>}/>
                         </Switch>
                     </div>
                 </Content>

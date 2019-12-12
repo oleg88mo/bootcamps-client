@@ -4,6 +4,7 @@ import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, notification} fro
 import {URL} from '../../../configKey';
 
 function AddNewBootcamp(p) {
+    const {locale} = p;
     const {getFieldDecorator, getFieldsError} = p.form;
     const {Option} = Select;
     const {TextArea} = Input;
@@ -15,7 +16,7 @@ function AddNewBootcamp(p) {
 
     const openNotificationWithIcon = (type, description) => {
         notification[type]({
-            message: 'Create New Bootcamp',
+            message: locale.create_new_bootcamp,
             description
         });
     };
@@ -38,6 +39,7 @@ function AddNewBootcamp(p) {
 
                     return obj;
                 };
+
                 const data = removeEmpty(values);
 
                 data && axios.post(`${URL}/bootcamps`, data, {
@@ -46,10 +48,10 @@ function AddNewBootcamp(p) {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-                    .then(response => {
+                    .then(() => {
                         setLoading(false);
                         setDisabled(false);
-                        openNotificationWithIcon('success', 'Bootcamp created');
+                        openNotificationWithIcon('success', `Bootcamp ${locale.bootcamp_was_created}`);
                         handlerReset();
                     })
                     .catch(error => {
@@ -64,51 +66,51 @@ function AddNewBootcamp(p) {
 
     return (
         <div>
-            <h1>Add Bootcamp</h1>
-            <h3>Important: You must be affiliated with a bootcamp to add to DevCamper</h3>
+            <h1>{locale.add_new_bootcamp} Bootcamp</h1>
+            <h3>{locale.add_new_bootcamp_important}</h3>
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">
                     <Col span={12}>
-                        <Form.Item label="Name">
+                        <Form.Item label={locale.name}>
                             {getFieldDecorator('name', {
-                                rules: [{required: true, message: 'Please input your name!'}],
+                                rules: [{required: true, message: locale.message_enter_name}],
                             })(
                                 <Input
                                     prefix={<Icon type="highlight" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="Name"
+                                    placeholder={locale.enter_name}
                                 />,
                             )}
                         </Form.Item>
-                        <Form.Item label="Address">
+                        <Form.Item label={locale.address}>
                             {getFieldDecorator('address', {
-                                rules: [{required: true, message: 'Please input your address!'}],
+                                rules: [{required: true, message: locale.message_enter_address}],
                             })(
                                 <Input
                                     prefix={<Icon type="home" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="address"
+                                    placeholder={locale.enter_address}
                                 />,
                             )}
                         </Form.Item>
-                        <Form.Item label="Website">
+                        <Form.Item label={locale.website}>
                             {getFieldDecorator('website')(
                                 <Input
                                     prefix={<Icon type="global" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="Website"
+                                    placeholder={locale.enter_website}
                                 />,
                             )}
                         </Form.Item>
-                        <Form.Item label="Email">
+                        <Form.Item label={locale.email}>
                             {getFieldDecorator('email', {
                                 rules: [
                                     {
                                         type: 'email',
-                                        message: 'The input is not valid E-mail!',
+                                        message: locale.not_valid_email,
                                     }
                                 ],
                             })(
                                 <Input
                                     prefix={<Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="Email"
+                                    placeholder={locale.enter_email}
                                 />,
                             )}
                         </Form.Item>
@@ -116,72 +118,78 @@ function AddNewBootcamp(p) {
                             {getFieldDecorator('housing', {
                                 initialValue: false
                             })(
-                                <Checkbox>Housing</Checkbox>
+                                <Checkbox>{locale.housing}</Checkbox>
                             )}
                         </Form.Item>
                         <Form.Item>
                             {getFieldDecorator('jobAssistance', {
                                 initialValue: false
                             })(
-                                <Checkbox>Job Assistance</Checkbox>
+                                <Checkbox>{locale.job_assistance}</Checkbox>
                             )}
                         </Form.Item>
                         <Form.Item>
                             {getFieldDecorator('jobGuarantee', {
                                 initialValue: false
                             })(
-                                <Checkbox>Job Guarantee</Checkbox>
+                                <Checkbox>{locale.job_guarantee}</Checkbox>
                             )}
                         </Form.Item>
                         <Form.Item>
                             {getFieldDecorator('acceptGi', {
                                 initialValue: false
                             })(
-                                <Checkbox>Accepts GI Bill</Checkbox>
+                                <Checkbox>{locale.accepts_gi_bill}</Checkbox>
                             )}
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Careers" hasFeedback>
+                        <Form.Item
+                            label={locale.careers}
+                            hasFeedback
+                        >
                             {getFieldDecorator('careers', {
-                                rules: [{required: true, message: 'Please select your country!'}],
+                                rules: [{required: true, message: locale.message_enter_careers}],
                             })(
-                                <Select placeholder="Please select a Careers" mode="tags">
+                                <Select
+                                    placeholder={locale.select_careers}
+                                    mode="tags"
+                                >
                                     <Option value="Web Development">Web Development</Option>
                                     <Option value="Mobile Development">Mobile Development</Option>
                                     <Option value="UI/UX">UI/UX</Option>
                                     <Option value="Data Science">Data Science</Option>
                                     <Option value="Business">Business</Option>
-                                    <Option value="Other">Other</Option>
+                                    <Option value="Other">{locale.other}</Option>
                                 </Select>,
                             )}
                         </Form.Item>
-                        <Form.Item label="Phone">
+                        <Form.Item label={locale.phone}>
                             {getFieldDecorator('phone')(
                                 <Input
                                     prefix={<Icon type="phone" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="Phone"
+                                    placeholder={locale.enter_phone}
                                 />,
                             )}
                         </Form.Item>
-                        <Form.Item label="Description">
+                        <Form.Item label={locale.description}>
                             {getFieldDecorator('description', {
-                                rules: [{required: true, message: 'Please input your description!'}],
+                                rules: [{required: true, message: locale.message_enter_description}],
                             })(
-                                <TextArea rows={5} placeholder="Enter your Description here..."/>,
+                                <TextArea rows={5} placeholder={locale.enter_description}/>,
                             )}
                         </Form.Item>
                     </Col>
                 </Row>
                 <footer>
-                    <span>*After you add the bootcamp, you can add the specific courses offered</span>
-                    <Button style={{marginRight: 8}} onClick={handlerReset}>Clear</Button>
+                    <span>*{locale.after_add_bootcamp}</span>
+                    <Button style={{marginRight: 8}} onClick={handlerReset}>{locale.clear}</Button>
                     <Button type="primary"
                             htmlType="submit"
                             loading={loading}
                             disabled={hasErrors(getFieldsError()) || disabled}
                     >
-                        Add New Bootcamp
+                        {locale.add_new_bootcamp} Bootcamp
                     </Button>
                 </footer>
             </Form>
@@ -190,5 +198,4 @@ function AddNewBootcamp(p) {
 }
 
 const WrappedNormalLoginForm = Form.create({name: 'normal_login'})(AddNewBootcamp);
-
 export default WrappedNormalLoginForm;

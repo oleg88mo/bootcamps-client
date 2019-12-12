@@ -72,10 +72,11 @@ class Login extends Component {
                         </Form.Item>
                         <Form.Item className="full-center">
                             <Button className="login-form-forgot">Forgot password?</Button>
-                            <Button type="primary"
-                                    htmlType="submit"
-                                    disabled={loading}
-                                    className="login-form-button"
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                disabled={loading}
+                                className="login-form-button"
                             >
                                 {loading ?
                                     <Icon type="loading"/> :
@@ -90,5 +91,4 @@ class Login extends Component {
 }
 
 const WrappedNormalLoginForm = Form.create({name: 'normal_login'})(Login);
-
 export default WrappedNormalLoginForm;

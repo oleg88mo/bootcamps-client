@@ -7,7 +7,7 @@ import {setMyBootcamps, sortBootcamps} from "../../../redux/users/actions";
 // components
 import EditBootcamp from './edit-bootcamp';
 
-function MyBootcamps() {
+function MyBootcamps({locale}) {
     const dispatch = useDispatch();
 
     const {id} = useSelector(state => state.Users.me);
@@ -64,8 +64,8 @@ function MyBootcamps() {
             }).then(res => {
                 setReloadedData(true);
                 notification['success']({
-                    message: 'Delete Bootcamp',
-                    description: 'Bootcamp was successful deleted!'
+                    message: `${locale.delete_bootcamp} Bootcamp`,
+                    description: `Bootcamp ${locale.delete_bootcamp_was_successful}!`
                 });
             });
         } catch (e) {
@@ -102,7 +102,7 @@ function MyBootcamps() {
                     setReloadedData(true);
                     setUploadPhotoId(null);
                     setCurrentFile(null);
-                    message.success(`${currentFile.name} file uploaded successfully`);
+                    message.success(`${currentFile.name} ${locale.file_uploaded_successfully}`);
                 })
                 .catch(e => console.log('e', e))
         } catch (e) {
@@ -117,13 +117,13 @@ function MyBootcamps() {
 
     return (
         <div className="my-bootcamp">
-            <h1>My Bootcamp List</h1>
+            <h1>{locale.my_bootcamps} Bootcamps</h1>
             <Button
                 type="default"
                 onClick={handlerSort}
                 style={{marginBottom: 15}}
             >
-                {sort === 'ASC' ? <Icon type="sort-ascending"/> : <Icon type="sort-descending"/>} Sort by name
+                {sort === 'ASC' ? <Icon type="sort-ascending"/> : <Icon type="sort-descending"/>} {locale.sort_by_name}
             </Button>
             <ul>
                 {myBootcamps && myBootcamps.data && myBootcamps.data.map(b => (
@@ -143,25 +143,34 @@ function MyBootcamps() {
                                        onChange={(e) => handleChangeFile(e, b.id)}
                                 />
                                 {currentFile === null &&
-                                <label htmlFor={`photo-${b.id}`}><Icon type="upload"/> Select photo...</label>}
+                                <label htmlFor={`photo-${b.id}`}><Icon type="upload"/> {locale.select_photo}...</label>}
                                 {uploadPhotoId === b.id &&
-                                <Button onClick={() => handlerUploadPhoto(b.id)}>Upload ({currentFile.name})</Button>}
+                                <Button
+                                    onClick={() => handlerUploadPhoto(b.id)}>{locale.upload} ({currentFile.name})</Button>}
                             </Col>
                             <Col span={16}>
                                 <h3>{b.name}</h3>
                                 <div>{b.description}</div>
                             </Col>
                             <Col span={5}>
-                                <Button type="primary" block onClick={() => setEditedBootcampId(b.id)}>Edit
-                                    Bootcamp</Button>
-                                <Button type="danger" block style={{marginTop: 10}}
-                                        onClick={() => deleteBootcamp(b.id)}>Delete Bootcamp</Button>
+                                <Button
+                                    type="primary"
+                                    block
+                                    onClick={() => setEditedBootcampId(b.id)}
+                                >{locale.edit_new_bootcamp} Bootcamp</Button>
+                                <Button
+                                    type="danger"
+                                    block
+                                    style={{marginTop: 10}}
+                                    onClick={() => deleteBootcamp(b.id)}
+                                >{locale.delete_bootcamp} Bootcamp</Button>
                             </Col>
                         </Row>
                         {editedBootcampId && editedBootcampId === b.id && (
                             <EditBootcamp
                                 element={b}
                                 handlerReloadBootcamp={handlerReloadBootcamp}
+                                locale={locale}
                             />)
                         }
                     </li>

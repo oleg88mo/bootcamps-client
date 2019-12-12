@@ -4,6 +4,7 @@ import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, notification} fro
 import {URL} from '../../../configKey';
 
 function EditBootcamp(p) {
+    const {locale} = p;
     const el = p.element;
 
     const {getFieldDecorator, getFieldsError} = p.form;
@@ -18,7 +19,7 @@ function EditBootcamp(p) {
 
     const openNotificationWithIcon = (type, description) => {
         notification[type]({
-            message: 'Create New Bootcamp',
+            message: `${locale.add_new_bootcamp} Bootcamp`,
             description
         });
     };
@@ -44,7 +45,7 @@ function EditBootcamp(p) {
                         p.handlerReloadBootcamp()
                         setLoading(false);
                         setDisabled(false);
-                        openNotificationWithIcon('success', 'Bootcamp was updated');
+                        openNotificationWithIcon('success', `Bootcamp ${locale.bootcamp_was_updated}`);
                     })
                     .catch(error => {
                         openNotificationWithIcon('error', error.response.data.error);
@@ -57,19 +58,19 @@ function EditBootcamp(p) {
 
     return (
         <div className="edit-bootcamp">
-            <h1>Edit Bootcamp</h1>
+            <h1>{locale.edit_new_bootcamp} Bootcamp</h1>
 
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">
                     <Col span={12}>
-                        <Form.Item label="Name">
+                        <Form.Item label={locale.name}>
                             {getFieldDecorator('name', {
-                                rules: [{required: true, message: 'Please input your name!'}],
+                                rules: [{required: true, message: locale.message_enter_name}],
                                 initialValue: elementState.name,
                             })(
                                 <Input
                                     prefix={<Icon type="highlight" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="Name"
+                                    placeholder={locale.enter_name}
                                     onChange={(e) => setElementState({
                                         ...elementState,
                                         'name': e.target.value
@@ -77,14 +78,14 @@ function EditBootcamp(p) {
                                 />,
                             )}
                         </Form.Item>
-                        <Form.Item label="Address">
+                        <Form.Item label={locale.address}>
                             {getFieldDecorator('address', {
-                                rules: [{required: true, message: 'Please input your address!'}],
+                                rules: [{required: true, message: locale.message_enter_address}],
                                 initialValue: elementState.location.formattedAddress,
                             })(
                                 <Input
                                     prefix={<Icon type="home" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="address"
+                                    placeholder={locale.enter_address}
                                     onChange={(e) => setElementState({
                                         ...elementState,
                                         'location': {
@@ -95,13 +96,13 @@ function EditBootcamp(p) {
                                 />,
                             )}
                         </Form.Item>
-                        <Form.Item label="Website">
+                        <Form.Item label={locale.website}>
                             {getFieldDecorator('website', {
                                 initialValue: elementState.website,
                             })(
                                 <Input
                                     prefix={<Icon type="global" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="Website"
+                                    placeholder={locale.enter_website}
                                     onChange={(e) => setElementState({
                                         ...elementState,
                                         'website': e.target.value
@@ -109,7 +110,7 @@ function EditBootcamp(p) {
                                 />,
                             )}
                         </Form.Item>
-                        <Form.Item label="Email">
+                        <Form.Item label={locale.email}>
                             {getFieldDecorator('email', {
                                 rules: [
                                     {
