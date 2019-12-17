@@ -1,11 +1,16 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Input, Slider, notification} from 'antd';
+// actions
 import {setBootcampsFilter, clearBootcampsFilter} from "../../../redux/bootcamps/actions";
 
-function DetailModeRating() {
+function DetailModeRating({locale}) {
     const dispatch = useDispatch();
+
     const filter = useSelector(state => state.Bootcamps.filter);
+
+    const ratingFrom = filter.find(el => el.name === 'ratingFrom');
+    const ratingTo = filter.find(el => el.name === 'ratingTo');
 
     const openNotification = (mes, desc) => {
         notification.open({
@@ -114,12 +119,9 @@ function DetailModeRating() {
         }
     };
 
-    const ratingFrom = filter.find(el => el.name === 'ratingFrom');
-    const ratingTo = filter.find(el => el.name === 'ratingTo');
-
     return (
         <div className="rating">
-            <p className='filter-label'>by Rating:</p>
+            <p className='filter-label'>{locale.search_by_rating}:</p>
             <div className="rating-container">
                 <Input
                     name="ratingFrom"

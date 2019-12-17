@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Avatar, Row, Col, Icon} from 'antd';
-
 import Photo from '../../img/contact.jpg';
 import Pin from "../../img/pin.png";
 import mapboxgl from "mapbox-gl";
@@ -49,6 +48,8 @@ class Contacts extends Component {
     }
 
     render() {
+        const {locale} = this.props;
+
         return (
             <div className="contact-page">
                 <div className="contact-page__container">
@@ -60,17 +61,16 @@ class Contacts extends Component {
                     </span>
                 </div>
                 <div className="find-me">
-                    <h2>You can find me in social network's:</h2>
+                    <h2>{locale.you_can_find_me}:</h2>
                     <Row type="flex">
                         <Col span={5}>
                             <a href="https://github.com/oleg88mo" target="_blank"><Icon type="github"/>GitHub</a>
                         </Col>
                         <Col span={5}>
-                            <a href="https://www.linkedin.com/in/oleh-monastyrskyi-3947b9140/" target="_blank"><Icon
-                                type="linkedin"/>linkedin</a>
+                            <a href="https://www.linkedin.com/in/oleh-monastyrskyi-3947b9140/" target="_blank"><Icon type="linkedin"/>Linkedin</a>
                         </Col>
                     </Row>
-                    <h3>Or sent me letter in email:</h3>
+                    <h3>{locale.sent_me_letter}:</h3>
                     <Row type="flex">
                         <Col span={8}>
                             <a href="mailto:oleg88mo@gmail.com"><Icon type="google"/>Gmail</a>
@@ -78,7 +78,7 @@ class Contacts extends Component {
                     </Row>
                 </div>
                 <div className="currently-located">
-                    <h2>I'm currently located in:</h2>
+                    <h2>{locale.located_in}:</h2>
                     <div className="map" id="contactMap"/>
                 </div>
             </div>

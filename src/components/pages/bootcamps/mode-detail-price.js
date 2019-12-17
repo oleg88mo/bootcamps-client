@@ -1,11 +1,16 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Input, Slider, notification} from 'antd';
+// actions
 import {setBootcampsFilter, clearBootcampsFilter} from "../../../redux/bootcamps/actions";
 
-function DetailModePrice() {
+function DetailModePrice({locale}) {
     const dispatch = useDispatch();
+
     const filter = useSelector(state => state.Bootcamps.filter);
+
+    const priceFrom = filter.find(el => el.name === 'priceFrom');
+    const priceTo = filter.find(el => el.name === 'priceTo');
 
     const openNotification = (mes, desc) => {
         notification.open({
@@ -114,12 +119,9 @@ function DetailModePrice() {
         }
     };
 
-    const priceFrom = filter.find(el => el.name === 'priceFrom');
-    const priceTo = filter.find(el => el.name === 'priceTo');
-
     return (
         <div className="price">
-            <p className='filter-label'>by Price:</p>
+            <p className='filter-label'>{locale.search_by_price}:</p>
             <div className="price-container">
                 <Input
                     name="priceFrom"

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import axios from 'axios';
 import {URL} from '../../../configKey';
@@ -13,39 +13,33 @@ import {
     notification
 } from 'antd';
 
-const openNotificationWithIcon = (type, description) => {
-    notification[type]({
-        message: '/register',
-        description
-    });
-};
+function Register(p) {
+    const {locale, form} = p;
+    const {getFieldDecorator, getFieldsError} = form;
 
-class Register extends Component {
-    state = {
-        confirmDirty: false,
-        autoCompleteResult: [],
-        visible: false,
-        agree: false,
-        name: null,
-        email: null,
-        password: null,
-        confirmPassword: null,
-        role: 'user',
+    const [name, setName] = useState(null);
+    const [password, setPassword] = useState(null);
+    // const [confirmPassword, setConfirmPassword] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [agree, setAgree] = useState(false);
+    const [confirmDirty, setConfirmDirty] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [role, setRole] = useState('user');
+
+    const openNotificationWithIcon = (type, description) => {
+        notification[type]({
+            message: '/register',
+            description
+        });
     };
 
-    componentDidMount() {
-        this.props.form.validateFields();
-    }
+    const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
 
-    hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
-
-    handlerRegister = e => {
+    const handlerRegister = e => {
         e.preventDefault();
 
-        this.props.form.validateFieldsAndScroll(err => {
+        form.validateFieldsAndScroll(err => {
             if (!err) {
-                const {name, email, password, role} = this.state;
-
                 axios.post(`${URL}/auth/register`, {
                     name,
                     email,
@@ -59,21 +53,19 @@ class Register extends Component {
                         }
                     })
                     .catch(error => {
-                        openNotificationWithIcon('error', error.response.data.error)
+                        openNotificationWithIcon('error', error.response && error.response.data.error)
                     });
             }
         });
     };
 
-    handleConfirmBlur = e => {
+    const handleConfirmBlur = e => {
         const {value} = e.target;
 
-        this.setState({confirmDirty: this.state.confirmDirty || !!value});
+        setConfirmDirty(confirmDirty || !!value)
     };
 
-    compareToFirstPassword = (rule, value, callback) => {
-        const {form} = this.props;
-
+    const compareToFirstPassword = (rule, value, callback) => {
         if (value && value !== form.getFieldValue('password')) {
             callback('Two passwords is inconsistent!');
         } else {
@@ -81,150 +73,150 @@ class Register extends Component {
         }
     };
 
-    validateToNextPassword = (rule, value, next) => {
-        const {form} = this.props;
-
-        if (value && value.length > 5 && this.state.confirmDirty) {
+    const validateToNextPassword = (rule, value, next) => {
+        if (value && value.length > 5 && confirmDirty) {
             form.validateFields(['confirm'], {force: true});
         }
         next();
     };
 
-    showModal = () => this.setState({visible: true});
+    const showModal = () => setVisible(true);
 
-    handleOk = () => this.setState({visible: false});
+    const handleOk = () => setVisible(false);
 
-    handleCancel = () => this.setState({visible: false});
+    const onChange = e => setAgree(e.target.checked);
 
-    onChange = e => this.setState({agree: e.target.checked});
+    const handlerChangeRole = e => setRole(e.target.value);
 
-    handlerSetUserValue = val => this.setState({...val});
+    const formItemLayout = {
+        labelCol: {
+            xs: {span: 24},
+            sm: {span: 10},
+        },
+        wrapperCol: {
+            xs: {span: 24},
+            sm: {span: 14},
+        },
+    };
 
-    handlerChangeRole = role => this.setState({role: role.target.value});
+    useEffect(() => {
+        form.validateFields();
+    }, []);
 
-    render() {
-        const {getFieldDecorator, getFieldsError} = this.props.form;
-        const {agree, password} = this.state;
-
-        const formItemLayout = {
-            labelCol: {
-                xs: {span: 24},
-                sm: {span: 10},
-            },
-            wrapperCol: {
-                xs: {span: 24},
-                sm: {span: 14},
-            },
-        };
-
-        return (
-            <div className="register-form-center">
-                <div className="register-form">
-                    <h2><Icon type="user"/> Register</h2>
-                    <Form {...formItemLayout} onSubmit={this.handlerRegister}>
-                        <Form.Item label="Name">
-                            {getFieldDecorator('name', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: 'Please input your name!',
-                                    },
-                                ],
-                            })(<Input
-                                onChange={e => this.handlerSetUserValue({['name']: e.target.value !== "" ? e.target.value : null})}
-                            />)}
-                        </Form.Item>
-                        <Form.Item label="E-mail">
-                            {getFieldDecorator('email', {
-                                rules: [
-                                    {
-                                        type: 'email',
-                                        message: 'The input is not valid E-mail!',
-                                    },
-                                    {
-                                        required: true,
-                                        message: 'Please input your E-mail!',
-                                    },
-                                ],
-                            })(<Input
-                                onChange={e => this.handlerSetUserValue({['email']: e.target.value !== "" ? e.target.value : null})}
-                            />)}
-                        </Form.Item>
-                        <Form.Item label="Password" hasFeedback={password && password.length > 5}>
-                            {getFieldDecorator('password', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: 'Please input your password!',
-                                    },
-                                    {
-                                        validator: this.validateToNextPassword,
-                                    },
-                                ],
-                            })(<Input.Password
-                                onChange={e => this.handlerSetUserValue({['password']: e.target.value !== "" ? e.target.value : null})}
-                            />)}
-                        </Form.Item>
-                        <Form.Item label="Confirm Password" hasFeedback>
-                            {getFieldDecorator('confirm', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: 'Please confirm your password!',
-                                    },
-                                    {
-                                        validator: this.compareToFirstPassword,
-                                    },
-                                ],
-                            })(<Input.Password
-                                onBlur={this.handleConfirmBlur}
-                                onChange={e => this.handlerSetUserValue({['confirmPassword']: e.target.value !== "" ? e.target.value : null})}
-                            />)}
-                        </Form.Item>
-                        <Form.Item label="User Your Role">
-                            {getFieldDecorator('role', {
-                                valuePropName: 'checked',
-                            })(
-                                <>
-                                    <Radio.Group onChange={this.handlerChangeRole} value={this.state.role}>
-                                        <Radio value="user">Regular User (Browse, Write reviews, etc)</Radio>
-                                        <Radio value="publisher">Bootcamp Publisher</Radio>
-                                    </Radio.Group>
-                                </>,
-                            )}
-                        </Form.Item>
-                        <Form.Item className="full-center">
-                            {getFieldDecorator('agreement', {
-                                valuePropName: 'checked',
-                            })(
-                                <>
-                                    <Checkbox onChange={this.onChange}>
-                                        I have read the
-                                    </Checkbox>
-                                    <a href="#" onClick={this.showModal}>agreement</a>
-                                </>,
-                            )}
-                        </Form.Item>
-                        <Form.Item className="full-center">
-                            <Button type="primary" htmlType="submit"
-                                    disabled={this.hasErrors(getFieldsError()) || !agree}>
-                                Register
-                            </Button>
-                            <br/>
-                            Or <Link to="/login">Logged in!</Link>
-                        </Form.Item>
-                    </Form>
-                    <Modal
-                        title="Basic Modal"
-                        visible={this.state.visible}
-                        onOk={this.handleOk}
-                        onCancel={this.handleCancel}
+    return (
+        <div className="register-form-center">
+            <div className="register-form">
+                <h2><Icon type="user"/> {locale.register}</h2>
+                <Form
+                    {...formItemLayout}
+                    onSubmit={handlerRegister}
+                >
+                    <Form.Item label={locale.name}>
+                        {getFieldDecorator('name', {
+                            rules: [
+                                {
+                                    required: true,
+                                    message: locale.message_enter_name,
+                                },
+                            ],
+                        })(<Input
+                            onChange={e => setName(e.target.value !== "" ? e.target.value : null)}
+                        />)}
+                    </Form.Item>
+                    <Form.Item label={locale.email}>
+                        {getFieldDecorator('email', {
+                            rules: [
+                                {
+                                    type: 'email',
+                                    message: locale.not_valid_email,
+                                },
+                                {
+                                    required: true,
+                                    message: locale.enter_email,
+                                },
+                            ],
+                        })(<Input
+                            onChange={e => setEmail(e.target.value !== "" ? e.target.value : null)}
+                        />)}
+                    </Form.Item>
+                    <Form.Item
+                        label={locale.password}
+                        hasFeedback={password && password.length > 5}
                     >
-                        <p>Some contents...</p>
-                    </Modal>
-                </div>
-            </div>)
-    }
+                        {getFieldDecorator('password', {
+                            rules: [
+                                {
+                                    required: true,
+                                    message: locale.message_enter_password,
+                                },
+                                {
+                                    validator: validateToNextPassword,
+                                },
+                            ],
+                        })(<Input.Password
+                            onChange={e => setPassword(e.target.value !== "" ? e.target.value : null)}
+                        />)}
+                    </Form.Item>
+                    <Form.Item
+                        label={locale.confirm_password}
+                        hasFeedback
+                    >
+                        {getFieldDecorator('confirm', {
+                            rules: [
+                                {
+                                    required: true,
+                                    message: locale.message_enter_confirm_password,
+                                },
+                                {
+                                    validator: compareToFirstPassword,
+                                },
+                            ],
+                        })(<Input.Password
+                            onBlur={handleConfirmBlur}
+                            // onChange={e => setConfirmPassword(e.target.value !== "" ? e.target.value : null)}
+                        />)}
+                    </Form.Item>
+                    <Form.Item label={locale.use_your_role}>
+                        {getFieldDecorator('role', {
+                            valuePropName: 'checked',
+                        })(<>
+                            <Radio.Group onChange={handlerChangeRole} value={role}>
+                                <Radio value="user">Regular User (Browse, Write reviews, etc)</Radio>
+                                <Radio value="publisher">Bootcamp Publisher</Radio>
+                            </Radio.Group>
+                        </>)}
+                    </Form.Item>
+                    <Form.Item className="full-center">
+                        {getFieldDecorator('agreement', {
+                            valuePropName: 'checked',
+                        })(<>
+                            <Checkbox onChange={onChange}>{locale.read_the}</Checkbox>
+                            <Button onClick={showModal} className="btn-agreement">{locale.agreement}</Button>
+                        </>)}
+                    </Form.Item>
+                    <Form.Item className="full-center">
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            disabled={hasErrors(getFieldsError()) || !agree}
+                        >
+                            {locale.register}
+                        </Button>
+                        <br/>
+                        {locale.or} <Link to="/login">{locale.login}!</Link>
+                    </Form.Item>
+                </Form>
+                <Modal
+                    title="Basic Modal"
+                    visible={visible}
+                    onOk={handleOk}
+                    onCancel={handleOk}
+                >
+                    <p>Some contents...</p>
+                </Modal>
+            </div>
+        </div>
+    )
 }
 
 const WrappedRegistrationForm = Form.create({name: 'register'})(Register);

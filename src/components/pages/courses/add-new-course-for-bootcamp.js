@@ -2,52 +2,25 @@ import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, notification, InputNumber} from 'antd';
 import {URL} from '../../../configKey';
-import {setMyBootcamps} from "../../../redux/users/actions";
 import {useDispatch, useSelector} from "react-redux";
+// action
+import {setMyBootcamps} from "../../../redux/users/actions";
 
 function AddNewCourseForBootcamp(p) {
-    const {getFieldDecorator, getFieldsError} = p.form;
+    const {locale, form} = p;
+    const {getFieldDecorator, getFieldsError} = form;
     const {Option} = Select;
     const {TextArea} = Input;
 
     const dispatch = useDispatch();
 
-    const {id} = useSelector(state => state.Users.me);
+    const {me} = useSelector(state => state.Users);
     const myBootcamps = useSelector(state => state.Users.myBootcamps);
 
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [selectedBootcamp, setSelectedBootcamp] = useState(false);
-
     const [reloadedData, setReloadedData] = useState(false);
-
-    useEffect(() => {
-        let mounted = true;
-
-        const loadData = async () => {
-            if (mounted) {
-                try {
-                    let responseBootcamps;
-                    responseBootcamps = await axios.get(`${URL}/bootcamps?page=1&user=${id}`);
-
-                    if (responseBootcamps && responseBootcamps.data.success) {
-                        dispatch(setMyBootcamps(responseBootcamps.data));
-                        setReloadedData(false);
-                    }
-                } catch (e) {
-                    console.log('error:', e);
-                }
-            }
-        };
-
-        if (id && !myBootcamps) {
-            loadData();
-        }
-
-        return () => {
-            mounted = false;
-        }
-    }, [reloadedData]);
 
     const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
 
@@ -61,7 +34,7 @@ function AddNewCourseForBootcamp(p) {
     const handleSubmit = e => {
         e.preventDefault();
 
-        p.form.validateFields((err, values) => {
+        form.validateFields((err, values) => {
             if (!err) {
                 if (selectedBootcamp) {
                     setLoading(true);
@@ -94,7 +67,7 @@ function AddNewCourseForBootcamp(p) {
                             handlerReset();
                         })
                         .catch(error => {
-                            openNotificationWithIcon('error', error.response.data.error);
+                            openNotificationWithIcon('error', error.response && error.response.data.error);
                             setLoading(false);
                             setDisabled(false);
                         });
@@ -102,20 +75,49 @@ function AddNewCourseForBootcamp(p) {
             }
         });
     };
-    const handlerReset = () => p.form.resetFields();
+
+    const handlerReset = () => form.resetFields();
 
     const handlerChangeBootcamp = value => {
         setSelectedBootcamp(value);
         setDisabled(false);
     };
 
+    useEffect(() => {
+        let mounted = true;
+
+        const loadData = async () => {
+            if (mounted) {
+                try {
+                    let responseBootcamps;
+                    responseBootcamps = await axios.get(`${URL}/bootcamps?page=1&user=${me.id}`);
+
+                    if (responseBootcamps && responseBootcamps.data.success) {
+                        dispatch(setMyBootcamps(responseBootcamps.data));
+                        setReloadedData(false);
+                    }
+                } catch (e) {
+                    console.log('error:', e);
+                }
+            }
+        };
+
+        if (me && me.id && !myBootcamps) {
+            loadData();
+        }
+
+        return () => {
+            mounted = false;
+        }
+    }, [reloadedData]);
+
     return (
         <div className="new-course-for-bootcamp">
-            <h1>Add New Course For Bootcamp</h1>
+            <h1>{locale.add_new_course} Course {locale.add_new_course_for} Bootcamp</h1>
 
             {myBootcamps && <div className="select-bootcamp">
                 <Select
-                    placeholder="Виберіть Буткамп для якого буде створено курс"
+                    placeholder={locale.select_bootcamp_for_creating_course}
                     onChange={handlerChangeBootcamp}
                     style={{width: 250}}
                 >
@@ -128,26 +130,26 @@ function AddNewCourseForBootcamp(p) {
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">
                     <Col span={12}>
-                        <Form.Item label="Title">
+                        <Form.Item label={locale.title}>
                             {getFieldDecorator('title', {
-                                rules: [{required: true, message: 'Please input title of course!'}],
+                                rules: [{required: true, message: locale.message_enter_title_for_course}],
                             })(
                                 <Input
                                     prefix={<Icon type="highlight" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="Title"
+                                    placeholder={locale.title}
                                 />,
                             )}
                         </Form.Item>
-                        <Form.Item label="Weeks">
+                        <Form.Item label={locale.weeks}>
                             {getFieldDecorator('weeks', {
-                                rules: [{required: true, message: 'Please input your weeks!'}],
+                                rules: [{required: true, message: locale.message_enter_weeks_for_course}],
                             })(
                                 <InputNumber min={1}/>,
                             )}
                         </Form.Item>
-                        <Form.Item label="Tuition">
+                        <Form.Item label={locale.tuition}>
                             {getFieldDecorator('tuition', {
-                                rules: [{required: true, message: 'Please input your tuition!'}],
+                                rules: [{required: true, message: locale.message_enter_tuition_for_course}],
                             })(
                                 <InputNumber min={1}/>,
                             )}
@@ -156,40 +158,41 @@ function AddNewCourseForBootcamp(p) {
                             {getFieldDecorator('scholarhipsAvailable', {
                                 initialValue: false
                             })(
-                                <Checkbox>scholarhipsAvailable</Checkbox>
+                                <Checkbox>{locale.scholarhipsAvailable}</Checkbox>
                             )}
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Minimum Skill" hasFeedback>
+                        <Form.Item label={locale.minimum_skill} hasFeedback>
                             {getFieldDecorator('minimumSkill', {
-                                rules: [{required: true, message: 'Please select your minimumSkill!'}],
+                                rules: [{required: true, message: locale.message_enter_minimum_skill}],
                             })(
-                                <Select placeholder="Please select a Careers">
-                                    <Option value="beginner">beginner</Option>
-                                    <Option value="intermediate">intermediate</Option>
-                                    <Option value="advanced">advanced</Option>
+                                <Select placeholder={`${locale.select_careers} Careers`}>
+                                    <Option value="beginner">{locale.beginner}</Option>
+                                    <Option value="intermediate">{locale.intermediate}</Option>
+                                    <Option value="advanced">{locale.advanced}</Option>
                                 </Select>,
                             )}
                         </Form.Item>
-                        <Form.Item label="Description">
+                        <Form.Item label={locale.description}>
                             {getFieldDecorator('description', {
-                                rules: [{required: true, message: 'Please input your description!'}],
+                                rules: [{required: true, message: locale.enter_description}],
                             })(
-                                <TextArea rows={5} placeholder="Enter your Description here..."/>,
+                                <TextArea rows={5} placeholder={locale.enter_description}/>,
                             )}
                         </Form.Item>
                     </Col>
                 </Row>
                 <footer>
-                    <span>*After you add the bootcamp, you can add the specific courses offered</span>
-                    <Button style={{marginRight: 8}} onClick={handlerReset}>Clear</Button>
-                    <Button type="primary"
-                            htmlType="submit"
-                            loading={loading}
-                            disabled={hasErrors(getFieldsError()) || disabled}
+                    <span>*{locale.after_add_bootcamp}</span>
+                    <Button style={{marginRight: 8}} onClick={handlerReset}>{locale.clear}</Button>
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={loading}
+                        disabled={hasErrors(getFieldsError()) || disabled}
                     >
-                        Add New Course
+                        {locale.add_new_course} Course
                     </Button>
                 </footer>
             </Form>

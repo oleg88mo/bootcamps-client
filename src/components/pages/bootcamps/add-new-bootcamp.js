@@ -55,13 +55,14 @@ function AddNewBootcamp(p) {
                         handlerReset();
                     })
                     .catch(error => {
-                        openNotificationWithIcon('error', error.response.data.error);
+                        openNotificationWithIcon('error', error.response && error.response.data.error);
                         setLoading(false);
                         setDisabled(false);
                     });
             }
         });
     };
+
     const handlerReset = () => p.form.resetFields();
 
     return (
@@ -128,20 +129,6 @@ function AddNewBootcamp(p) {
                                 <Checkbox>{locale.job_assistance}</Checkbox>
                             )}
                         </Form.Item>
-                        <Form.Item>
-                            {getFieldDecorator('jobGuarantee', {
-                                initialValue: false
-                            })(
-                                <Checkbox>{locale.job_guarantee}</Checkbox>
-                            )}
-                        </Form.Item>
-                        <Form.Item>
-                            {getFieldDecorator('acceptGi', {
-                                initialValue: false
-                            })(
-                                <Checkbox>{locale.accepts_gi_bill}</Checkbox>
-                            )}
-                        </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
@@ -177,6 +164,20 @@ function AddNewBootcamp(p) {
                                 rules: [{required: true, message: locale.message_enter_description}],
                             })(
                                 <TextArea rows={5} placeholder={locale.enter_description}/>,
+                            )}
+                        </Form.Item>
+                        <Form.Item>
+                            {getFieldDecorator('jobGuarantee', {
+                                initialValue: false
+                            })(
+                                <Checkbox>{locale.job_guarantee}</Checkbox>
+                            )}
+                        </Form.Item>
+                        <Form.Item>
+                            {getFieldDecorator('acceptGi', {
+                                initialValue: false
+                            })(
+                                <Checkbox>{locale.accepts_gi_bill}</Checkbox>
                             )}
                         </Form.Item>
                     </Col>

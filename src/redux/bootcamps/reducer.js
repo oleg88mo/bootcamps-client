@@ -48,6 +48,12 @@ export default function bootcamps(state = INIT_STATE, {type, payload}) {
                 ],
             };
         }
+        case TYPES.BOOTCAMPS_CLEAR_ALL_FILTER: {
+            return {
+                ...state,
+                filter: [],
+            };
+        }
         case TYPES.BOOTCAMPS_SET_REVIEWS_DATA: {
             return {
                 ...state,
@@ -58,6 +64,12 @@ export default function bootcamps(state = INIT_STATE, {type, payload}) {
             return {
                 ...state,
                 singleBootcamp: payload.data
+            };
+        }
+        case TYPES.BOOTCAMPS_DELETE_ELEMENT_FROM_FILTER: {
+            return {
+                ...state,
+                filter: [...state.filter.filter(f => f.name !== payload)]
             };
         }
         case TYPES.GET_COURSES_FOR_SINGLE_BOOTCAMP: {

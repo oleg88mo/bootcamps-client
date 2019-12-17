@@ -23,7 +23,7 @@ const locales = {
     ua: uk_UA,
 };
 
-function List() {
+function List({locale}) {
     const dispatch = useDispatch();
     const data = useSelector(state => state.Bootcamps.data);
     const totalCount = useSelector(state => state.Bootcamps.totalCount);
@@ -32,6 +32,29 @@ function List() {
     const lang = useSelector(state => state.Users.lang);
     const [pageSize, setPageSize] = useState(10);
     const [pageNumber, setPageNumber] = useState(1);
+
+    const handlerSetBootcampId = id => window.localStorage.setItem('singleBootcampId', id);
+
+    const bootcampRatind = bootcampId => {
+        const review = reviews.find(f => f.bootcamp.id === bootcampId);
+
+        if (review) {
+            return review.rating
+        }
+    };
+
+    const onShowSizeChange = pageSizeNew => {
+        setPageNumber(1);
+        setPageSize(pageSizeNew);
+    };
+
+    const onChangePagination = pageNumberNew => setPageNumber(pageNumberNew);
+
+    const showTotal = (total, range) => (
+        <div className="table-showing__pagination">
+            {locale.showing}<b>{range[0]}-{range[1]}</b> {locale.of}<b> {total}</b>
+        </div>
+    );
 
     useEffect(() => {
         let mounted = true;
@@ -72,74 +95,45 @@ function List() {
         }
     }, [pageSize, pageNumber]);
 
-    const handlerSetBootcampId = id => window.localStorage.setItem('singleBootcampId', id);
-
-    const bootcampRatind = bootcampId => {
-        const review = reviews.find(f => f.bootcamp.id === bootcampId);
-
-        if (review) {
-            return review.rating
-        }
-    };
-
-    const onShowSizeChange = pageSizeNew => {
-        setPageNumber(1);
-        setPageSize(pageSizeNew);
-    };
-
-    const onChangePagination = pageNumberNew => setPageNumber(pageNumberNew);
-
-    const showTotal = (total, range) => (
-        <div className="table-showing__pagination">
-            {/*{this.props.locale.pagination.showing}*/}
-            showing:
-            <b>
-                {range[0]}-{range[1]}
-            </b>
-            {/*{this.props.locale.pagination.of}*/}
-            of:
-            <b> {total}</b>
-        </div>
-    );
-
     return (
         <div className="list">
             {data && data.length > 0
                 ?
                 <>
-                    <Row type="flex">
-                        {data.map(bootcamp => (
-                                <Col
-                                    span={8}
-                                    key={bootcamp.id}
-                                    className="bootcamp-item"
-                                >
-                                    <div className="wrap">
-                                        {bootcampRatind(bootcamp.id) ?
-                                            <span className="rating">
-                                           <Tag color="green">{bootcampRatind(bootcamp.id)}</Tag>
-                                       </span> :
-                                            <span className="rating">
-                                           <Tag color="red">no rating yet</Tag>
-                                       </span>
-                                        }
-                                        <Link to={`/bootcamps/${bootcamp.slug}`}
-                                              onClick={() => handlerSetBootcampId(bootcamp.id)}>
+                    <Row type="flex" className="bootcamp-list">
+                        {data.map(bootcamp => (<Col
+                                span={8}
+                                key={bootcamp.id}
+                                className="bootcamp-item"
+                            >
+                                <div className="wrap">
+                                    {bootcampRatind(bootcamp.id) ?
+                                        (<span className="rating"><Tag color="green">{bootcampRatind(bootcamp.id)}</Tag></span>) :
+                                        (<span className="rating"><Tag color="red">no rating yet</Tag></span>)
+                                    }
+
+                                    <div className="img">
+                                        <Link
+                                            to={`/bootcamps/${bootcamp.slug}`}
+                                            onClick={() => handlerSetBootcampId(bootcamp.id)}
+                                        >
                                             {bootcamp.photo !== 'no-photo.jpg' ?
-                                                <img src={`${PHOTO_URL}/${bootcamp.photo}`}/> :
+                                                <img src={`${PHOTO_URL}/${bootcamp.photo}`} alt='photo'/> :
                                                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
                                         </Link>
-                                        <Link to={`/bootcamps/${bootcamp.slug}`}
-                                              onClick={() => handlerSetBootcampId(bootcamp.id)}>
-                                            <span className="link">{bootcamp.name}</span>
-                                        </Link>
-                                        {bootcamp.location.city &&
-                                        <p className="city">{bootcamp.location.city}{bootcamp.location.country ? `, ${bootcamp.location.country}` : null}</p>}
-                                        {bootcamp.description &&
-                                        <span className="description">{bootcamp.description}</span>}
                                     </div>
-                                </Col>
-                            )
+
+                                    <Link
+                                        to={`/bootcamps/${bootcamp.slug}`}
+                                        onClick={() => handlerSetBootcampId(bootcamp.id)}
+                                    >
+                                        <span className="link">{bootcamp.name}</span>
+                                    </Link>
+
+                                    {bootcamp.location.city && <p className="city">{bootcamp.location.city}{bootcamp.location.country ? `, ${bootcamp.location.country}` : null}</p>}
+                                    {bootcamp.description && <span className="description">{bootcamp.description}</span>}
+                                </div>
+                            </Col>)
                         )}
                     </Row>
                     <Row type="flex" justify="end" className="bootcamp-pagination">
@@ -164,9 +158,10 @@ function List() {
                     </Row>
                 </>
                 :
-                <EmptyList data={data}/>}
+                <EmptyList data={data} locale={locale}/>
+            }
         </div>
     );
 }
 
-export default List
+export default List;

@@ -48,7 +48,7 @@ function EditBootcamp(p) {
                         openNotificationWithIcon('success', `Bootcamp ${locale.bootcamp_was_updated}`);
                     })
                     .catch(error => {
-                        openNotificationWithIcon('error', error.response.data.error);
+                        openNotificationWithIcon('error', error.response && error.response.data.error);
                         setLoading(false);
                         setDisabled(false);
                     });

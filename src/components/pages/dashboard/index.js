@@ -1,11 +1,12 @@
 import React, {useState} from "react";
 import {Layout, Menu, Icon} from 'antd';
-// components
+// component
 import RenderComponents from './renderComponents';
 
 function Dashboard({locale}) {
     const {Header, Sider, Content} = Layout;
     const {SubMenu} = Menu;
+
     const [collapsed, setCollapsed] = useState(false);
     const [componentName, setComponentName] = useState('add-new-bootcamp');
 

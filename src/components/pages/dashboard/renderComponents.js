@@ -14,11 +14,11 @@ function RenderComponents({componentName, locale}) {
             case 'my-bootcamps':
                 return <MyBootcamps locale={locale}/>;
             case 'add-new-course':
-                return <AddNewCourseForBootcamp/>;
+                return <AddNewCourseForBootcamp locale={locale}/>;
             case 'my-courses':
-                return <MyCourses/>;
+                return <MyCourses locale={locale}/>;
             case 'my-information':
-                return <MyInformation/>;
+                return <MyInformation locale={locale}/>;
             default:
                 return null;
         }

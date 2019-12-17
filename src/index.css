@@ -39,6 +39,8 @@ h4 {
   border-color: transparent;
   color: rgba(255, 255, 255, 0.65);
   margin: 0 3px; }
+  .ant-menu-item .ant-btn.active {
+    color: #1890ff; }
 .ant-menu-item.header-locale {
   background-color: transparent !important; }
 
@@ -99,7 +101,9 @@ h4 {
     .bootcamp-page .filter .action-panel {
       display: flex;
       align-items: center;
-      justify-content: flex-end; }
+      justify-content: space-between; }
+      .bootcamp-page .filter .action-panel .anticon {
+        font-size: 23px; }
       .bootcamp-page .filter .action-panel button svg {
         width: 16px;
         vertical-align: sub;
@@ -119,6 +123,8 @@ h4 {
         color: #bbb; }
         .bootcamp-page .filter .detail-mode .panel i:hover {
           color: #5d5d5d; }
+    .bootcamp-page .filter .detail-mode .switch {
+      margin-bottom: 10px; }
     .bootcamp-page .filter .detail-mode footer {
       margin-top: 10px;
       text-align: right; }
@@ -129,8 +135,28 @@ h4 {
         padding: 0 10px; }
     .bootcamp-page .filter .small-mode {
       margin-top: 20px; }
+      .bootcamp-page .filter .small-mode .title {
+        font-size: 16px;
+        margin-right: 10px; }
+      .bootcamp-page .filter .small-mode .ant-tag {
+        padding: 3px 10px;
+        font-size: 14px;
+        margin-right: 15px;
+        background-color: #fff;
+        position: relative; }
+        .bootcamp-page .filter .small-mode .ant-tag.tag__from:after, .bootcamp-page .filter .small-mode .ant-tag.empty:after {
+          content: '';
+          position: absolute;
+          right: -14px;
+          width: 10px;
+          top: 50%;
+          height: 2px;
+          background-color: #bbb; }
+        .bootcamp-page .filter .small-mode .ant-tag.empty {
+          background-color: #f9f9f9;
+          color: #bbb; }
     .bootcamp-page .filter .filter-label {
-      margin-bottom: 0; }
+      margin-bottom: 3px; }
     .bootcamp-page .filter .price-container, .bootcamp-page .filter .careers-container, .bootcamp-page .filter .rating-container {
       display: flex; }
     .bootcamp-page .filter .checkbox-container .ant-checkbox-wrapper {
@@ -143,20 +169,31 @@ h4 {
     padding: 0 10px;
     margin-left: -15px;
     margin-right: -15px; }
+    .bootcamp-page .list .bootcamp-list {
+      padding-bottom: 15px; }
     .bootcamp-page .list .bootcamp-pagination {
       position: sticky;
       bottom: 0;
+      margin-left: 5px;
+      box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
+      margin-right: 5px;
       padding: 5px;
       background-color: #f0f2f5; }
     .bootcamp-page .list .bootcamp-item {
       padding: 0 5px; }
       .bootcamp-page .list .bootcamp-item .wrap {
         background-color: #fff;
+        min-height: 230px;
         padding: 10px;
         border-radius: 4px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         margin-bottom: 10px;
         transition: box-shadow .2s ease-in; }
+        .bootcamp-page .list .bootcamp-item .wrap .img {
+          min-height: 100px;
+          display: flex;
+          align-items: center;
+          justify-content: center; }
         .bootcamp-page .list .bootcamp-item .wrap .link {
           color: #1890ff;
           font-size: 15px;
@@ -213,7 +250,16 @@ h4 {
       padding: 50px 0;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); }
     .bootcamp-page .single-bootcamp .column-right .table .ant-row-flex {
-      width: 100%; }
+      width: 100%;
+      align-items: center;
+      padding: 3px 10px; }
+    .bootcamp-page .single-bootcamp .column-right .table main svg {
+      position: relative;
+      top: 2px; }
+    .bootcamp-page .single-bootcamp .column-right .table main > div:nth-of-type(odd) {
+      background-color: #f9f9f9; }
+    .bootcamp-page .single-bootcamp .column-right .table main > div:nth-of-type(2n) {
+      background-color: #ececec; }
     .bootcamp-page .single-bootcamp .column-right .rating {
       display: flex;
       flex-direction: column;
@@ -221,12 +267,11 @@ h4 {
       .bootcamp-page .single-bootcamp .column-right .rating .ant-btn {
         font-size: 15px; }
       .bootcamp-page .single-bootcamp .column-right .rating .ant-tag {
-        font-size: 18px;
-        margin-bottom: 10px;
-        padding: 3px 7px 6px; }
+        font-size: 17px;
+        margin: 0;
+        padding: 3px 7px; }
     .bootcamp-page .single-bootcamp .column-right .website {
-      font-size: 16px;
-      margin-top: 10px; }
+      font-size: 16px; }
       .bootcamp-page .single-bootcamp .column-right .website .ant-btn {
         font-size: 15px;
         margin-top: 5px; }
@@ -315,6 +360,11 @@ h4 {
     padding: 0;
     background-color: transparent;
     color: #1890ff; }
+  .login-form .btn-agreement, .register-form .btn-agreement {
+    background-color: transparent;
+    border-color: transparent;
+    color: #1890ff;
+    padding: 0; }
 
 .dashboard .anticon.anticon-menu-fold, .dashboard .anticon.anticon-menu-unfold {
   position: relative;
@@ -330,7 +380,8 @@ h4 {
 .dashboard .ant-form-item-control {
   line-height: 27px; }
 .dashboard footer {
-  text-align: right; }
+  text-align: right;
+  margin-top: 20px; }
   .dashboard footer > span {
     display: block;
     margin-bottom: 10px; }

@@ -37,7 +37,7 @@ function UpdatePassword(p) {
                         }
                     })
                     .catch(error => {
-                        openNotificationWithIcon('error', error.response.data.error)
+                        openNotificationWithIcon('error', error.response && error.response.data.error)
                     });
             }
         });

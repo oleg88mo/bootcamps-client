@@ -48,10 +48,7 @@ C339.911,308.622,339.911,322.844,331.378,331.378z"/>
 export const check = (
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" x="0px" y="0px" width="25px" height="25px"
          viewBox="0 0 510 510" style={{
-        enableBackground: "new 0 0 510 510",
-        position: "relative",
-        bottom: "3px",
-        left: "5px"
+        enableBackground: "new 0 0 510 510"
     }}>
         <g>
             <g>

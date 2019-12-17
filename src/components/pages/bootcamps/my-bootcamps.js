@@ -3,6 +3,7 @@ import {Empty, Row, Col, Button, Icon, notification, message} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import {PHOTO_URL, URL} from "../../../configKey";
+// actions
 import {setMyBootcamps, sortBootcamps} from "../../../redux/users/actions";
 // components
 import EditBootcamp from './edit-bootcamp';
@@ -10,7 +11,7 @@ import EditBootcamp from './edit-bootcamp';
 function MyBootcamps({locale}) {
     const dispatch = useDispatch();
 
-    const {id} = useSelector(state => state.Users.me);
+    const {me} = useSelector(state => state.Users);
     const myBootcamps = useSelector(state => state.Users.myBootcamps);
     const sort = useSelector(state => state.Users.sort);
     const [editedBootcampId, setEditedBootcampId] = useState(null);
@@ -18,35 +19,6 @@ function MyBootcamps({locale}) {
     const [uploadPhotoId, setUploadPhotoId] = useState(null);
     const [currentFormData, setCurrentFormData] = useState(null);
     const [currentFile, setCurrentFile] = useState(null);
-
-    useEffect(() => {
-        let mounted = true;
-
-        const loadData = async () => {
-            if (mounted) {
-                try {
-                    let responseBootcamps;
-
-                    responseBootcamps = await axios.get(`${URL}/bootcamps?page=1&user=${id}`);
-
-                    if (responseBootcamps && responseBootcamps.data.success) {
-                        dispatch(setMyBootcamps(responseBootcamps.data));
-                        setReloadedData(false);
-                    }
-                } catch (e) {
-                    console.log('error:', e);
-                }
-            }
-        };
-
-        if (id) {
-            loadData();
-        }
-
-        return () => {
-            mounted = false;
-        }
-    }, [reloadedData]);
 
     const handlerSort = () => dispatch(sortBootcamps(sort === 'ASC' ? 'DESC' : 'ASC'));
 
@@ -115,6 +87,35 @@ function MyBootcamps({locale}) {
         setEditedBootcampId(null);
     };
 
+    useEffect(() => {
+        let mounted = true;
+
+        const loadData = async () => {
+            if (mounted) {
+                try {
+                    let responseBootcamps;
+
+                    responseBootcamps = await axios.get(`${URL}/bootcamps?page=1&user=${me.id}`);
+
+                    if (responseBootcamps && responseBootcamps.data.success) {
+                        dispatch(setMyBootcamps(responseBootcamps.data));
+                        setReloadedData(false);
+                    }
+                } catch (e) {
+                    console.log('error:', e);
+                }
+            }
+        };
+
+        if (me && me.id) {
+            loadData();
+        }
+
+        return () => {
+            mounted = false;
+        }
+    }, [reloadedData]);
+
     return (
         <div className="my-bootcamp">
             <h1>{locale.my_bootcamps} Bootcamps</h1>
@@ -131,7 +132,7 @@ function MyBootcamps({locale}) {
                         <Row type="flex" align="middle">
                             <Col span={3}>
                                 {b.photo !== 'no-photo.jpg' ?
-                                    <img src={`${PHOTO_URL}/${b.photo}`}/>
+                                    <img src={`${PHOTO_URL}/${b.photo}`} alt='photo'/>
                                     :
                                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
                                 }
@@ -142,11 +143,8 @@ function MyBootcamps({locale}) {
                                        id={`photo-${b.id}`}
                                        onChange={(e) => handleChangeFile(e, b.id)}
                                 />
-                                {currentFile === null &&
-                                <label htmlFor={`photo-${b.id}`}><Icon type="upload"/> {locale.select_photo}...</label>}
-                                {uploadPhotoId === b.id &&
-                                <Button
-                                    onClick={() => handlerUploadPhoto(b.id)}>{locale.upload} ({currentFile.name})</Button>}
+                                {currentFile === null && <label htmlFor={`photo-${b.id}`}><Icon type="upload"/> {locale.select_photo}...</label>}
+                                {uploadPhotoId === b.id && <Button onClick={() => handlerUploadPhoto(b.id)}>{locale.upload} ({currentFile.name})</Button>}
                             </Col>
                             <Col span={16}>
                                 <h3>{b.name}</h3>

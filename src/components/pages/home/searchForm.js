@@ -4,53 +4,25 @@ import axios from "axios";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {URL} from "../../../configKey";
+// component
 import DetailModeSearchByName from '../bootcamps/mode-detail-search-by-name';
-// action
+// actions
 import {setBootcampsData, setDisabledSearchForListComponent} from "../../../redux/bootcamps/actions";
 import {changePageName} from "../../../redux/users/actions";
 
 function SearchForm({locale}) {
     const dispatch = useDispatch();
+
     const filter = useSelector(state => state.Bootcamps.filter);
     const pageSize = useSelector(state => state.Bootcamps.pagination);
+
     const history = useHistory();
 
     const [onSearch, setOnSearch] = useState(false);
     const [loaderSearch, setLoaderSearch] = useState(false);
     const [searchUrl, setSearchUrl] = useState('');
+
     let tempUrl;
-
-    useEffect(() => {
-        let mounted = true;
-
-        const loadData = async () => {
-            if (mounted) {
-                let responseBootcamps;
-
-                try {
-                    setLoaderSearch(true);
-                    responseBootcamps = await axios.get(`${URL}/bootcamps?${searchUrl}`);
-
-                    if (responseBootcamps && responseBootcamps.data.success) {
-                        dispatch(setBootcampsData(responseBootcamps.data));
-                        setLoaderSearch(false);
-                        history.push('/bootcamps');
-                    }
-                } catch (e) {
-                    setLoaderSearch(false);
-                    console.log('error:', e);
-                }
-            }
-        };
-        if (onSearch) {
-            loadData();
-        }
-
-        return () => {
-            mounted = false;
-            setOnSearch(false);
-        }
-    }, [onSearch]);
 
     const handlerCreatedUrl = async () => {
         const limitSearchParam = () => {
@@ -94,21 +66,55 @@ function SearchForm({locale}) {
         await dispatch(changePageName('2'));
     };
 
+    useEffect(() => {
+        let mounted = true;
+
+        const loadData = async () => {
+            if (mounted) {
+                let responseBootcamps;
+
+                try {
+                    setLoaderSearch(true);
+                    responseBootcamps = await axios.get(`${URL}/bootcamps?${searchUrl}`);
+
+                    if (responseBootcamps && responseBootcamps.data.success) {
+                        dispatch(setBootcampsData(responseBootcamps.data));
+                        setLoaderSearch(false);
+                        history.push('/bootcamps');
+                    }
+                } catch (e) {
+                    setLoaderSearch(false);
+                    console.log('error:', e);
+                }
+            }
+        };
+        if (onSearch) {
+            loadData();
+        }
+
+        return () => {
+            mounted = false;
+            setOnSearch(false);
+        }
+    }, [onSearch]);
+
     return (
         <div className="search-form">
             <h1>{locale.main_page.title}</h1>
             <h2>{locale.main_page.description}</h2>
             <Row>
                 <Col span={12}>
-                    <DetailModeSearchByName page={'home'}/>
+                    <DetailModeSearchByName page={'home'} locale={locale}/>
                 </Col>
                 <Col span={12}>
                     <Input placeholder="Zipcode"/>
                 </Col>
                 <Col span={24}>
-                    {loaderSearch && <p>Loading...</p>}
-                    <Button type="primary" onClick={handlerClickFilterSearch}
-                            disabled={!filter.length}
+                    {loaderSearch && <p>{locale.loading}...</p>}
+                    <Button
+                        type="primary"
+                        onClick={handlerClickFilterSearch}
+                        disabled={!filter.length}
                     >{locale.search}</Button>
                 </Col>
             </Row>

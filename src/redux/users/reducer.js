@@ -54,7 +54,7 @@ export default function users(state = INIT_STATE, {type, payload}) {
             };
         }
         case TYPES.SORT_BOOTCAMPS: {
-            const sortedData = [...state.myBootcamps.data.sort((a, b) => {
+            const sortedData = state.myBootcamps && state.myBootcamps.data ? [...state.myBootcamps.data.sort((a, b) => {
                 let nameA = a.name.toUpperCase();
                 let nameB = b.name.toUpperCase();
 
@@ -66,7 +66,7 @@ export default function users(state = INIT_STATE, {type, payload}) {
                 }
 
                 return 0;
-            })];
+            })] : [];
 
             return {
                 ...state,
@@ -93,7 +93,7 @@ export default function users(state = INIT_STATE, {type, payload}) {
             };
         }
         case TYPES.SORT_COURSES: {
-            const sortedData = [...state.myCourses.data.sort((a, b) => {
+            const sortedData = state.myCourses && state.myCourses.data ? [...state.myCourses.data.sort((a, b) => {
                 let nameA = a.title.toUpperCase();
                 let nameB = b.title.toUpperCase();
 
@@ -105,7 +105,7 @@ export default function users(state = INIT_STATE, {type, payload}) {
                 }
 
                 return 0;
-            })];
+            })] : [];
 
             return {
                 ...state,

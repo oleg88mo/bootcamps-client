@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {Layout, Menu, Icon, Dropdown, Button, notification} from "antd";
 import {URL} from '../../configKey';
@@ -12,24 +12,11 @@ function Nav(p) {
     const {Header} = Layout;
 
     const locale = p.locale;
+
+    const {lang} = useSelector(state => state.Users);
     const [isLoggin, setIsLoggin] = useState(null);
     const [isLoadingAuth, setIsLoadingAuth] = useState(false);
     const [name, setName] = useState(null);
-
-    useEffect(() => {
-        let mounted = true;
-        const checkIsLoggin = async () => {
-            if (mounted) {
-                await handlerCheckIsLoggin()
-            }
-        };
-
-        checkIsLoggin();
-
-        return () => {
-            mounted = false;
-        }
-    }, []);
 
     const openNotificationWithIcon = (type, description) => notification[type]({
         message: '/user/auth',
@@ -64,7 +51,7 @@ function Nav(p) {
                 .catch(error => {
                     console.log('error.response', error);
                     if (error) {
-                        openNotificationWithIcon('error', error.response.data.error)
+                        openNotificationWithIcon('error', error.response && error.response.data.error)
                     }
                 })
         }
@@ -76,7 +63,7 @@ function Nav(p) {
             window.location = '/';
         }
     }).catch(error => {
-        openNotificationWithIcon('error', error.response.data.error)
+        openNotificationWithIcon('error', error.response && error.response.data.error)
     });
 
     const handlerMenuClick = item => {
@@ -95,6 +82,22 @@ function Nav(p) {
         </Menu.Item>
     </Menu>);
 
+    useEffect(() => {
+        let mounted = true;
+
+        const checkIsLoggin = () => {
+            if (mounted) {
+                handlerCheckIsLoggin()
+            }
+        };
+
+        checkIsLoggin();
+
+        return () => {
+            mounted = false;
+        }
+    }, []);
+
     return (
         <Header style={{position: 'fixed', zIndex: 1, width: '100%'}}>
             <div className="logo"/>
@@ -110,9 +113,9 @@ function Nav(p) {
                 <Menu.Item key="3"><Link to="/contacts">{locale.contacts_page}</Link></Menu.Item>
                 <Menu.Item key="4" style={{float: 'right'}} className="header-locale">
                     <div className="lng-page">
-                        <Button onClick={() => handlerChangeLocale('ua')}>UA</Button>
-                        <Button onClick={() => handlerChangeLocale('en')}>EN</Button>
-                        <Button onClick={() => handlerChangeLocale('ru')}>RU</Button>
+                        <Button onClick={() => handlerChangeLocale('ua')} className={`${lang === 'ua' ? 'active' : ''}`}>UA</Button>
+                        <Button onClick={() => handlerChangeLocale('en')} className={`${lang === 'en' ? 'active' : ''}`}>EN</Button>
+                        <Button onClick={() => handlerChangeLocale('ru')} className={`${lang === 'ru' ? 'active' : ''}`}>RU</Button>
                     </div>
                 </Menu.Item>
                 {!isLoggin && <Menu.Item
@@ -120,8 +123,7 @@ function Nav(p) {
                     style={{float: 'right'}}
                     className="ant-menu-item"
                 >
-                    {isLoadingAuth ? <Icon type="loading"/> :
-                        <Link to="/login"><Icon type="login"/>{locale.login}</Link>}
+                    {isLoadingAuth ? <Icon type="loading"/> : <Link to="/login"><Icon type="login"/>{locale.login}</Link>}
                 </Menu.Item>}
                 {!isLoggin &&
                 <Menu.Item
@@ -129,8 +131,7 @@ function Nav(p) {
                     style={{float: 'right'}}
                     className="ant-menu-item"
                 >
-                    {isLoadingAuth ? <Icon type="loading"/> :
-                        <Link to="/register"><Icon type="user"/>{locale.register}</Link>}
+                    {isLoadingAuth ? <Icon type="loading"/> : <Link to="/register"><Icon type="user"/>{locale.register}</Link>}
                 </Menu.Item>}
                 {isLoggin && <Menu.Item
                     key="7"

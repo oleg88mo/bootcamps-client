@@ -2,16 +2,22 @@ import React, {useState} from "react";
 import axios from 'axios';
 import {Row, Col, Form, Input, Button, Select, notification} from 'antd';
 import {URL} from '../../../configKey';
-import UpdatePassword from './updatePassword';
 import {useSelector} from "react-redux";
+// component
+import UpdatePassword from './updatePassword';
 
 function MyInformation(p) {
-    const {getFieldDecorator, getFieldsError} = p.form;
+    const {form, locale} = p;
+    const {getFieldDecorator, getFieldsError} = form;
+
     const me = useSelector(state => state.Users.me);
+
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [userInformation, setUserInformation] = useState(me);
+
     const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
+
     const openNotificationWithIcon = (type, description) => {
         notification[type]({
             message: 'Create New Bootcamp',
@@ -22,7 +28,7 @@ function MyInformation(p) {
     const handleSubmit = e => {
         e.preventDefault();
 
-        p.form.validateFields((err, values) => {
+        form.validateFields((err, values) => {
             if (!err) {
                 setLoading(true);
                 setDisabled(true);
@@ -48,10 +54,10 @@ function MyInformation(p) {
                     .then(response => {
                         setLoading(false);
                         setDisabled(false);
-                        openNotificationWithIcon('success', 'User Information was updated');
+                        openNotificationWithIcon('success', `${locale.user_information} ${locale.was_updated}`);
                     })
                     .catch(error => {
-                        openNotificationWithIcon('error', error.response.data.error);
+                        openNotificationWithIcon('error', error.response && error.response.data.error);
                         setLoading(false);
                         setDisabled(false);
                     });
@@ -61,22 +67,21 @@ function MyInformation(p) {
 
     return (
         <div>
-            <h1>User Information</h1>
+            <h1>{locale.user_information}</h1>
 
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">
                     <Col span={24}>
                         <Form.Item label="role">
                             <Select
-                                placeholder="Please select a Careers"
                                 disabled
-                                value={userInformation.role && userInformation.role}
+                                value={userInformation && userInformation.role}
                             />
                         </Form.Item>
-                        <Form.Item label="Name">
+                        <Form.Item label={locale.name}>
                             {getFieldDecorator('name', {
-                                rules: [{required: true, message: 'Please input your name!'}],
-                                initialValue: userInformation.name,
+                                rules: [{required: true, message: locale.message_enter_name}],
+                                initialValue: userInformation && userInformation.name,
                             })(<Input
                                 onChange={(e) => setUserInformation({
                                     ...userInformation,
@@ -84,13 +89,13 @@ function MyInformation(p) {
                                 })}
                             />)}
                         </Form.Item>
-                        <Form.Item label="E-mail">
+                        <Form.Item label={locale.email}>
                             {getFieldDecorator('email', {
                                 rules: [
-                                    {type: 'email', message: 'The input is not valid E-mail!'},
-                                    {required: true, message: 'Please input your E-mail!'},
+                                    {type: 'email', message: locale.not_valid_email},
+                                    {required: true, message: locale.enter_email},
                                 ],
-                                initialValue: userInformation.email,
+                                initialValue: userInformation && userInformation.email,
                             })(<Input
                                 onChange={(e) => setUserInformation({
                                     ...userInformation,
@@ -107,7 +112,7 @@ function MyInformation(p) {
                         loading={loading}
                         disabled={hasErrors(getFieldsError()) || disabled}
                     >
-                        Update Information
+                        {locale.update} {locale.user_information}
                     </Button>
                 </footer>
             </Form>
@@ -119,4 +124,5 @@ function MyInformation(p) {
 }
 
 const WrappedNormalLoginForm = Form.create({name: 'normal_login'})(MyInformation);
+
 export default WrappedNormalLoginForm;

@@ -5,8 +5,8 @@ import {URL} from '../../../configKey';
 
 function EditCourse(p) {
     const el = p.element;
-
-    const {getFieldDecorator, getFieldsError} = p.form;
+    const {form, locale, handlerReloadCourse} = p;
+    const {getFieldDecorator, getFieldsError} = form;
     const {Option} = Select;
     const {TextArea} = Input;
 
@@ -26,7 +26,7 @@ function EditCourse(p) {
     const handleSubmit = e => {
         e.preventDefault();
 
-        p.form.validateFields((err) => {
+        form.validateFields((err) => {
             if (!err) {
                 setLoading(true);
                 setDisabled(true);
@@ -41,10 +41,10 @@ function EditCourse(p) {
                     }
                 })
                     .then(() => {
-                        p.handlerReloadCourse();
+                        handlerReloadCourse();
                         setLoading(false);
                         setDisabled(false);
-                        openNotificationWithIcon('success', 'Course was updated');
+                        openNotificationWithIcon('success', `Course ${locale.was_updated}`);
                     })
                     .catch(() => {
                         setLoading(false);
@@ -56,19 +56,19 @@ function EditCourse(p) {
 
     return (
         <div className="edit-course">
-            <h1>Edit Course</h1>
+            <h1>{locale.edit} Course</h1>
 
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">
                     <Col span={12}>
-                        <Form.Item label="Title">
+                        <Form.Item label={locale.title}>
                             {getFieldDecorator('title', {
-                                rules: [{required: true, message: 'Please input your title!'}],
+                                rules: [{required: true, message: locale.message_enter_title_for_course}],
                                 initialValue: elementState.title,
                             })(
                                 <Input
                                     prefix={<Icon type="highlight" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                    placeholder="title"
+                                    placeholder={locale.title}
                                     onChange={(e) => setElementState({
                                         ...elementState,
                                         'title': e.target.value
@@ -84,28 +84,28 @@ function EditCourse(p) {
                                         ...elementState,
                                         'scholarhipsAvailable': e.target.checked
                                     })}
-                                >scholarhipsAvailable</Checkbox>
+                                >{locale.scholarhipsAvailable}</Checkbox>
                             )}
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item label="Skill" hasFeedback>
                             {getFieldDecorator('minimumSkill', {
-                                rules: [{required: true, message: 'Please select your country!'}],
+                                rules: [{required: true, message: locale.message_enter_minimum_skill}],
                                 initialValue: elementState.minimumSkill,
                             })(
-                                <Select placeholder="Please select a Careers"
+                                <Select placeholder={locale.message_enter_minimum_skill}
                                         onChange={value => setElementState({
                                             ...elementState,
                                             'minimumSkill': value
                                         })}>
-                                    <Option value="beginner">beginner</Option>
-                                    <Option value="intermediate">intermediate</Option>
-                                    <Option value="advanced">advanced</Option>
+                                    <Option value="beginner">{locale.beginner}</Option>
+                                    <Option value="intermediate">{locale.intermediate}</Option>
+                                    <Option value="advanced">{locale.advanced}</Option>
                                 </Select>,
                             )}
                         </Form.Item>
-                        <Form.Item label="Weeks">
+                        <Form.Item label={locale.weeks}>
                             {getFieldDecorator('weeks', {
                                 initialValue: elementState.weeks,
                             })(
@@ -117,16 +117,19 @@ function EditCourse(p) {
                                 />,
                             )}
                         </Form.Item>
-                        <Form.Item label="Description">
+                        <Form.Item label={locale.description}>
                             {getFieldDecorator('description', {
-                                rules: [{required: true, message: 'Please input your description!'}],
+                                rules: [{required: true, message: locale.message_enter_description}],
                                 initialValue: elementState.description,
                             })(
-                                <TextArea rows={5} placeholder="Enter your Description here..."
-                                          onChange={(e) => setElementState({
-                                              ...elementState,
-                                              'description': e.target.value
-                                          })}/>,
+                                <TextArea
+                                    rows={5}
+                                    placeholder={locale.message_enter_description}
+                                    onChange={(e) => setElementState({
+                                        ...elementState,
+                                        'description': e.target.value
+                                    })}
+                                />,
                             )}
                         </Form.Item>
                     </Col>
@@ -138,7 +141,7 @@ function EditCourse(p) {
                             loading={loading}
                             disabled={hasErrors(getFieldsError()) || disabled}
                     >
-                        Update Course
+                        {locale.updated} Course
                     </Button>
                 </footer>
             </Form>

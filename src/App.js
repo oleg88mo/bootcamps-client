@@ -18,9 +18,9 @@ import Nav from "./components/nav";
 import Protected from './components/protected';
 import PageNotFound from './components/pages/404';
 
-const {Content, Footer} = Layout;
-
 function App() {
+    const {Content, Footer} = Layout;
+
     const bootcampPageStorage = window.localStorage.getItem('bootcampPage');
     const bootcampPageRedux = useSelector(state => state.Users.bootcampPage);
     const bootcampPage = bootcampPageStorage ? bootcampPageStorage : bootcampPageRedux;
@@ -36,12 +36,12 @@ function App() {
                     <div className="content-container">
                         <Switch>
                             <Route exact path="/" component={() => <MainPage locale={Locale.Locales[locale]}/>}/>
-                            <Route exact path="/bootcamps" component={Bootcamps}/>
-                            <Route exact path="/bootcamps/:slug" component={SingleBootcamp}/>
-                            <Route exact path="/bootcamps/:slug/reviews" component={ReviewsSingleBootcamp}/>
-                            <Route path="/contacts" component={Contacts}/>
-                            <Route path="/login" component={Login}/>
-                            <Route path="/register" component={Register}/>
+                            <Route exact path="/bootcamps" component={() => <Bootcamps locale={Locale.Locales[locale]}/>}/>
+                            <Route exact path="/bootcamps/:slug" component={() => <SingleBootcamp locale={Locale.Locales[locale]}/>}/>
+                            <Route exact path="/bootcamps/:slug/reviews" component={() => <ReviewsSingleBootcamp locale={Locale.Locales[locale]}/>}/>
+                            <Route path="/contacts" component={() => <Contacts locale={Locale.Locales[locale]}/>}/>
+                            <Route path="/login" component={() => <Login locale={Locale.Locales[locale]}/>}/>
+                            <Route path="/register" component={() => <Register locale={Locale.Locales[locale]}/>}/>
 
                             <Protected exact path="/dashboard" locale={Locale.Locales[locale]}/>
                             <Route component={() => <PageNotFound locale={Locale.Locales[locale]}/>}/>

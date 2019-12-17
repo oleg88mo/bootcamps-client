@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Icon, Row, Col, Switch} from 'antd';
+import {Button, Icon, Row, Col, Switch, notification} from 'antd';
 import axios from "axios";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {URL} from "../../../configKey";
-import {setBootcampsData} from "../../../redux/bootcamps/actions";
+// actions
+import {
+    setBootcampsData,
+    setBootcampsFilter,
+    clearBootcampsFilter,
+    clearAllBootcampsFilter
+} from "../../../redux/bootcamps/actions";
 // components
 import DetailModePrice from './mode-detail-price';
 import DetailModeRating from './mode-detail-rating';
@@ -13,51 +19,48 @@ import DetailModeWithCheckbox from './mode-detail-with-checkbox';
 import DetailModeSearchByRadius from './mode-detail-search-by-radius';
 
 function DetailMode(p) {
-    const dispatch = useDispatch();
-    const pageSize = useSelector(state => state.Bootcamps.pagination);
-    const filter = useSelector(state => state.Bootcamps.filter);
+    const {locale, handlerVisibleSmallModeFilter, handlerVisibleFilter, filter} = p;
 
-    const [onSearch, setOnSearch] = useState(false);
-    const [loaderSearch, setLoaderSearch] = useState(false);
-    const [searchUrl, setSearchUrl] = useState('');
+    const dispatch = useDispatch();
+
     const [switchChecked, setSwitchChecked] = useState(false);
+    const [radiusSearch, setRadiusSearch] = useState(false);
     const [radiusSearchParam, setRadiusSearchParam] = useState({
         zipCode: null,
         distance: null
     });
-    const [radiusSearch, setRadiusSearch] = useState(false);
 
-    useEffect(() => {
-        let mounted = true;
+    const openNotificationWithIcon = (type, description) => {
+        notification[type]({
+            message: locale.search_by_radius,
+            description
+        });
+    };
 
-        const loadData = async () => {
-            if (mounted) {
-                let responseBootcamps;
+    const changeSwitchChecked = val => {
+        setSwitchChecked(val);
+        dispatch(clearAllBootcampsFilter())
+    };
 
-                try {
-                    setLoaderSearch(true);
-                    responseBootcamps = await axios.get(`${URL}/bootcamps?${searchUrl}`);
+    const handlerClickFilterSearchWithRadius = () => setRadiusSearch(true);
 
-                    if (responseBootcamps && responseBootcamps.data.success) {
-                        dispatch(setBootcampsData(responseBootcamps.data));
-                        setLoaderSearch(false);
-                    }
-                } catch (e) {
-                    setLoaderSearch(false);
-                    console.log('error:', e);
-                }
-            }
-        };
+    const onChangeInputRadiusSearchParam = e => {
+        const {name, value} = e.target;
 
-        if (onSearch) {
-            loadData();
+        setRadiusSearchParam({
+            ...radiusSearchParam,
+            [name]: value ? value : null
+        });
+
+        if (value !== '') {
+            dispatch(setBootcampsFilter({
+                name,
+                values: value ? value : null,
+            }));
+        } else {
+            dispatch(clearBootcampsFilter({name}))
         }
-
-        return () => {
-            mounted = false;
-            setOnSearch(false);
-        }
-    }, [onSearch]);
+    };
 
     // search by Radius
     useEffect(() => {
@@ -68,16 +71,19 @@ function DetailMode(p) {
                 let responseBootcamps;
 
                 try {
-                    // setLoaderSearch(true);
                     responseBootcamps = await axios.get(`${URL}/bootcamps/radius/${radiusSearchParam.zipCode}/${radiusSearchParam.distance}`);
 
                     if (responseBootcamps && responseBootcamps.data.success) {
                         dispatch(setBootcampsData(responseBootcamps.data));
-                        // setLoaderSearch(false);
+
+                        if (filter && !filter.length) {
+                            handlerVisibleSmallModeFilter(false);
+                        } else {
+                            handlerVisibleSmallModeFilter(true);
+                        }
                     }
-                } catch (e) {
-                    // setLoaderSearch(false);
-                    console.log('error:', e);
+                } catch (error) {
+                    openNotificationWithIcon('error', error.response && error.response.data.error);
                 }
             }
         };
@@ -92,108 +98,58 @@ function DetailMode(p) {
         }
     }, [radiusSearch]);
 
-    let tempUrl;
-
-    const handlerCreatedUrl = async () => {
-        const limitSearchParam = () => {
-            if (pageSize && pageSize.next) {
-                tempUrl = `page=1&limit=${pageSize.next.limit}`;
-            } else {
-                tempUrl = `page=1&limit=${pageSize.prev.limit}`;
-            }
-        };
-
-        const cycleSearchParam = () => {
-            for (let i = 0; i < filter.length; i++) {
-                const name = filter[i].name;
-                const operator = filter[i].operator;
-                const values = filter[i].values;
-
-                if (name === 'priceFrom' || name === 'priceTo') {
-                    tempUrl = tempUrl + `&averageCost[${operator}]=${values}`;
-                } else if (name === 'ratingFrom' || name === 'ratingTo') {
-                    tempUrl = tempUrl + `&averageRating[${operator}]=${values}`;
-                } else if (name === 'careers') {
-                    tempUrl = tempUrl + `&careers[${operator}]=${values}`;
-                } else if (name === 'housing' || name === 'jobAssistance' || name === 'jobGuarantee' || name === 'acceptGi') {
-                    tempUrl = tempUrl + `&${name}=${values}`;
-                } else if (name === 'name' || name === 'phone') {
-                    tempUrl = tempUrl + `&${name}=${values}`;
-                }
-            }
-        };
-
-        await limitSearchParam();
-        await cycleSearchParam();
-        await setSearchUrl(tempUrl)
-    };
-
-    const handlerClickFilterSearch = async () => {
-        await handlerCreatedUrl();
-        await setOnSearch(true);
-        await p.handlerVisibleSmallModeFilter(true);
-    };
-
-    const changeSwitchChecked = val => setSwitchChecked(val);
-
-    const handlerClickFilterSearchWithRadius = () => setRadiusSearch(true);
-
-    const onChangeInputRadiusSearchParam = e => {
-        const {name, value} = e.target;
-
-        setRadiusSearchParam({
-            ...radiusSearchParam,
-            [name]: value ? value : null
-        });
-    };
-
     return (
         <div className="detail-mode">
-            {loaderSearch && <p>Loading...</p>}
-
             <div className="panel">
-                <h3>Filter</h3>
-                <Icon type="close-circle" onClick={() => p.handlerVisibleSmallModeFilter(true)}/>
+                <h3>{locale.filter}</h3>
+                <Icon type="close-circle" onClick={() => handlerVisibleFilter(false)}/>
             </div>
-            <Row type="flex">
+            <Row type="flex" className="switch">
                 <Col span={24}>
-                    <Switch onChange={changeSwitchChecked} checked={switchChecked}/> Search by ZipCode & Radius
+                    <Switch onChange={changeSwitchChecked} checked={switchChecked}/> {locale.search_by_zipCode_radius}
                 </Col>
             </Row>
-            {!switchChecked ?
+            {!switchChecked ? (
                 <Row type="flex">
                     <Col span={8}>
-                        <DetailModeSearchByName/>
+                        <DetailModeSearchByName locale={locale}/>
                     </Col>
                     <Col span={8}>
-                        <DetailModePrice/>
+                        <DetailModePrice locale={locale}/>
                     </Col>
                     <Col span={8}>
-                        <DetailModeRating/>
+                        <DetailModeRating locale={locale}/>
                     </Col>
                     <Col span={8}>
-                        <DetailModeWithCheckbox/>out
+                        <DetailModeWithCheckbox locale={locale}/>
                     </Col>
                     <Col span={8}>
-                        <DetailModeCareers/>
+                        <DetailModeCareers locale={locale}/>
                     </Col>
                 </Row>
-
-                :
+            ) : (
                 <Row type="flex">
                     <Col span={24}>
-                        <DetailModeSearchByRadius onChangeInputRadiusSearchParam={onChangeInputRadiusSearchParam}/>
+                        <DetailModeSearchByRadius
+                            onChangeInputRadiusSearchParam={onChangeInputRadiusSearchParam}
+                            locale={locale}
+                        />
                     </Col>
                 </Row>
-            }
+            )}
             <footer>
                 {!switchChecked ?
-                    <Button type="primary" onClick={handlerClickFilterSearch} disabled={!filter.length}>Filter
-                        Search</Button>
+                    <Button
+                        type="primary"
+                        onClick={p.handlerClickFilterSearch}
+                        disabled={!p.filter.length}
+                    >{locale.search}</Button>
                     :
-                    <Button type="primary" onClick={handlerClickFilterSearchWithRadius}
-                            disabled={!radiusSearchParam.zipCode || !radiusSearchParam.distance}>Filter Search
-                        2</Button>
+                    <Button
+                        type="primary"
+                        onClick={handlerClickFilterSearchWithRadius}
+                        disabled={!radiusSearchParam.zipCode || !radiusSearchParam.distance}
+                    >{locale.search}</Button>
                 }
             </footer>
         </div>
