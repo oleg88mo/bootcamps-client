@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Icon, Row, Col, Switch, notification} from 'antd';
+import {Button, Icon, Row, Col, Switch} from 'antd';
+import {openNotification} from '../../utils/usedFunctions';
 import axios from "axios";
 import {useDispatch} from "react-redux";
 import {URL} from "../../../configKey";
@@ -29,13 +30,6 @@ function DetailMode(p) {
         zipCode: null,
         distance: null
     });
-
-    const openNotificationWithIcon = (type, description) => {
-        notification[type]({
-            message: locale.search_by_radius,
-            description
-        });
-    };
 
     const changeSwitchChecked = val => {
         setSwitchChecked(val);
@@ -83,7 +77,7 @@ function DetailMode(p) {
                         }
                     }
                 } catch (error) {
-                    openNotificationWithIcon('error', error.response && error.response.data.error);
+                    openNotification('error', `${locale.search_by_radius}`,error.response && error.response.data.error);
                 }
             }
         };

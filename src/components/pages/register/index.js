@@ -2,16 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import axios from 'axios';
 import {URL} from '../../../configKey';
-import {
-    Form,
-    Input,
-    Checkbox,
-    Radio,
-    Button,
-    Icon,
-    Modal,
-    notification
-} from 'antd';
+import {Form, Input, Checkbox, Radio, Button, Icon, Modal} from 'antd';
+import {openNotification} from '../../utils/usedFunctions';
 
 function Register(p) {
     const {locale, form} = p;
@@ -19,19 +11,11 @@ function Register(p) {
 
     const [name, setName] = useState(null);
     const [password, setPassword] = useState(null);
-    // const [confirmPassword, setConfirmPassword] = useState(null);
     const [email, setEmail] = useState(null);
     const [agree, setAgree] = useState(false);
     const [confirmDirty, setConfirmDirty] = useState(false);
     const [visible, setVisible] = useState(false);
     const [role, setRole] = useState('user');
-
-    const openNotificationWithIcon = (type, description) => {
-        notification[type]({
-            message: '/register',
-            description
-        });
-    };
 
     const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
 
@@ -53,7 +37,7 @@ function Register(p) {
                         }
                     })
                     .catch(error => {
-                        openNotificationWithIcon('error', error.response && error.response.data.error)
+                        openNotification('error', '/register',error.response && error.response.data.error)
                     });
             }
         });

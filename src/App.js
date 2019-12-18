@@ -21,17 +21,13 @@ import PageNotFound from './components/pages/404';
 function App() {
     const {Content, Footer} = Layout;
 
-    const bootcampPageStorage = window.localStorage.getItem('bootcampPage');
-    const bootcampPageRedux = useSelector(state => state.Users.bootcampPage);
-    const bootcampPage = bootcampPageStorage ? bootcampPageStorage : bootcampPageRedux;
-
     const lang = useSelector(state => state.Users.lang);
     const locale = Object.keys(Locale.Locales).map(l => l === lang ? l : null).filter(f => f !== null);
 
     return (
         <Router>
             <Layout>
-                <Nav locale={Locale.Locales[locale]} bootcampPage={bootcampPage}/>
+                <Nav locale={Locale.Locales[locale]}/>
                 <Content style={{marginTop: 50}}>
                     <div className="content-container">
                         <Switch>

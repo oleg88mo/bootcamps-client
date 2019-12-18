@@ -2,12 +2,17 @@ import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
-import {Layout, Menu, Icon, Dropdown, Button, notification} from "antd";
+import {Layout, Menu, Icon, Dropdown, Button} from "antd";
+import {openNotification} from '../utils/usedFunctions';
 import {URL} from '../../configKey';
 // actions
 import {setUser, changeLang, changePageName} from '../../redux/users/actions'
 
 function Nav(p) {
+    const bootcampPageStorage = window.localStorage.getItem('bootcampPage');
+    const bootcampPageRedux = useSelector(state => state.Users.bootcampPage);
+    const bootcampPage = bootcampPageStorage ? bootcampPageStorage : bootcampPageRedux;
+
     const dispatch = useDispatch();
     const {Header} = Layout;
 
@@ -17,11 +22,6 @@ function Nav(p) {
     const [isLoggin, setIsLoggin] = useState(null);
     const [isLoadingAuth, setIsLoadingAuth] = useState(false);
     const [name, setName] = useState(null);
-
-    const openNotificationWithIcon = (type, description) => notification[type]({
-        message: '/user/auth',
-        description
-    });
 
     const handlerCheckIsLoggin = async () => {
         const isLoggin = await window.localStorage.getItem('bootcampAuthToken');
@@ -49,9 +49,8 @@ function Nav(p) {
                     }
                 })
                 .catch(error => {
-                    console.log('error.response', error);
                     if (error) {
-                        openNotificationWithIcon('error', error.response && error.response.data.error)
+                        openNotification('error', '/auth/me', error.response && error.response.data.error)
                     }
                 })
         }
@@ -63,7 +62,7 @@ function Nav(p) {
             window.location = '/';
         }
     }).catch(error => {
-        openNotificationWithIcon('error', error.response && error.response.data.error)
+        openNotification('error', '/auth/logout', error.response && error.response.data.error)
     });
 
     const handlerMenuClick = item => {
@@ -104,7 +103,7 @@ function Nav(p) {
             <Menu
                 theme="dark"
                 mode="horizontal"
-                selectedKeys={[p.bootcampPage]}
+                selectedKeys={[bootcampPage]}
                 style={{lineHeight: '50px'}}
                 onClick={(item) => handlerMenuClick(item)}
             >

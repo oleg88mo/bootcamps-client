@@ -1,6 +1,7 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Input, Slider, notification} from 'antd';
+import {Input, Slider} from 'antd';
+import {openNotification} from '../../utils/usedFunctions';
 // actions
 import {setBootcampsFilter, clearBootcampsFilter} from "../../../redux/bootcamps/actions";
 
@@ -11,13 +12,6 @@ function DetailModeRating({locale}) {
 
     const ratingFrom = filter.find(el => el.name === 'ratingFrom');
     const ratingTo = filter.find(el => el.name === 'ratingTo');
-
-    const openNotification = (mes, desc) => {
-        notification.open({
-            message: `${mes}`,
-            description: `${desc}`,
-        });
-    };
 
     const onChangeRangeHolds = value => {
         if (value[0] === 0) {
@@ -78,7 +72,7 @@ function DetailModeRating({locale}) {
                 ? ratingTo.values
                 : 0;
             if (ratingFrom !== undefined ? value > notEmptyDurationTo : null) {
-                openNotification('Notification', "The value entered can not be greater than the maximum");
+                openNotification('info','Notification', "The value entered can not be greater than the maximum");
             }
         }
 
@@ -114,7 +108,7 @@ function DetailModeRating({locale}) {
                 ? ratingFrom.values
                 : 0;
             if (ratingTo !== undefined ? value < notEmptyDurationFrom : null) {
-                openNotification('Notification', "The entered value can not be less than the minimum");
+                openNotification('info', 'Notification', "The entered value can not be less than the minimum");
             }
         }
     };

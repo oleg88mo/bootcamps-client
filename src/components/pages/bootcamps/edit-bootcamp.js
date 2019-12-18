@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import axios from 'axios';
-import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, notification} from 'antd';
+import {Row, Col, Form, Input, Icon, Button, Select, Checkbox} from 'antd';
+import {openNotification} from '../../utils/usedFunctions';
 import {URL} from '../../../configKey';
 
 function EditBootcamp(p) {
@@ -16,13 +17,6 @@ function EditBootcamp(p) {
     const [elementState, setElementState] = useState(el);
 
     const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
-
-    const openNotificationWithIcon = (type, description) => {
-        notification[type]({
-            message: `${locale.add_new_bootcamp} Bootcamp`,
-            description
-        });
-    };
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -45,10 +39,10 @@ function EditBootcamp(p) {
                         p.handlerReloadBootcamp()
                         setLoading(false);
                         setDisabled(false);
-                        openNotificationWithIcon('success', `Bootcamp ${locale.bootcamp_was_updated}`);
+                        openNotification('success', `Bootcamp ${locale.bootcamp_was_updated}`, null);
                     })
                     .catch(error => {
-                        openNotificationWithIcon('error', error.response && error.response.data.error);
+                        openNotification('error', error.response && error.response.data.error, null);
                         setLoading(false);
                         setDisabled(false);
                     });

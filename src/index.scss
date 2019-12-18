@@ -394,8 +394,29 @@ h4 {
       }
     }
 
+    .column-left {
+      .loading {
+        display: block;
+        text-align: left;
+        font-size: 25px;
+        margin-top: 25px;
+      }
+
+      .ant-skeleton {
+        margin-top: 25px;
+      }
+    }
+
     .column-right {
       padding-left: 10px;
+
+      .image {
+        display: flex;
+        height: 100px;
+        align-items: center;
+        justify-content: center;
+        background-color: $WHITE;
+      }
 
       .ant-empty-normal {
         background-color: $WHITE;
@@ -549,6 +570,18 @@ h4 {
         }
       }
     }
+  }
+
+  a {
+    font-size: 16px;
+
+    i {
+      margin-right: 5px;
+    }
+  }
+
+  h3, h2{
+    margin-top: 20px;
   }
 
   .ant-avatar {

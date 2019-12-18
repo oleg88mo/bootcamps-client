@@ -1,16 +1,12 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import {URL} from '../../../configKey';
-import {Form, Input, Button, notification} from 'antd';
+import {Form, Input, Button} from 'antd';
+import {openNotification} from '../../utils/usedFunctions';
 
 function UpdatePassword(p) {
     const {getFieldDecorator} = p.form;
-    const openNotificationWithIcon = (type, description) => {
-        notification[type]({
-            message: '/UpdatePassword',
-            description
-        });
-    };
+
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const handlerUpdate = e => {
@@ -33,11 +29,11 @@ function UpdatePassword(p) {
                 })
                     .then(response => {
                         if (response && response.data) {
-                            openNotificationWithIcon('success', 'User password was updated');
+                            openNotification('success', '/UpdatePassword','User password was updated');
                         }
                     })
                     .catch(error => {
-                        openNotificationWithIcon('error', error.response && error.response.data.error)
+                        openNotification('error', '/UpdatePassword',error.response && error.response.data.error)
                     });
             }
         });

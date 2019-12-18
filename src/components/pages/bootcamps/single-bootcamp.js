@@ -137,9 +137,9 @@ function SingleBootcapm({locale}) {
                     subTitle={bootcamp.name}
                 />)}
                 <Row type="flex">
-                    <Col span={16}>
-                        {loadingBootcamp ? (<Icon type="loading"/>) : (<h1>{bootcamp.name}</h1>)}
-                        {loadingBootcamp ? (<Icon type="loading"/>) : bootcamp.description ? (<>
+                    <Col span={16} className="column-left">
+                        {loadingBootcamp ? (<Icon type="loading" className="loading"/>) : (<h1>{bootcamp.name}</h1>)}
+                        {loadingBootcamp ? (<Icon type="loading" className="loading"/>) : bootcamp.description ? (<>
                             <h3>{bootcamp.description}</h3>
                             <hr/>
                         </>) : null}
@@ -174,9 +174,9 @@ function SingleBootcapm({locale}) {
                             </div>) : null}
                     </Col>
                     <Col span={8} className="column-right">
-                        {bootcamp.photo !== 'no-photo.jpg' ?
-                            <img src={`${PHOTO_URL}/${bootcamp.photo}`} alt={bootcamp.name}/> :
-                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
+                        {bootcamp.photo !== 'no-photo.jpg' ? (<div className="image">
+                            <img src={`${PHOTO_URL}/${bootcamp.photo}`} alt={bootcamp.name}/>
+                        </div>) : (<Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>)}
 
                         {bootcamp.averageCost && (<>
                             <h2>{locale.average_course_cost}: ${bootcamp.averageCost} USD</h2>
@@ -212,7 +212,7 @@ function SingleBootcapm({locale}) {
                                     </Row>
                                 </div>)}
                                 <Row type="flex">
-                                    <Col span={8}>{locale.Housing}:</Col>
+                                    <Col span={8}>{locale.housing}:</Col>
                                     <Col span={16}>{bootcamp.housing ? check : checkCancel}</Col>
                                 </Row>
                                 <Row type="flex">

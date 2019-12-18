@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import axios from 'axios';
-import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, notification, InputNumber} from 'antd';
+import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, InputNumber} from 'antd';
 import {URL} from '../../../configKey';
 import {useDispatch, useSelector} from "react-redux";
+import {openNotification} from '../../utils/usedFunctions';
 // action
 import {setMyBootcamps} from "../../../redux/users/actions";
 
@@ -23,13 +24,6 @@ function AddNewCourseForBootcamp(p) {
     const [reloadedData, setReloadedData] = useState(false);
 
     const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
-
-    const openNotificationWithIcon = (type, description) => {
-        notification[type]({
-            message: 'Create New Bootcamp',
-            description
-        });
-    };
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -63,11 +57,11 @@ function AddNewCourseForBootcamp(p) {
                         .then(response => {
                             setLoading(false);
                             setDisabled(false);
-                            openNotificationWithIcon('success', 'Course was created');
+                            openNotification('success', 'Create New Bootcamp','Course was created');
                             handlerReset();
                         })
                         .catch(error => {
-                            openNotificationWithIcon('error', error.response && error.response.data.error);
+                            openNotification('error', null, error.response && error.response.data.error);
                             setLoading(false);
                             setDisabled(false);
                         });

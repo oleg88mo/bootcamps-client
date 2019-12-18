@@ -243,8 +243,21 @@ h4 {
   .bootcamp-page .single-bootcamp .course svg {
     vertical-align: middle;
     margin-right: 10px; }
+  .bootcamp-page .single-bootcamp .column-left .loading {
+    display: block;
+    text-align: left;
+    font-size: 25px;
+    margin-top: 25px; }
+  .bootcamp-page .single-bootcamp .column-left .ant-skeleton {
+    margin-top: 25px; }
   .bootcamp-page .single-bootcamp .column-right {
     padding-left: 10px; }
+    .bootcamp-page .single-bootcamp .column-right .image {
+      display: flex;
+      height: 100px;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff; }
     .bootcamp-page .single-bootcamp .column-right .ant-empty-normal {
       background-color: #fff;
       padding: 50px 0;
@@ -328,6 +341,12 @@ h4 {
         margin-bottom: 10px; }
         .contact-page__container .about-me i:first-letter {
           color: #1890ff; }
+  .contact-page a {
+    font-size: 16px; }
+    .contact-page a i {
+      margin-right: 5px; }
+  .contact-page h3, .contact-page h2 {
+    margin-top: 20px; }
   .contact-page .ant-avatar {
     width: 200px;
     height: 200px; }

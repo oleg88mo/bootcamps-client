@@ -1,3 +1,6 @@
+import React from "react";
+import {notification} from 'antd';
+
 export const bootcampRatind = async (bootcamp, setMiddleRating) => {
     const arrayOfRatingReviews = [];
 
@@ -13,4 +16,11 @@ export const bootcampRatind = async (bootcamp, setMiddleRating) => {
         result = await ratingSum / bootcamp.reviews.length;
         await setMiddleRating(result)
     }
+};
+
+export const openNotification = (type, message, description) => {
+    notification[type]({
+        message,
+        description
+    });
 };

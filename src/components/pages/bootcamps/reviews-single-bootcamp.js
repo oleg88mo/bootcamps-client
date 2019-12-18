@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, Link} from "react-router-dom";
-import {PageHeader, Row, Col, Tag, Button, Empty, Rate, Modal, Slider, Input, notification} from 'antd';
+import {PageHeader, Row, Col, Tag, Button, Empty, Rate, Modal, Slider, Input} from 'antd';
+import {openNotification} from '../../utils/usedFunctions';
 import axios from "axios";
 import {URL} from '../../../configKey';
 import {emptyData} from '../../../components/img/iconSvg'
@@ -32,13 +33,6 @@ function ReviewsSingleBootcamp({locale}) {
     const [deletedReview, setDeletedReview] = useState(false);
     const [reloaded, setReloaded] = useState(false);
     const [editedReview, setEditedReview] = useState(false);
-
-    const openNotificationWithIcon = (type, description) => {
-        notification[type]({
-            message: 'Create New Review',
-            description
-        });
-    };
 
     if (bootcamp) {
         bootcampRatind(bootcamp, setMiddleRating)
@@ -84,7 +78,7 @@ function ReviewsSingleBootcamp({locale}) {
                     setTextNewReview(null);
                 }
             } catch (error) {
-                openNotificationWithIcon('warning', error.response && error.response.data.error);
+                openNotification('warning', 'Create New Review', error.response && error.response.data.error);
             }
         })();
     };
@@ -118,7 +112,7 @@ function ReviewsSingleBootcamp({locale}) {
                     }
                 }
             } catch (error) {
-                openNotificationWithIcon('warning', error.response && error.response.data.error);
+                openNotification('warning', 'Create New Review', error.response && error.response.data.error);
             }
         };
 
@@ -154,7 +148,7 @@ function ReviewsSingleBootcamp({locale}) {
                     }
                 }
             } catch (error) {
-                openNotificationWithIcon('warning', error.response && error.response.data.error);
+                openNotification('warning', 'Create New Review', error.response && error.response.data.error);
             }
         };
 

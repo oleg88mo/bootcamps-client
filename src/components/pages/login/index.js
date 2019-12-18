@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-import {Form, Icon, Input, Button, notification} from 'antd';
+import {Form, Icon, Input, Button} from 'antd';
+import {openNotification} from '../../utils/usedFunctions';
 import {URL} from '../../../configKey';
 
 function Login(p) {
@@ -10,13 +11,6 @@ function Login(p) {
 
     const [loading, setLoading] = useState(false);
 
-    const openNotificationWithIcon = (type, description) => {
-        notification[type]({
-            message: '/login',
-            description
-        });
-    };
-
     const handlerLoggedIn = values => axios.post(`${URL}/auth/login`, values)
         .then(response => {
             window.localStorage.setItem('bootcampAuthToken', JSON.stringify(response.data.token));
@@ -24,7 +18,7 @@ function Login(p) {
             setLoading(false)
         })
         .catch(error => {
-            openNotificationWithIcon('error', error.response && error.response.data.error);
+            openNotification('error', '/login',error.response && error.response.data.error);
             setLoading(false);
         });
 

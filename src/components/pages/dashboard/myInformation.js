@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import axios from 'axios';
-import {Row, Col, Form, Input, Button, Select, notification} from 'antd';
+import {Row, Col, Form, Input, Button, Select} from 'antd';
+import {openNotification} from '../../utils/usedFunctions';
 import {URL} from '../../../configKey';
 import {useSelector} from "react-redux";
 // component
@@ -17,13 +18,6 @@ function MyInformation(p) {
     const [userInformation, setUserInformation] = useState(me);
 
     const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
-
-    const openNotificationWithIcon = (type, description) => {
-        notification[type]({
-            message: 'Create New Bootcamp',
-            description
-        });
-    };
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -54,10 +48,10 @@ function MyInformation(p) {
                     .then(response => {
                         setLoading(false);
                         setDisabled(false);
-                        openNotificationWithIcon('success', `${locale.user_information} ${locale.was_updated}`);
+                        openNotification('success', 'Message',`${locale.user_information} ${locale.was_updated}`);
                     })
                     .catch(error => {
-                        openNotificationWithIcon('error', error.response && error.response.data.error);
+                        openNotification('error', 'Message',error.response && error.response.data.error);
                         setLoading(false);
                         setDisabled(false);
                     });

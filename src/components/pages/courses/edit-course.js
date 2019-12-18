@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import axios from 'axios';
-import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, notification, InputNumber} from 'antd';
+import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, InputNumber} from 'antd';
+import {openNotification} from '../../utils/usedFunctions';
 import {URL} from '../../../configKey';
 
 function EditCourse(p) {
@@ -15,13 +16,6 @@ function EditCourse(p) {
     const [elementState, setElementState] = useState(el);
 
     const hasErrors = fieldsError => Object.keys(fieldsError).some(field => fieldsError[field]);
-
-    const openNotificationWithIcon = (type, description) => {
-        notification[type]({
-            message: 'Create New Course',
-            description
-        });
-    };
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -44,7 +38,7 @@ function EditCourse(p) {
                         handlerReloadCourse();
                         setLoading(false);
                         setDisabled(false);
-                        openNotificationWithIcon('success', `Course ${locale.was_updated}`);
+                        openNotification('success', 'Create New Course',`Course ${locale.was_updated}`);
                     })
                     .catch(() => {
                         setLoading(false);
