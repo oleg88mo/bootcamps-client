@@ -39,7 +39,7 @@ function EditBootcamp(p) {
                         p.handlerReloadBootcamp()
                         setLoading(false);
                         setDisabled(false);
-                        openNotification('success', `Bootcamp ${locale.bootcamp_was_updated}`, null);
+                        openNotification('success', `Bootcamp ${locale.was_updated}`, null);
                     })
                     .catch(error => {
                         openNotification('error', error.response && error.response.data.error, null);
@@ -52,7 +52,7 @@ function EditBootcamp(p) {
 
     return (
         <div className="edit-bootcamp">
-            <h1>{locale.edit_new_bootcamp} Bootcamp</h1>
+            <h1>{locale.edit} Bootcamp</h1>
 
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">

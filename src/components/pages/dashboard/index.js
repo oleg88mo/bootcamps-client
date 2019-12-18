@@ -65,7 +65,7 @@ function Dashboard({locale}) {
                         onClick={() => handlerRenderComponent(null, 'my-information')}
                     >
                         <Icon type="user"/>
-                        <span>{locale.my_information}</span>
+                        <span>{locale.user_information}</span>
                     </Menu.Item>
                 </Menu>
             </Sider>

@@ -108,7 +108,7 @@ function Nav(p) {
                 onClick={(item) => handlerMenuClick(item)}
             >
                 <Menu.Item key="1"><Link to="/">{locale.home_page}</Link></Menu.Item>
-                <Menu.Item key="2"><Link to="/bootcamps">{locale.bootcamps_page}</Link></Menu.Item>
+                <Menu.Item key="2"><Link to="/bootcamps">Bootcamps</Link></Menu.Item>
                 <Menu.Item key="3"><Link to="/contacts">{locale.contacts_page}</Link></Menu.Item>
                 <Menu.Item key="4" style={{float: 'right'}} className="header-locale">
                     <div className="lng-page">

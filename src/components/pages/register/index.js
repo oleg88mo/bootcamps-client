@@ -165,8 +165,8 @@ function Register(p) {
                             valuePropName: 'checked',
                         })(<>
                             <Radio.Group onChange={handlerChangeRole} value={role}>
-                                <Radio value="user">Regular User (Browse, Write reviews, etc)</Radio>
-                                <Radio value="publisher">Bootcamp Publisher</Radio>
+                                <Radio value="user">{locale.role_user}</Radio>
+                                <Radio value="publisher">{locale.author} Bootcamp</Radio>
                             </Radio.Group>
                         </>)}
                     </Form.Item>

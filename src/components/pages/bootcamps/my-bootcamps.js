@@ -36,7 +36,7 @@ function MyBootcamps({locale}) {
             }).then(res => {
                 setReloadedData(true);
                 notification['success']({
-                    message: `${locale.delete_bootcamp} Bootcamp`,
+                    message: `${locale.delete} Bootcamp`,
                     description: `Bootcamp ${locale.delete_bootcamp_was_successful}!`
                 });
             });
@@ -159,13 +159,13 @@ function MyBootcamps({locale}) {
                                     type="primary"
                                     block
                                     onClick={() => setEditedBootcampId(b.id)}
-                                >{locale.edit_new_bootcamp} Bootcamp</Button>
+                                >{locale.edit} Bootcamp</Button>
                                 <Button
                                     type="danger"
                                     block
                                     style={{marginTop: 10}}
                                     onClick={() => deleteBootcamp(b.id)}
-                                >{locale.delete_bootcamp} Bootcamp</Button>
+                                >{locale.delete} Bootcamp</Button>
                             </Col>
                         </Row>
                         {editedBootcampId && editedBootcampId === b.id && (
