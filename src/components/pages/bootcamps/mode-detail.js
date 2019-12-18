@@ -77,7 +77,7 @@ function DetailMode(p) {
                         }
                     }
                 } catch (error) {
-                    openNotification('error', `${locale.search_by_radius}`,error.response && error.response.data.error);
+                    openNotification('error', `${locale.search_by_radius}`, error.response && error.response.data.error);
                 }
             }
         };
@@ -105,19 +105,19 @@ function DetailMode(p) {
             </Row>
             {!switchChecked ? (
                 <Row type="flex">
-                    <Col span={8}>
+                    <Col md={24} lg={12} xl={8} xxl={8}>
                         <DetailModeSearchByName locale={locale}/>
                     </Col>
-                    <Col span={8}>
+                    <Col md={24} lg={12} xl={8} xxl={8}>
                         <DetailModePrice locale={locale}/>
                     </Col>
-                    <Col span={8}>
+                    <Col md={24} lg={12} xl={8} xxl={8}>
                         <DetailModeRating locale={locale}/>
                     </Col>
-                    <Col span={8}>
+                    <Col md={24} lg={12} xl={8} xxl={8}>
                         <DetailModeWithCheckbox locale={locale}/>
                     </Col>
-                    <Col span={8}>
+                    <Col md={24} lg={12} xl={8} xxl={8}>
                         <DetailModeCareers locale={locale}/>
                     </Col>
                 </Row>

@@ -56,7 +56,7 @@ function EditBootcamp(p) {
 
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">
-                    <Col span={12}>
+                    <Col md={24} lg={12}>
                         <Form.Item label={locale.name}>
                             {getFieldDecorator('name', {
                                 rules: [{required: true, message: locale.message_enter_name}],
@@ -169,7 +169,7 @@ function EditBootcamp(p) {
                             )}
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col md={24} lg={12}>
                         <Form.Item label="Careers" hasFeedback>
                             {getFieldDecorator('careers', {
                                 rules: [{required: true, message: 'Please select your country!'}],

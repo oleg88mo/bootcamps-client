@@ -65,7 +65,8 @@ function AddNewBootcamp(p) {
             <h3>{locale.add_new_bootcamp_important}</h3>
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">
-                    <Col span={12}>
+                    {/*md={24} lg={12} xl={8} xxl={8}*/}
+                    <Col md={24} lg={12}>
                         <Form.Item label={locale.name}>
                             {getFieldDecorator('name', {
                                 rules: [{required: true, message: locale.message_enter_name}],
@@ -124,7 +125,7 @@ function AddNewBootcamp(p) {
                             )}
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col md={24} lg={12}>
                         <Form.Item
                             label={locale.careers}
                             hasFeedback

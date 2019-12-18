@@ -78,10 +78,15 @@ export default function users(state = INIT_STATE, {type, payload}) {
             };
         }
         case TYPES.SET_MY_COURSES: {
+            const tempArr = [];
+            if (payload.data.length > 0) {
+                payload.data.map(el => el.courses.length > 0 && el.courses.map(c => tempArr.push(c)))
+            }
+
             return {
                 ...state,
                 myCourses: {
-                    data: payload.data[0].courses && payload.data[0].courses.sort((a, b) => {
+                    data: tempArr.sort((a, b) => {
                         const resA = a.title.toLowerCase();
                         const resB = b.title.toLowerCase();
 

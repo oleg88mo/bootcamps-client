@@ -224,7 +224,7 @@ h4 {
       .ant-tag {
         padding: 3px 10px;
         font-size: 14px;
-        margin-right: 15px;
+        margin: 5px 15px 5px 0;
         background-color: $WHITE;
         position: relative;
 
@@ -580,7 +580,7 @@ h4 {
     }
   }
 
-  h3, h2{
+  h3, h2 {
     margin-top: 20px;
   }
 
@@ -695,6 +695,36 @@ h4 {
       li {
         border-top: 1px solid $GREY;
         padding-right: 5px;
+      }
+    }
+
+    .photo {
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px 0;
+      justify-content: center;
+      .ant-btn{
+        padding: 0;
+      }
+      img {
+        margin-bottom: 10px;
+      }
+
+      .ant-empty-normal {
+        margin: 0 0 10px;
+      }
+
+      label {
+        padding: 0 15px;
+        display: flex;
+        height: 100%;
+        align-items: center;
+        cursor: pointer;
+        i{
+          margin-right: 5px;
+        }
       }
     }
   }

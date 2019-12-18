@@ -102,7 +102,7 @@ function List({locale}) {
                 <>
                     <Row type="flex" className="bootcamp-list">
                         {data.map(bootcamp => (<Col
-                                span={8}
+                                md={24} lg={12} xl={8} xxl={6}
                                 key={bootcamp.id}
                                 className="bootcamp-item"
                             >

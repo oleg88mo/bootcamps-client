@@ -109,21 +109,21 @@ function AddNewCourseForBootcamp(p) {
         <div className="new-course-for-bootcamp">
             <h1>{locale.add_new_course} Course {locale.add_new_course_for} Bootcamp</h1>
 
-            {myBootcamps && <div className="select-bootcamp">
+            {myBootcamps && (<div className="select-bootcamp">
                 <Select
                     placeholder={locale.select_bootcamp_for_creating_course}
                     onChange={handlerChangeBootcamp}
-                    style={{width: 250}}
+                    style={{width: '50%', marginBottom: 20}}
                 >
                     {myBootcamps.data && myBootcamps.data.map(bootcamp => (
                         <Option value={bootcamp.id} key={bootcamp.id}>{bootcamp.name}</Option>)
                     )}
                 </Select>
-            </div>}
+            </div>)}
 
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">
-                    <Col span={12}>
+                    <Col md={24} lg={12}>
                         <Form.Item label={locale.title}>
                             {getFieldDecorator('title', {
                                 rules: [{required: true, message: locale.message_enter_title_for_course}],
@@ -138,14 +138,14 @@ function AddNewCourseForBootcamp(p) {
                             {getFieldDecorator('weeks', {
                                 rules: [{required: true, message: locale.message_enter_weeks_for_course}],
                             })(
-                                <InputNumber min={1}/>,
+                                <InputNumber min={1} style={{width: '100%'}}/>,
                             )}
                         </Form.Item>
                         <Form.Item label={locale.tuition}>
                             {getFieldDecorator('tuition', {
                                 rules: [{required: true, message: locale.message_enter_tuition_for_course}],
                             })(
-                                <InputNumber min={1}/>,
+                                <InputNumber min={1} style={{width: '100%'}}/>,
                             )}
                         </Form.Item>
                         <Form.Item>
@@ -156,7 +156,7 @@ function AddNewCourseForBootcamp(p) {
                             )}
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col md={24} lg={12}>
                         <Form.Item label={locale.minimum_skill} hasFeedback>
                             {getFieldDecorator('minimumSkill', {
                                 rules: [{required: true, message: locale.message_enter_minimum_skill}],

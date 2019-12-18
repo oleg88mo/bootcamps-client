@@ -54,7 +54,7 @@ function EditCourse(p) {
 
             <Form onSubmit={handleSubmit}>
                 <Row type="flex">
-                    <Col span={12}>
+                    <Col md={24} lg={12}>
                         <Form.Item label={locale.title}>
                             {getFieldDecorator('title', {
                                 rules: [{required: true, message: locale.message_enter_title_for_course}],
@@ -82,7 +82,7 @@ function EditCourse(p) {
                             )}
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col md={24} lg={12}>
                         <Form.Item label="Skill" hasFeedback>
                             {getFieldDecorator('minimumSkill', {
                                 rules: [{required: true, message: locale.message_enter_minimum_skill}],

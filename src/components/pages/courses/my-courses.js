@@ -92,7 +92,7 @@ function MyCourses({locale}) {
                 {myCourses && myCourses.data && myCourses.data.map(b => (
                     <li key={b._id}>
                         <Row type="flex" align="middle">
-                            <Col span={19}>
+                            <Col md={24} lg={19}>
                                 <h3>{b.title}</h3>
                                 <p>
                                     {locale.weeks}: <b>{b.weeks}</b>,
@@ -100,7 +100,7 @@ function MyCourses({locale}) {
                                 </p>
                                 <div>{b.description}</div>
                             </Col>
-                            <Col span={5}>
+                            <Col md={24} lg={5}>
                                 <Button
                                     type="primary"
                                     block

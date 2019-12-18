@@ -137,7 +137,7 @@ function SingleBootcapm({locale}) {
                     subTitle={bootcamp.name}
                 />)}
                 <Row type="flex">
-                    <Col span={16} className="column-left">
+                    <Col md={24} lg={15} xl={16} className="column-left">
                         {loadingBootcamp ? (<Icon type="loading" className="loading"/>) : (<h1>{bootcamp.name}</h1>)}
                         {loadingBootcamp ? (<Icon type="loading" className="loading"/>) : bootcamp.description ? (<>
                             <h3>{bootcamp.description}</h3>
@@ -173,7 +173,7 @@ function SingleBootcapm({locale}) {
                                 </Collapse>
                             </div>) : null}
                     </Col>
-                    <Col span={8} className="column-right">
+                    <Col md={24} lg={9} xl={8} className="column-right">
                         {bootcamp.photo !== 'no-photo.jpg' ? (<div className="image">
                             <img src={`${PHOTO_URL}/${bootcamp.photo}`} alt={bootcamp.name}/>
                         </div>) : (<Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>)}

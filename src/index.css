@@ -141,7 +141,7 @@ h4 {
       .bootcamp-page .filter .small-mode .ant-tag {
         padding: 3px 10px;
         font-size: 14px;
-        margin-right: 15px;
+        margin: 5px 15px 5px 0;
         background-color: #fff;
         position: relative; }
         .bootcamp-page .filter .small-mode .ant-tag.tag__from:after, .bootcamp-page .filter .small-mode .ant-tag.empty:after {
@@ -415,6 +415,27 @@ h4 {
     .dashboard .my-bootcamp > ul li, .dashboard .my-course > ul li {
       border-top: 1px solid #bbb;
       padding-right: 5px; }
+  .dashboard .my-bootcamp .photo, .dashboard .my-course .photo {
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 0;
+    justify-content: center; }
+    .dashboard .my-bootcamp .photo .ant-btn, .dashboard .my-course .photo .ant-btn {
+      padding: 0; }
+    .dashboard .my-bootcamp .photo img, .dashboard .my-course .photo img {
+      margin-bottom: 10px; }
+    .dashboard .my-bootcamp .photo .ant-empty-normal, .dashboard .my-course .photo .ant-empty-normal {
+      margin: 0 0 10px; }
+    .dashboard .my-bootcamp .photo label, .dashboard .my-course .photo label {
+      padding: 0 15px;
+      display: flex;
+      height: 100%;
+      align-items: center;
+      cursor: pointer; }
+      .dashboard .my-bootcamp .photo label i, .dashboard .my-course .photo label i {
+        margin-right: 5px; }
 .dashboard .edit-bootcamp, .dashboard .edit-course {
   border-top: 1px solid #f9f9f9; }
   .dashboard .edit-bootcamp .ant-upload.ant-upload-disabled .ant-btn, .dashboard .edit-course .ant-upload.ant-upload-disabled .ant-btn {

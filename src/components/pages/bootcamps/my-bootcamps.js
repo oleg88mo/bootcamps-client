@@ -130,27 +130,31 @@ function MyBootcamps({locale}) {
                 {myBootcamps && myBootcamps.data && myBootcamps.data.map(b => (
                     <li key={b.id}>
                         <Row type="flex" align="middle">
-                            <Col span={3}>
-                                {b.photo !== 'no-photo.jpg' ?
-                                    <img src={`${PHOTO_URL}/${b.photo}`} alt='photo'/>
-                                    :
-                                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
-                                }
-                                <input name="file"
-                                       type="file"
-                                       style={{display: 'none'}}
-                                       multiple
-                                       id={`photo-${b.id}`}
-                                       onChange={(e) => handleChangeFile(e, b.id)}
-                                />
-                                {currentFile === null && <label htmlFor={`photo-${b.id}`}><Icon type="upload"/> {locale.select_photo}...</label>}
-                                {uploadPhotoId === b.id && <Button onClick={() => handlerUploadPhoto(b.id)}>{locale.upload} ({currentFile.name})</Button>}
+                            <Col md={24} lg={5} xl={4}>
+                                <div className="photo">
+                                    {b.photo !== 'no-photo.jpg' ?
+                                        <img src={`${PHOTO_URL}/${b.photo}`} alt='photo'/>
+                                        :
+                                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+                                    }
+                                    <input name="file"
+                                           type="file"
+                                           style={{display: 'none'}}
+                                           multiple
+                                           id={`photo-${b.id}`}
+                                           onChange={(e) => handleChangeFile(e, b.id)}
+                                    />
+                                    {currentFile === null && (<Button type="primary">
+                                        <label htmlFor={`photo-${b.id}`}><Icon type="upload"/> {locale.select_photo}</label>
+                                    </Button>)}
+                                    {uploadPhotoId === b.id && <Button onClick={() => handlerUploadPhoto(b.id)}>{locale.upload} ({currentFile.name})</Button>}
+                                </div>
                             </Col>
-                            <Col span={16}>
+                            <Col md={24} lg={13} xl={14}>
                                 <h3>{b.name}</h3>
                                 <div>{b.description}</div>
                             </Col>
-                            <Col span={5}>
+                            <Col md={24} lg={6}>
                                 <Button
                                     type="primary"
                                     block
