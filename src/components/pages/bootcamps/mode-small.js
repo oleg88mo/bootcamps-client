@@ -35,20 +35,20 @@ function SmallMode(p) {
         <div className="small-mode">
             <span className="title">You select:</span>
             {/* price */}
-            {priceFrom || priceTo ? <PriceComponent from={priceFrom} to={priceTo} locale={locale} closeTag={p.closeTag}/> : null}
+            {priceFrom || priceTo ? (<PriceComponent from={priceFrom} to={priceTo} locale={locale} closeTag={p.closeTag}/>) : null}
             {/* rating */}
-            {ratingFrom || ratingTo ? <RatingComponent from={ratingFrom} to={ratingTo} locale={locale} closeTag={p.closeTag}/> : null}
+            {ratingFrom || ratingTo ? (<RatingComponent from={ratingFrom} to={ratingTo} locale={locale} closeTag={p.closeTag}/>) : null}
             {/* careers */}
-            {careers && <CareersComponent careers={careers} locale={locale} closeTag={p.closeTag}/>}
+            {careers && (<CareersComponent careers={careers} locale={locale} closeTag={p.closeTag}/>)}
             {/* housing || jobAssistance || jobGuarantee || acceptGi */}
-            {housing && <AdditionalComponent el={housing} locale={locale.housing} closeTag={p.closeTag}/>}
-            {jobAssistance && <AdditionalComponent el={jobAssistance} locale={locale.job_assistance} closeTag={p.closeTag}/>}
-            {jobGuarantee && <AdditionalComponent el={jobGuarantee} locale={locale.job_guarantee} closeTag={p.closeTag}/>}
-            {acceptGi && <AdditionalComponent el={acceptGi} locale={locale.accepts_gi_bill} closeTag={p.closeTag}/>}
+            {housing && (<AdditionalComponent el={housing} locale={locale.housing} closeTag={p.closeTag}/>)}
+            {jobAssistance && (<AdditionalComponent el={jobAssistance} locale={locale.job_assistance} closeTag={p.closeTag}/>)}
+            {jobGuarantee && (<AdditionalComponent el={jobGuarantee} locale={locale.job_guarantee} closeTag={p.closeTag}/>)}
+            {acceptGi && (<AdditionalComponent el={acceptGi} locale={locale.accepts_gi_bill} closeTag={p.closeTag}/>)}
             {/* name || phone */}
-            {name || phone ? <NamePhoneComponent el={name || phone} locale={locale} closeTag={p.closeTag}/> : null}
+            {name || phone ? (<NamePhoneComponent el={name || phone} locale={locale} closeTag={p.closeTag}/>) : null}
             {/* search by radius */}
-            {zipCode && distance ? <RadiusComponent zipCode={zipCode} distance={distance} locale={locale} closeTag={p.closeTag}/> : null}
+            {zipCode && distance ? (<RadiusComponent zipCode={zipCode} distance={distance} locale={locale} closeTag={p.closeTag}/>) : null}
         </div>
     );
 }

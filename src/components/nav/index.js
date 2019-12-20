@@ -16,12 +16,11 @@ function Nav(p) {
     const dispatch = useDispatch();
     const {Header} = Layout;
 
-    const locale = p.locale;
+    const {locale, name, setName} = p;
 
     const {lang} = useSelector(state => state.Users);
     const [isLoggin, setIsLoggin] = useState(null);
     const [isLoadingAuth, setIsLoadingAuth] = useState(false);
-    const [name, setName] = useState(null);
 
     const handlerCheckIsLoggin = async () => {
         const isLoggin = await window.localStorage.getItem('bootcampAuthToken');
@@ -84,13 +83,9 @@ function Nav(p) {
     useEffect(() => {
         let mounted = true;
 
-        const checkIsLoggin = () => {
-            if (mounted) {
-                handlerCheckIsLoggin()
-            }
-        };
-
-        checkIsLoggin();
+        if (mounted) {
+            handlerCheckIsLoggin()
+        }
 
         return () => {
             mounted = false;
@@ -117,22 +112,24 @@ function Nav(p) {
                         <Button onClick={() => handlerChangeLocale('ru')} className={`${lang === 'ru' ? 'active' : ''}`}>RU</Button>
                     </div>
                 </Menu.Item>
-                {!isLoggin && <Menu.Item
+                {!isLoggin && (<Menu.Item
                     key="5"
                     style={{float: 'right'}}
                     className="ant-menu-item"
                 >
-                    {isLoadingAuth ? <Icon type="loading"/> : <Link to="/login"><Icon type="login"/>{locale.login}</Link>}
-                </Menu.Item>}
+                    {isLoadingAuth ? (<Icon type="loading"/>) : (
+                        <Link to="/login"><Icon type="login"/>{locale.login}</Link>)}
+                </Menu.Item>)}
                 {!isLoggin &&
                 <Menu.Item
                     key="6"
                     style={{float: 'right'}}
                     className="ant-menu-item"
                 >
-                    {isLoadingAuth ? <Icon type="loading"/> : <Link to="/register"><Icon type="user"/>{locale.register}</Link>}
+                    {isLoadingAuth ? (<Icon type="loading"/>) : (
+                        <Link to="/register"><Icon type="user"/>{locale.register}</Link>)}
                 </Menu.Item>}
-                {isLoggin && <Menu.Item
+                {isLoggin && (<Menu.Item
                     key="7"
                     style={{float: 'right'}}
                     className="di-select"
@@ -146,7 +143,7 @@ function Nav(p) {
                             <Icon type="user"/> {name} <Icon type="down"/>
                         </a>
                     </Dropdown>
-                </Menu.Item>}
+                </Menu.Item>)}
             </Menu>
         </Header>
     )

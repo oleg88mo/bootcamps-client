@@ -9,6 +9,7 @@ import DetailModeSearchByName from '../bootcamps/mode-detail-search-by-name';
 // actions
 import {setBootcampsData, setDisabledSearchForListComponent} from "../../../redux/bootcamps/actions";
 import {changePageName} from "../../../redux/users/actions";
+import {openNotification, req} from "../../utils/usedFunctions";
 
 function SearchForm({locale}) {
     const dispatch = useDispatch();
@@ -71,21 +72,26 @@ function SearchForm({locale}) {
 
         const loadData = async () => {
             if (mounted) {
-                let responseBootcamps;
+                setLoaderSearch(true);
 
-                try {
-                    setLoaderSearch(true);
-                    responseBootcamps = await axios.get(`${URL}/bootcamps?${searchUrl}`);
+                const options = {
+                    url: `${URL}/bootcamps?${searchUrl}`,
+                    method: 'get',
+                };
 
-                    if (responseBootcamps && responseBootcamps.data.success) {
-                        dispatch(setBootcampsData(responseBootcamps.data));
+                req(options).then(
+                    response => {
+                        if (response && response.data.success) {
+                            dispatch(setBootcampsData(response.data));
+                            setLoaderSearch(false);
+                            history.push('/bootcamps');
+                        }
+                    },
+                    error => {
                         setLoaderSearch(false);
-                        history.push('/bootcamps');
+                        console.log('error',error);
                     }
-                } catch (e) {
-                    setLoaderSearch(false);
-                    console.log('error:', e);
-                }
+                )
             }
         };
         if (onSearch) {
@@ -110,7 +116,7 @@ function SearchForm({locale}) {
                     <Input placeholder="Zipcode"/>
                 </Col>
                 <Col span={24}>
-                    {loaderSearch && <p>{locale.loading}...</p>}
+                    {loaderSearch && (<p>{locale.loading}...</p>)}
                     <Button
                         type="primary"
                         onClick={handlerClickFilterSearch}

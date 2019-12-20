@@ -37,10 +37,7 @@ export function changeBootcampsFilterOption(payload) {
 }
 
 export function setDisabledSearchForListComponent(payload) {
-    return async dispatch => await dispatch({
-        type: TYPES.BOOTCAMPS_SET_DISABLED_SEARCH_PARAM_FOR_LIST_COMPONENT,
-        payload
-    })
+    return async dispatch => await dispatch({type: TYPES.BOOTCAMPS_SET_DISABLED_SEARCH_PARAM_FOR_LIST_COMPONENT, payload})
 }
 
 export function deleteElementFromFilter(payload) {
@@ -50,4 +47,3 @@ export function deleteElementFromFilter(payload) {
 export function clearAllBootcampsFilter(payload) {
     return async dispatch => await dispatch({type: TYPES.BOOTCAMPS_CLEAR_ALL_FILTER, payload})
 }
-

@@ -357,6 +357,9 @@ h4 {
   justify-content: center;
   height: 100%; }
 
+.login-form {
+  min-width: 350px; }
+
 .login-form, .register-form {
   margin: 0 auto;
   background-color: #f9f9f9;

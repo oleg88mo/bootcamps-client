@@ -48,7 +48,7 @@ function DetailModeSearchByName(p) {
 
     return (
         <div className="price">
-            {page !== 'home' && <p className='filter-label'>{locale.search_by}:</p>}
+            {page !== 'home' && (<p className='filter-label'>{locale.search_by}:</p>)}
             <div className="price-container">
                 <Select
                     defaultValue={searchBy}

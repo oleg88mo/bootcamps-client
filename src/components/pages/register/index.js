@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
-import axios from 'axios';
 import {URL} from '../../../configKey';
 import {Form, Input, Checkbox, Radio, Button, Icon, Modal} from 'antd';
-import {openNotification} from '../../utils/usedFunctions';
+import {openNotification, req} from '../../utils/usedFunctions';
 
 function Register(p) {
     const {locale, form} = p;
@@ -24,21 +23,23 @@ function Register(p) {
 
         form.validateFieldsAndScroll(err => {
             if (!err) {
-                axios.post(`${URL}/auth/register`, {
-                    name,
-                    email,
-                    password,
-                    role,
-                })
-                    .then(response => {
+                const options = {
+                    data: {name, email, password, role},
+                    url: `${URL}/auth/register`,
+                    method: 'post',
+                };
+
+                req(options).then(
+                    response => {
                         if (response && response.data) {
                             window.localStorage.setItem('bootcampAuthToken', JSON.stringify(response.data.token));
                             window.location = '/';
                         }
-                    })
-                    .catch(error => {
-                        openNotification('error', '/register',error.response && error.response.data.error)
-                    });
+                    },
+                    error => {
+                        openNotification('error', '/register', error.response && error.response.data.error)
+                    }
+                )
             }
         });
     };
@@ -155,10 +156,7 @@ function Register(p) {
                                     validator: compareToFirstPassword,
                                 },
                             ],
-                        })(<Input.Password
-                            onBlur={handleConfirmBlur}
-                            // onChange={e => setConfirmPassword(e.target.value !== "" ? e.target.value : null)}
-                        />)}
+                        })(<Input.Password onBlur={handleConfirmBlur}/>)}
                     </Form.Item>
                     <Form.Item label={locale.use_your_role}>
                         {getFieldDecorator('role', {

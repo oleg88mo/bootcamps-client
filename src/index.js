@@ -12,6 +12,7 @@ import App from './App'
 
 const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));
 const RootWithAuth = withRouter(App);
+
 ReactDOM.render(
     <Provider store={store}>
         <Router>

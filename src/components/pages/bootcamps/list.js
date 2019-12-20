@@ -130,8 +130,8 @@ function List({locale}) {
                                         <span className="link">{bootcamp.name}</span>
                                     </Link>
 
-                                    {bootcamp.location.city && <p className="city">{bootcamp.location.city}{bootcamp.location.country ? `, ${bootcamp.location.country}` : null}</p>}
-                                    {bootcamp.description && <span className="description">{bootcamp.description}</span>}
+                                    {bootcamp.location.city && (<p className="city">{bootcamp.location.city}{bootcamp.location.country ? `, ${bootcamp.location.country}` : null}</p>)}
+                                    {bootcamp.description && (<span className="description">{bootcamp.description}</span>)}
                                 </div>
                             </Col>)
                         )}

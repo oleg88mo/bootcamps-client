@@ -3,7 +3,7 @@ import {Layout, Menu, Icon} from 'antd';
 // component
 import RenderComponents from './renderComponents';
 
-function Dashboard({locale}) {
+function Dashboard({locale, setName}) {
     const {Header, Sider, Content} = Layout;
     const {SubMenu} = Menu;
 
@@ -88,6 +88,7 @@ function Dashboard({locale}) {
                     <RenderComponents
                         componentName={componentName}
                         locale={locale}
+                        setName={setName}
                     />
                 </Content>
             </Layout>

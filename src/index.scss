@@ -600,6 +600,10 @@ h4 {
   height: 100%;
 }
 
+.login-form {
+  min-width: 350px;
+}
+
 .login-form, .register-form {
   margin: 0 auto;
   background-color: $GREY_LIGHT;
@@ -705,9 +709,11 @@ h4 {
       align-items: center;
       padding: 15px 0;
       justify-content: center;
-      .ant-btn{
+
+      .ant-btn {
         padding: 0;
       }
+
       img {
         margin-bottom: 10px;
       }
@@ -722,7 +728,8 @@ h4 {
         height: 100%;
         align-items: center;
         cursor: pointer;
-        i{
+
+        i {
           margin-right: 5px;
         }
       }

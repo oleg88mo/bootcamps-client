@@ -124,7 +124,7 @@ function MyBootcamps({locale}) {
                 onClick={handlerSort}
                 style={{marginBottom: 15}}
             >
-                {sort === 'ASC' ? <Icon type="sort-ascending"/> : <Icon type="sort-descending"/>} {locale.sort_by_name}
+                {sort === 'ASC' ? (<Icon type="sort-ascending"/>) : (<Icon type="sort-descending"/>)} {locale.sort_by_name}
             </Button>
             <ul>
                 {myBootcamps && myBootcamps.data && myBootcamps.data.map(b => (
@@ -147,7 +147,7 @@ function MyBootcamps({locale}) {
                                     {currentFile === null && (<Button type="primary">
                                         <label htmlFor={`photo-${b.id}`}><Icon type="upload"/> {locale.select_photo}</label>
                                     </Button>)}
-                                    {uploadPhotoId === b.id && <Button onClick={() => handlerUploadPhoto(b.id)}>{locale.upload} ({currentFile.name})</Button>}
+                                    {uploadPhotoId === b.id && (<Button onClick={() => handlerUploadPhoto(b.id)}>{locale.upload} ({currentFile.name})</Button>)}
                                 </div>
                             </Col>
                             <Col md={24} lg={13} xl={14}>

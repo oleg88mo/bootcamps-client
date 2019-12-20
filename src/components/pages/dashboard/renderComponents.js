@@ -6,7 +6,7 @@ import AddNewCourseForBootcamp from '../courses/add-new-course-for-bootcamp';
 import MyCourses from '../courses/my-courses';
 import MyInformation from './myInformation';
 
-function RenderComponents({componentName, locale}) {
+function RenderComponents({componentName, locale, setName}) {
     const component = () => {
         switch (componentName) {
             case 'add-new-bootcamp':
@@ -18,7 +18,7 @@ function RenderComponents({componentName, locale}) {
             case 'my-courses':
                 return <MyCourses locale={locale}/>;
             case 'my-information':
-                return <MyInformation locale={locale}/>;
+                return <MyInformation locale={locale} setName={setName}/>;
             default:
                 return null;
         }

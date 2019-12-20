@@ -31,21 +31,15 @@ export default function bootcamps(state = INIT_STATE, {type, payload}) {
 
             return {
                 ...state,
-                filter: [
-                    ...newFilter.filter(criteria =>
-                        Array.isArray(criteria.values)
-                            ? criteria.values.length
-                            : criteria.values,
-                    ),
-                ],
+                filter: [...newFilter.filter(criteria =>
+                    Array.isArray(criteria.values) ? criteria.values.length : criteria.values,
+                )],
             };
         }
         case TYPES.BOOTCAMPS_CLEAR_FILTER: {
             return {
                 ...state,
-                filter: [
-                    ...state.filter.filter(el => el.name !== payload.name),
-                ],
+                filter: [...state.filter.filter(el => el.name !== payload.name)],
             };
         }
         case TYPES.BOOTCAMPS_CLEAR_ALL_FILTER: {
@@ -104,11 +98,13 @@ export default function bootcamps(state = INIT_STATE, {type, payload}) {
         }
         case TYPES.BOOTCAMPS_CHANGE_FILTER_OPTION: {
             const newFilter = [...state.filter.map(m => {
-                if(m.name === payload.prev){
-                    return payload.next
+                    if (m.name === payload.prev) {
+                        return payload.next
+                    }
+
+                    return m;
                 }
-                return m;
-            })];
+            )];
 
             return {
                 ...state,

@@ -136,20 +136,20 @@ function Filter({locale}) {
 
     return (
         <div className="filter">
-            {!visible && <div className="action-panel">
+            {!visible && (<div className="action-panel">
                 <span>
-                    {loaderSearch && <Icon type="loading"/>}
+                    {loaderSearch && (<Icon type="loading"/>)}
                 </span>
                 <Button type="primary" onClick={() => handlerVisibleFilter(true)}>{setting} {locale.filter}</Button>
-            </div>}
-            {visible && <DetailMode
+            </div>)}
+            {visible && (<DetailMode
                 handlerVisibleSmallModeFilter={handlerVisibleSmallModeFilter}
                 handlerVisibleFilter={handlerVisibleFilter}
                 handlerClickFilterSearch={handlerClickFilterSearch}
                 filter={filter}
                 locale={locale}
-            />}
-            {smallMode && <SmallMode locale={locale} closeTag={closeTag}/>}
+            />)}
+            {smallMode && (<SmallMode locale={locale} closeTag={closeTag}/>)}
         </div>
     );
 }

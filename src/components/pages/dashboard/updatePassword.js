@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import axios from 'axios';
 import {URL} from '../../../configKey';
 import {Form, Input, Button} from 'antd';
-import {openNotification} from '../../utils/usedFunctions';
+import {openNotification, req} from '../../utils/usedFunctions';
 
 function UpdatePassword(p) {
     const {getFieldDecorator} = p.form;
@@ -17,24 +16,23 @@ function UpdatePassword(p) {
                 const isLoggin = window.localStorage.getItem('bootcampAuthToken');
                 const tokenRemoveFirstChar = isLoggin.substr(1);
                 const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+                const options = {
+                    headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                    data: {currentPassword, newPassword},
+                    url: `${URL}/auth/updatepassword`,
+                    method: 'put',
+                };
 
-                axios.put(`${URL}/auth/updatepassword`, {
-                    currentPassword,
-                    newPassword,
-                }, {
-                    headers: {
-                        'content-type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                    .then(response => {
+                req(options).then(
+                    response => {
                         if (response && response.data) {
-                            openNotification('success', '/UpdatePassword','User password was updated');
+                            openNotification('success', '/UpdatePassword', 'User password was updated');
                         }
-                    })
-                    .catch(error => {
-                        openNotification('error', '/UpdatePassword',error.response && error.response.data.error)
-                    });
+                    },
+                    error => {
+                        openNotification('error', '/UpdatePassword', error.response && error.response.data.error)
+                    }
+                )
             }
         });
     };

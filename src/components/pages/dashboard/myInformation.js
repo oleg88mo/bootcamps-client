@@ -1,16 +1,17 @@
 import React, {useState} from "react";
-import axios from 'axios';
 import {Row, Col, Form, Input, Button, Select} from 'antd';
-import {openNotification} from '../../utils/usedFunctions';
+import {openNotification, req} from '../../utils/usedFunctions';
 import {URL} from '../../../configKey';
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 // component
 import UpdatePassword from './updatePassword';
+import {updateUserInpormation} from "../../../redux/users/actions";
 
 function MyInformation(p) {
-    const {form, locale} = p;
+    const {form, locale, setName} = p;
     const {getFieldDecorator, getFieldsError} = form;
 
+    const dispatch = useDispatch();
     const me = useSelector(state => state.Users.me);
 
     const [loading, setLoading] = useState(false);
@@ -39,22 +40,28 @@ function MyInformation(p) {
                 };
                 const data = removeEmpty(values);
 
-                data && axios.put(`${URL}/users/${userInformation.id}`, data, {
-                    headers: {
-                        'content-type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                const options = {
+                    headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                    data,
+                    url: `${URL}/users/${userInformation.id}`,
+                    method: 'put',
+                };
+
+                req(options).then(
+                    response => {
+                        setLoading(false);
+                        setDisabled(false);
+                        dispatch(updateUserInpormation(response.data));
+                        const {name} = response.data.data;
+                        setName(name);
+                        openNotification('success', 'Message', `${locale.user_information} ${locale.was_updated}`);
+                    },
+                    error => {
+                        openNotification('error', 'Message', error.response && error.response.data.error);
+                        setLoading(false);
+                        setDisabled(false);
                     }
-                })
-                    .then(response => {
-                        setLoading(false);
-                        setDisabled(false);
-                        openNotification('success', 'Message',`${locale.user_information} ${locale.was_updated}`);
-                    })
-                    .catch(error => {
-                        openNotification('error', 'Message',error.response && error.response.data.error);
-                        setLoading(false);
-                        setDisabled(false);
-                    });
+                );
             }
         });
     };
@@ -106,7 +113,7 @@ function MyInformation(p) {
                         loading={loading}
                         disabled={hasErrors(getFieldsError()) || disabled}
                     >
-                        {locale.update} {locale.user_information}
+                        {locale.edit}
                     </Button>
                 </footer>
             </Form>

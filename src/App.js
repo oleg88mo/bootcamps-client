@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {useSelector} from 'react-redux';
 import {Layout} from 'antd';
@@ -22,12 +22,18 @@ function App() {
     const {Content, Footer} = Layout;
 
     const lang = useSelector(state => state.Users.lang);
+    const [name, setName] = useState(null);
+
     const locale = Object.keys(Locale.Locales).map(l => l === lang ? l : null).filter(f => f !== null);
 
     return (
         <Router>
             <Layout>
-                <Nav locale={Locale.Locales[locale]}/>
+                <Nav
+                    locale={Locale.Locales[locale]}
+                    name={name}
+                    setName={setName}
+                />
                 <Content style={{marginTop: 50}}>
                     <div className="content-container">
                         <Switch>
@@ -39,7 +45,7 @@ function App() {
                             <Route path="/login" component={() => <Login locale={Locale.Locales[locale]}/>}/>
                             <Route path="/register" component={() => <Register locale={Locale.Locales[locale]}/>}/>
 
-                            <Protected exact path="/dashboard" locale={Locale.Locales[locale]}/>
+                            <Protected exact path="/dashboard" locale={Locale.Locales[locale]} setName={setName}/>
                             <Route component={() => <PageNotFound locale={Locale.Locales[locale]}/>}/>
                         </Switch>
                     </div>

@@ -1,4 +1,6 @@
-import * as TYPES from './types'
+import * as TYPES from './types';
+// utils
+import {sortPayload, sortByClick} from '../../components/utils/usedFunctions';
 
 const INIT_STATE = {
     data: [],
@@ -42,31 +44,14 @@ export default function users(state = INIT_STATE, {type, payload}) {
             return {
                 ...state,
                 myBootcamps: {
-                    data: payload.data && payload.data.sort((a, b) => {
-                        const resA = a.name.toLowerCase();
-                        const resB = b.name.toLowerCase();
-
-                        return resA > resB ? 1 : resA === resB ? 0 : -1;
-                    }),
+                    data: payload.data && sortPayload(payload.data, 'name'),
                     totalCount: payload.totalCount,
                     pagination: payload.pagination
                 }
             };
         }
         case TYPES.SORT_BOOTCAMPS: {
-            const sortedData = state.myBootcamps && state.myBootcamps.data ? [...state.myBootcamps.data.sort((a, b) => {
-                let nameA = a.name.toUpperCase();
-                let nameB = b.name.toUpperCase();
-
-                if (nameA < nameB) {
-                    return payload === 'DESC' ? -1 : 1;
-                }
-                if (nameA > nameB) {
-                    return payload === 'DESC' ? 1 : -1;
-                }
-
-                return 0;
-            })] : [];
+            const sortedData = state.myBootcamps && state.myBootcamps.data ? sortByClick(state.myBootcamps.data, 'name', payload) : [];
 
             return {
                 ...state,
@@ -79,6 +64,7 @@ export default function users(state = INIT_STATE, {type, payload}) {
         }
         case TYPES.SET_MY_COURSES: {
             const tempArr = [];
+
             if (payload.data.length > 0) {
                 payload.data.map(el => el.courses.length > 0 && el.courses.map(c => tempArr.push(c)))
             }
@@ -86,31 +72,14 @@ export default function users(state = INIT_STATE, {type, payload}) {
             return {
                 ...state,
                 myCourses: {
-                    data: tempArr.sort((a, b) => {
-                        const resA = a.title.toLowerCase();
-                        const resB = b.title.toLowerCase();
-
-                        return resA > resB ? 1 : resA === resB ? 0 : -1;
-                    }),
+                    data: tempArr && sortPayload(tempArr, 'title'),
                     totalCount: payload.totalCount,
                     pagination: payload.pagination
                 }
             };
         }
         case TYPES.SORT_COURSES: {
-            const sortedData = state.myCourses && state.myCourses.data ? [...state.myCourses.data.sort((a, b) => {
-                let nameA = a.title.toUpperCase();
-                let nameB = b.title.toUpperCase();
-
-                if (nameA < nameB) {
-                    return payload === 'DESC' ? -1 : 1;
-                }
-                if (nameA > nameB) {
-                    return payload === 'DESC' ? 1 : -1;
-                }
-
-                return 0;
-            })] : [];
+            const sortedData = state.myCourses && state.myCourses.data ? sortByClick(state.myCourses.data, 'title', payload) : [];
 
             return {
                 ...state,
@@ -125,6 +94,16 @@ export default function users(state = INIT_STATE, {type, payload}) {
             return {
                 ...state,
                 lang: payload
+            };
+        }
+        case TYPES.UPDATE_USER_INFORMATION: {
+            return {
+                ...state,
+                me: {
+                    ...state.me,
+                    email: payload.email,
+                    name: payload.name
+                }
             };
         }
         default:

@@ -31,3 +31,7 @@ export function setMyCourses(payload) {
 export function sortCourses(payload) {
     return async dispatch => await dispatch({type: TYPES.SORT_COURSES, payload})
 }
+
+export function updateUserInpormation(payload) {
+    return async dispatch => await dispatch({type: TYPES.UPDATE_USER_INFORMATION, payload})
+}

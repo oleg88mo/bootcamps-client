@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios';
 import {notification} from 'antd';
 
 export const bootcampRatind = async (bootcamp, setMiddleRating) => {
@@ -24,3 +25,36 @@ export const openNotification = (type, message, description) => {
         description
     });
 };
+
+export const sortPayload = (dataSort, fieldName) => {
+    dataSort.sort((a, b) => {
+        const resA = a[fieldName].toLowerCase();
+        const resB = b[fieldName].toLowerCase();
+
+        return resA > resB ? 1 : resA === resB ? 0 : -1;
+    });
+
+    return dataSort;
+};
+
+export const sortByClick = (dataSort, fieldName, payloadSortedField) => {
+    dataSort.sort((a, b) => {
+        let nameA = a[fieldName].toUpperCase();
+        let nameB = b[fieldName].toUpperCase();
+
+        if (nameA < nameB) {
+            return payloadSortedField === 'DESC' ? -1 : 1;
+        }
+        if (nameA > nameB) {
+            return payloadSortedField === 'DESC' ? 1 : -1;
+        }
+
+        return 0;
+    });
+
+    return dataSort;
+};
+
+export function req(options) {
+    return axios({...options});
+}

@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import {Link} from 'react-router-dom';
-import axios from 'axios';
 import {Form, Icon, Input, Button} from 'antd';
-import {openNotification} from '../../utils/usedFunctions';
+import {openNotification, req} from '../../utils/usedFunctions';
 import {URL} from '../../../configKey';
 
 function Login(p) {
@@ -11,16 +10,27 @@ function Login(p) {
 
     const [loading, setLoading] = useState(false);
 
-    const handlerLoggedIn = values => axios.post(`${URL}/auth/login`, values)
-        .then(response => {
-            window.localStorage.setItem('bootcampAuthToken', JSON.stringify(response.data.token));
-            window.location = '/';
-            setLoading(false)
-        })
-        .catch(error => {
-            openNotification('error', '/login',error.response && error.response.data.error);
-            setLoading(false);
-        });
+    const handlerLoggedIn = values => {
+        const options = {
+            data: values,
+            url: `${URL}/auth/login`,
+            method: 'post',
+        };
+
+        req(options).then(
+            response => {
+                if (response && response.data) {
+                    window.localStorage.setItem('bootcampAuthToken', JSON.stringify(response.data.token));
+                    window.location = '/';
+                    setLoading(false)
+                }
+            },
+            error => {
+                openNotification('error', '/login',error.response && error.response.data.error);
+                setLoading(false);
+            }
+        );
+    };
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -63,7 +73,6 @@ function Login(p) {
                         )}
                     </Form.Item>
                     <Form.Item className="full-center">
-                        <Button className="login-form-forgot">{locale.forgot_password}?</Button>
                         <Button
                             type="primary"
                             htmlType="submit"
@@ -74,7 +83,7 @@ function Login(p) {
                                 <Icon type="loading"/> :
                                 <Icon type="login"/>
                             } {locale.login}</Button>
-                        Or <Link to="/register">{locale.register_now}!</Link>
+                        {locale.or} <Link to="/register">{locale.register_now}!</Link>
                     </Form.Item>
                 </Form>
             </div>
