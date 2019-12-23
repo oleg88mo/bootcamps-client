@@ -4,7 +4,7 @@ import {Tag, Tooltip} from "antd";
 export default function AdditionalComponent(p) {
     const {locale, el} = p;
 
-    return(
+    return (
         <>
             <Tag
                 closable

@@ -35,14 +35,6 @@ function List({locale}) {
 
     const handlerSetBootcampId = id => window.localStorage.setItem('singleBootcampId', id);
 
-    const bootcampRatind = bootcampId => {
-        const review = reviews.find(f => f.bootcamp.id === bootcampId);
-
-        if (review) {
-            return review.rating
-        }
-    };
-
     const onShowSizeChange = pageSizeNew => {
         setPageNumber(1);
         setPageSize(pageSizeNew);
@@ -107,11 +99,6 @@ function List({locale}) {
                                 className="bootcamp-item"
                             >
                                 <div className="wrap">
-                                    {bootcampRatind(bootcamp.id) ?
-                                        (<span className="rating"><Tag color="green">{bootcampRatind(bootcamp.id)}</Tag></span>) :
-                                        (<span className="rating"><Tag color="red">no rating yet</Tag></span>)
-                                    }
-
                                     <div className="img">
                                         <Link
                                             to={`/bootcamps/${bootcamp.slug}`}
@@ -147,11 +134,6 @@ function List({locale}) {
                                 defaultCurrent={1}
                                 className="pagination"
                                 total={totalCount}
-                                // defaultPageSize={pagination.pageSize}
-                                // current={pagination.pageNumber}
-
-                                // defaultPageSize={pageSize}
-                                // current={pageNumber}
                                 pageSizeOptions={['10', '25', '50']}
                             />
                         </ConfigProvider>

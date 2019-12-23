@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Row, Col, Button, Icon, notification} from "antd";
+import {Row, Col, Button, Icon} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import axios from "axios";
 import {URL} from "../../../configKey";
 // actions
 import {setMyCourses, sortCourses} from "../../../redux/users/actions";
 // component
 import EditCourse from './edit-course';
+import {openNotification, req} from "../../utils/usedFunctions";
 
 function MyCourses({locale}) {
     const dispatch = useDispatch();
@@ -21,26 +21,25 @@ function MyCourses({locale}) {
     const handlerSort = () => dispatch(sortCourses(sort === 'ASC' ? 'DESC' : 'ASC'));
 
     const deleteCourse = id => {
-        try {
-            const isLoggin = window.localStorage.getItem('bootcampAuthToken');
-            const tokenRemoveFirstChar = isLoggin.substr(1);
-            const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+        const isLoggin = window.localStorage.getItem('bootcampAuthToken');
+        const tokenRemoveFirstChar = isLoggin.substr(1);
+        const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
 
-            axios.delete(`${URL}/courses/${id}`, {
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            }).then(() => {
+        const options = {
+            headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+            url: `${URL}/courses/${id}`,
+            method: 'delete',
+        };
+
+        req(options).then(
+            () => {
                 setReloadedData(true);
-                notification['success']({
-                    message: 'Delete Course',
-                    description: 'Course was successful deleted!'
-                });
-            });
-        } catch (e) {
-            console.log('error:', e);
-        }
+                openNotification('success', 'Delete Course','Course was successful deleted!');
+            },
+            error => {
+                openNotification('error', 'Delete Course',error.response && error.response.data.error);
+            }
+        );
     };
 
     const handlerReloadCourse = () => {
@@ -53,18 +52,22 @@ function MyCourses({locale}) {
 
         const loadData = async () => {
             if (mounted) {
-                try {
-                    let responseCourses;
+                const options = {
+                    url: `${URL}/bootcamps?page=1&user=${me.id}`,
+                    method: 'get',
+                };
 
-                    responseCourses = await axios.get(`${URL}/bootcamps?page=1&user=${me.id}`);
-
-                    if (responseCourses && responseCourses.data.success) {
-                        dispatch(setMyCourses(responseCourses.data));
-                        setReloadedData(false);
+                req(options).then(
+                    response => {
+                        if (response && response.data.success) {
+                            dispatch(setMyCourses(response.data));
+                            setReloadedData(false);
+                        }
+                    },
+                    error => {
+                        console.log('error:', error);
                     }
-                } catch (e) {
-                    console.log('error:', e);
-                }
+                );
             }
         };
 

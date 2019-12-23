@@ -1,8 +1,7 @@
 import React, {useState} from "react";
-import axios from 'axios';
 import {Row, Col, Form, Input, Icon, Button, Select, Checkbox} from 'antd';
 import {URL} from '../../../configKey';
-import {openNotification} from '../../utils/usedFunctions';
+import {openNotification, req} from '../../utils/usedFunctions';
 
 function AddNewBootcamp(p) {
     const {locale} = p;
@@ -36,23 +35,26 @@ function AddNewBootcamp(p) {
 
                 const data = removeEmpty(values);
 
-                data && axios.post(`${URL}/bootcamps`, data, {
-                    headers: {
-                        'content-type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                    .then(() => {
+                const options = {
+                    headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                    data,
+                    url: `${URL}/bootcamps`,
+                    method: 'post',
+                };
+
+                data && req(options).then(
+                    () => {
                         setLoading(false);
                         setDisabled(false);
                         openNotification('success', `${locale.create_new_bootcamp}`, `${locale.bootcamp_was_created}`);
                         handlerReset();
-                    })
-                    .catch(error => {
-                        openNotification('error', `${locale.create_new_bootcamp}`,error.response && error.response.data.error);
+                    },
+                    error => {
+                        openNotification('error', `${locale.create_new_bootcamp}`, error.response && error.response.data.error);
                         setLoading(false);
                         setDisabled(false);
-                    });
+                    }
+                );
             }
         });
     };

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Input, Button, Row, Col} from 'antd';
-import axios from "axios";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {URL} from "../../../configKey";
@@ -9,7 +8,7 @@ import DetailModeSearchByName from '../bootcamps/mode-detail-search-by-name';
 // actions
 import {setBootcampsData, setDisabledSearchForListComponent} from "../../../redux/bootcamps/actions";
 import {changePageName} from "../../../redux/users/actions";
-import {openNotification, req} from "../../utils/usedFunctions";
+import {req} from "../../utils/usedFunctions";
 
 function SearchForm({locale}) {
     const dispatch = useDispatch();

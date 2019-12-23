@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
-import axios from 'axios';
 import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, InputNumber} from 'antd';
 import {URL} from '../../../configKey';
 import {useDispatch, useSelector} from "react-redux";
-import {openNotification} from '../../utils/usedFunctions';
+import {openNotification, req} from '../../utils/usedFunctions';
 // action
 import {setMyBootcamps} from "../../../redux/users/actions";
 
@@ -48,23 +47,26 @@ function AddNewCourseForBootcamp(p) {
 
                     const data = removeEmpty(values);
 
-                    data && axios.post(`${URL}/bootcamps/${selectedBootcamp}/courses`, data, {
-                        headers: {
-                            'content-type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
-                        .then(response => {
+                    const options = {
+                        headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                        data,
+                        url: `${URL}/bootcamps/${selectedBootcamp}/courses`,
+                        method: 'post',
+                    };
+
+                    data && req(options).then(
+                        () => {
                             setLoading(false);
                             setDisabled(false);
                             openNotification('success', 'Create New Bootcamp','Course was created');
                             handlerReset();
-                        })
-                        .catch(error => {
+                        },
+                        error => {
                             openNotification('error', null, error.response && error.response.data.error);
                             setLoading(false);
                             setDisabled(false);
-                        });
+                        }
+                    );
                 }
             }
         });
@@ -82,17 +84,22 @@ function AddNewCourseForBootcamp(p) {
 
         const loadData = async () => {
             if (mounted) {
-                try {
-                    let responseBootcamps;
-                    responseBootcamps = await axios.get(`${URL}/bootcamps?page=1&user=${me.id}`);
+                const options = {
+                    url: `${URL}/bootcamps?page=1&user=${me.id}`,
+                    method: 'get',
+                };
 
-                    if (responseBootcamps && responseBootcamps.data.success) {
-                        dispatch(setMyBootcamps(responseBootcamps.data));
-                        setReloadedData(false);
+                req(options).then(
+                    response => {
+                        if (response && response.data.success) {
+                            dispatch(setMyBootcamps(response.data));
+                            setReloadedData(false);
+                        }
+                    },
+                    error => {
+                        console.log('error:', error);
                     }
-                } catch (e) {
-                    console.log('error:', e);
-                }
+                );
             }
         };
 

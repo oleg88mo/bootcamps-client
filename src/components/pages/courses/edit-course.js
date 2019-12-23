@@ -1,7 +1,6 @@
 import React, {useState} from "react";
-import axios from 'axios';
 import {Row, Col, Form, Input, Icon, Button, Select, Checkbox, InputNumber} from 'antd';
-import {openNotification} from '../../utils/usedFunctions';
+import {openNotification, req} from '../../utils/usedFunctions';
 import {URL} from '../../../configKey';
 
 function EditCourse(p) {
@@ -28,22 +27,26 @@ function EditCourse(p) {
                 const tokenRemoveFirstChar = isLoggin.substr(1);
                 const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
 
-                axios.put(`${URL}/courses/${el._id}`, elementState, {
-                    headers: {
-                        'content-type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                    .then(() => {
+
+                const options = {
+                    headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                    data: elementState,
+                    url: `${URL}/courses/${el._id}`,
+                    method: 'put',
+                };
+
+                req(options).then(
+                    () => {
                         handlerReloadCourse();
                         setLoading(false);
                         setDisabled(false);
                         openNotification('success', 'Create New Course',`Course ${locale.was_updated}`);
-                    })
-                    .catch(() => {
+                    },
+                    () => {
                         setLoading(false);
                         setDisabled(false);
-                    });
+                    }
+                );
             }
         });
     };

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, Link} from "react-router-dom";
 import {PageHeader, Row, Col, Tag, Button, Empty, Rate, Modal, Slider, Input} from 'antd';
-import {openNotification} from '../../utils/usedFunctions';
+import {openNotification, req} from '../../utils/usedFunctions';
 import axios from "axios";
 import {URL} from '../../../configKey';
 import {emptyData} from '../../../components/img/iconSvg'
@@ -87,33 +87,35 @@ function ReviewsSingleBootcamp({locale}) {
         const sendReview = async () => {
             const isLoggin = await window.localStorage.getItem('bootcampAuthToken');
 
-            try {
-                if (isLoggin !== null) {
-                    const tokenRemoveFirstChar = isLoggin.substr(1);
-                    const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+            if (isLoggin !== null) {
+                const tokenRemoveFirstChar = isLoggin.substr(1);
+                const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
 
-                    const responseUsers = await axios.post(`${URL}/bootcamps/${bootcamp.id}/reviews`, {
+                const options = {
+                    headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                    data: {
                         "title": titleNewReview,
                         "text": textNewReview,
                         "rating": ratingNewReview
-                    }, {
-                        headers: {
-                            'content-type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                    });
+                    },
+                    url: `${URL}/bootcamps/${bootcamp.id}/reviews`,
+                    method: 'post',
+                };
 
-                    if (responseUsers.data.success) {
-                        await refreshBootcamp();
-                        await setModalVisible(false);
+                req(options).then(
+                    () => {
+                        refreshBootcamp();
+                        setModalVisible(false);
                         setRatingNewReview(0);
                         setTitleNewReview(null);
                         setTextNewReview(null);
+                    },
+                    error => {
+                        openNotification('warning', 'Create New Review', error.response && error.response.data.error);
                     }
-                }
-            } catch (error) {
-                openNotification('warning', 'Create New Review', error.response && error.response.data.error);
+                );
             }
+
         };
 
         sendReview();
@@ -123,32 +125,34 @@ function ReviewsSingleBootcamp({locale}) {
         const onEditReview = async () => {
             const isLoggin = await window.localStorage.getItem('bootcampAuthToken');
 
-            try {
-                if (isLoggin !== null) {
-                    const tokenRemoveFirstChar = isLoggin.substr(1);
-                    const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
 
-                    const responseUsers = await axios.put(`${URL}/reviews/${editedReview._id}`, {
+            if (isLoggin !== null) {
+                const tokenRemoveFirstChar = isLoggin.substr(1);
+                const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+
+                const options = {
+                    headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                    data: {
                         "title": editedReview.title,
                         "text": editedReview.text,
                         "rating": editedReview.rating
-                    }, {
-                        headers: {
-                            'content-type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                    });
+                    },
+                    url: `${URL}/reviews/${editedReview._id}`,
+                    method: 'put',
+                };
 
-                    if (responseUsers.data.success) {
-                        await refreshBootcamp();
-                        await setModalVisible(false);
+                req(options).then(
+                    () => {
+                        refreshBootcamp();
+                        setModalVisible(false);
                         setRatingNewReview(0);
                         setTitleNewReview(null);
                         setTextNewReview(null);
+                    },
+                    error => {
+                        openNotification('error', 'reviews', error.response && error.response.data.error);
                     }
-                }
-            } catch (error) {
-                openNotification('warning', 'Create New Review', error.response && error.response.data.error);
+                );
             }
         };
 
@@ -172,16 +176,20 @@ function ReviewsSingleBootcamp({locale}) {
                     const tokenRemoveFirstChar = isLoggin.substr(1);
                     const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
 
-                    try {
-                        await axios.delete(`${URL}/reviews/${deletedReview}`, {
-                            headers: {
-                                'content-type': 'application/json',
-                                'Authorization': `Bearer ${token}`
-                            }
-                        }).then(() => refreshBootcamp())
-                    } catch (e) {
-                        console.log('error:', e);
-                    }
+                    const options = {
+                        headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                        url: `${URL}/reviews/${deletedReview}`,
+                        method: 'delete',
+                    };
+
+                    req(options).then(
+                        () => {
+                            refreshBootcamp()
+                        },
+                        error => {
+                            console.log('error:', error);
+                        }
+                    );
                 }
             }
         };

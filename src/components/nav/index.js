@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import axios from 'axios';
 import {Layout, Menu, Icon, Dropdown, Button} from "antd";
-import {openNotification} from '../utils/usedFunctions';
+import {openNotification, req} from '../utils/usedFunctions';
 import {URL} from '../../configKey';
 // actions
 import {setUser, changeLang, changePageName} from '../../redux/users/actions'
@@ -31,13 +30,14 @@ function Nav(p) {
 
             setIsLoadingAuth(true);
 
-            axios.get(`${URL}/auth/me`, {
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then(response => {
+            const options = {
+                headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                url: `${URL}/auth/me`,
+                method: 'get',
+            };
+
+            req(options).then(
+                response => {
                     if (response.data.success) {
                         const {name} = response.data.data;
 
@@ -46,23 +46,32 @@ function Nav(p) {
                         setName(name);
                         setIsLoggin(true);
                     }
-                })
-                .catch(error => {
-                    if (error) {
-                        openNotification('error', '/auth/me', error.response && error.response.data.error)
-                    }
-                })
+                },
+                error => {
+                    openNotification('error', '/auth/me', error.response && error.response.data.error)
+                }
+            );
         }
     };
 
-    const handlerLogout = () => axios.get(`${URL}/auth/logout`).then(response => {
-        if (response.data.success) {
-            window.localStorage.removeItem('bootcampAuthToken');
-            window.location = '/';
-        }
-    }).catch(error => {
-        openNotification('error', '/auth/logout', error.response && error.response.data.error)
-    });
+    const handlerLogout = () => {
+        const options = {
+            url: `${URL}/auth/logout`,
+            method: 'get',
+        };
+
+        req(options).then(
+            response => {
+                if (response.data.success) {
+                    window.localStorage.removeItem('bootcampAuthToken');
+                    window.location = '/';
+                }
+            },
+            error => {
+                openNotification('error', '/auth/logout', error.response && error.response.data.error)
+            }
+        );
+    };
 
     const handlerMenuClick = item => {
         window.localStorage.setItem('bootcampPage', item.key);
@@ -107,9 +116,12 @@ function Nav(p) {
                 <Menu.Item key="3"><Link to="/contacts">{locale.contacts_page}</Link></Menu.Item>
                 <Menu.Item key="4" style={{float: 'right'}} className="header-locale">
                     <div className="lng-page">
-                        <Button onClick={() => handlerChangeLocale('ua')} className={`${lang === 'ua' ? 'active' : ''}`}>UA</Button>
-                        <Button onClick={() => handlerChangeLocale('en')} className={`${lang === 'en' ? 'active' : ''}`}>EN</Button>
-                        <Button onClick={() => handlerChangeLocale('ru')} className={`${lang === 'ru' ? 'active' : ''}`}>RU</Button>
+                        <Button onClick={() => handlerChangeLocale('ua')}
+                                className={`${lang === 'ua' ? 'active' : ''}`}>UA</Button>
+                        <Button onClick={() => handlerChangeLocale('en')}
+                                className={`${lang === 'en' ? 'active' : ''}`}>EN</Button>
+                        <Button onClick={() => handlerChangeLocale('ru')}
+                                className={`${lang === 'ru' ? 'active' : ''}`}>RU</Button>
                     </div>
                 </Menu.Item>
                 {!isLoggin && (<Menu.Item

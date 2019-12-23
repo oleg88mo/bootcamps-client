@@ -1,7 +1,6 @@
 import React, {useState} from "react";
-import axios from 'axios';
 import {Row, Col, Form, Input, Icon, Button, Select, Checkbox} from 'antd';
-import {openNotification} from '../../utils/usedFunctions';
+import {openNotification, req} from '../../utils/usedFunctions';
 import {URL} from '../../../configKey';
 
 function EditBootcamp(p) {
@@ -29,23 +28,26 @@ function EditBootcamp(p) {
                 const tokenRemoveFirstChar = isLoggin.substr(1);
                 const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
 
-                axios.put(`${URL}/bootcamps/${el.id}`, elementState, {
-                    headers: {
-                        'content-type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                    .then(() => {
+                const options = {
+                    headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`},
+                    data: elementState,
+                    url: `${URL}/bootcamps/${el.id}`,
+                    method: 'put',
+                };
+
+                req(options).then(
+                    () => {
                         p.handlerReloadBootcamp()
                         setLoading(false);
                         setDisabled(false);
                         openNotification('success', `Bootcamp ${locale.was_updated}`, null);
-                    })
-                    .catch(error => {
+                    },
+                    error => {
                         openNotification('error', error.response && error.response.data.error, null);
                         setLoading(false);
                         setDisabled(false);
-                    });
+                    }
+                );
             }
         });
     };

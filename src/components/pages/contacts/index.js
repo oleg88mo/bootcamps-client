@@ -1,50 +1,11 @@
 import React, {Component} from 'react';
 import {Avatar, Row, Col, Icon} from 'antd';
 import Photo from '../../img/contact.jpg';
-import Pin from "../../img/pin.png";
-import mapboxgl from "mapbox-gl";
-import {mapBoxKey} from "../../../configKey";
+import {mapRender} from '../../utils/usedFunctions';
 
 class Contacts extends Component {
     componentDidMount() {
-        mapboxgl.accessToken = mapBoxKey;
-
-        let map;
-        map = new mapboxgl.Map({
-            container: document.getElementById('contactMap'),
-            style: 'mapbox://styles/mapbox/dark-v10',
-            center: ['30.654431', '50.406565'],
-            zoom: 15,
-            pitch: 30
-        });
-
-        map.on('load', function () {
-            map.loadImage(Pin, function (error, image) {
-                if (error) throw error;
-                map.addImage('icon', image);
-                map.addLayer({
-                    "id": "points",
-                    "type": "symbol",
-                    "source": {
-                        "type": "geojson",
-                        "data": {
-                            "type": "FeatureCollection",
-                            "features": [{
-                                "type": "Feature",
-                                "geometry": {
-                                    "type": "Point",
-                                    "coordinates": ['30.654431', '50.406565']
-                                }
-                            }]
-                        }
-                    },
-                    "layout": {
-                        "icon-image": "icon",
-                        "icon-size": 0.65
-                    }
-                });
-            });
-        });
+        mapRender(document.getElementById('contactMap'), '30.654431', '50.406565');
     }
 
     render() {

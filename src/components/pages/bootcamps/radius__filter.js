@@ -4,7 +4,7 @@ import {Tag, Tooltip} from "antd";
 export default function RadiusComponent(p) {
     const {locale, zipCode, distance} = p;
     const closeTagRadius = () => {
-        p.closeTag(zipCode.name)
+        p.closeTag(zipCode.name);
         p.closeTag(distance.name)
     };
 

@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Empty, Row, Col, Button, Icon, notification, message} from "antd";
+import {Empty, Row, Col, Button, Icon} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import axios from "axios";
 import {PHOTO_URL, URL} from "../../../configKey";
 // actions
 import {setMyBootcamps, sortBootcamps} from "../../../redux/users/actions";
 // components
 import EditBootcamp from './edit-bootcamp';
+import {openNotification, req} from "../../utils/usedFunctions";
 
 function MyBootcamps({locale}) {
     const dispatch = useDispatch();
@@ -23,26 +23,28 @@ function MyBootcamps({locale}) {
     const handlerSort = () => dispatch(sortBootcamps(sort === 'ASC' ? 'DESC' : 'ASC'));
 
     const deleteBootcamp = id => {
-        try {
-            const isLoggin = window.localStorage.getItem('bootcampAuthToken');
-            const tokenRemoveFirstChar = isLoggin.substr(1);
-            const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+        const isLoggin = window.localStorage.getItem('bootcampAuthToken');
+        const tokenRemoveFirstChar = isLoggin.substr(1);
+        const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
 
-            axios.delete(`${URL}/bootcamps/${id}`, {
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            }).then(res => {
+        const options = {
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            url: `${URL}/bootcamps/${id}`,
+            method: 'delete',
+        };
+
+        req(options).then(
+            () => {
                 setReloadedData(true);
-                notification['success']({
-                    message: `${locale.delete} Bootcamp`,
-                    description: `Bootcamp ${locale.delete_bootcamp_was_successful}!`
-                });
-            });
-        } catch (e) {
-            console.log('error:', e);
-        }
+                openNotification('success', `${locale.delete} Bootcamp`, `Bootcamp ${locale.delete_bootcamp_was_successful}!`);
+            },
+            error => {
+                openNotification('error', '/login', error.response && error.response.data.error);
+            }
+        );
     };
 
     const handleChangeFile = (e, id) => {
@@ -58,28 +60,27 @@ function MyBootcamps({locale}) {
     };
 
     const handlerUploadPhoto = idBootcamp => {
-        try {
-            const isLoggin = window.localStorage.getItem('bootcampAuthToken');
-            const tokenRemoveFirstChar = isLoggin.substr(1);
-            const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+        const isLoggin = window.localStorage.getItem('bootcampAuthToken');
+        const tokenRemoveFirstChar = isLoggin.substr(1);
+        const token = tokenRemoveFirstChar.substring(0, isLoggin.length - 2);
+        const options = {
+            headers: {'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}`, "type": "formData"},
+            data: currentFormData,
+            url: `${URL}/bootcamps/${idBootcamp}/photo`,
+            method: 'put',
+        };
 
-            axios.put(`${URL}/bootcamps/${idBootcamp}/photo`, currentFormData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`,
-                    "type": "formData"
-                }
-            })
-                .then(() => {
-                    setReloadedData(true);
-                    setUploadPhotoId(null);
-                    setCurrentFile(null);
-                    message.success(`${currentFile.name} ${locale.file_uploaded_successfully}`);
-                })
-                .catch(e => console.log('e', e))
-        } catch (e) {
-            console.log('error:', e);
-        }
+        req(options).then(
+            () => {
+                setReloadedData(true);
+                setUploadPhotoId(null);
+                setCurrentFile(null);
+                openNotification('success', 'file', `${currentFile.name} ${locale.file_uploaded_successfully}`);
+            },
+            error => {
+                openNotification('error', '/login', error.response && error.response.data.error);
+            }
+        );
     };
 
     const handlerReloadBootcamp = () => {
@@ -92,18 +93,22 @@ function MyBootcamps({locale}) {
 
         const loadData = async () => {
             if (mounted) {
-                try {
-                    let responseBootcamps;
+                const options = {
+                    url: `${URL}/bootcamps?page=1&user=${me.id}`,
+                    method: 'get',
+                };
 
-                    responseBootcamps = await axios.get(`${URL}/bootcamps?page=1&user=${me.id}`);
-
-                    if (responseBootcamps && responseBootcamps.data.success) {
-                        dispatch(setMyBootcamps(responseBootcamps.data));
-                        setReloadedData(false);
+                req(options).then(
+                    response => {
+                        if (response && response.data.success) {
+                            dispatch(setMyBootcamps(response.data));
+                            setReloadedData(false);
+                        }
+                    },
+                    error => {
+                        openNotification('error', '/bootcamps', error.response && error.response.data.error);
                     }
-                } catch (e) {
-                    console.log('error:', e);
-                }
+                );
             }
         };
 
@@ -124,7 +129,8 @@ function MyBootcamps({locale}) {
                 onClick={handlerSort}
                 style={{marginBottom: 15}}
             >
-                {sort === 'ASC' ? (<Icon type="sort-ascending"/>) : (<Icon type="sort-descending"/>)} {locale.sort_by_name}
+                {sort === 'ASC' ? (<Icon type="sort-ascending"/>) : (
+                    <Icon type="sort-descending"/>)} {locale.sort_by_name}
             </Button>
             <ul>
                 {myBootcamps && myBootcamps.data && myBootcamps.data.map(b => (
@@ -145,9 +151,11 @@ function MyBootcamps({locale}) {
                                            onChange={(e) => handleChangeFile(e, b.id)}
                                     />
                                     {currentFile === null && (<Button type="primary">
-                                        <label htmlFor={`photo-${b.id}`}><Icon type="upload"/> {locale.select_photo}</label>
+                                        <label htmlFor={`photo-${b.id}`}><Icon type="upload"/> {locale.select_photo}
+                                        </label>
                                     </Button>)}
-                                    {uploadPhotoId === b.id && (<Button onClick={() => handlerUploadPhoto(b.id)}>{locale.upload} ({currentFile.name})</Button>)}
+                                    {uploadPhotoId === b.id && (<Button
+                                        onClick={() => handlerUploadPhoto(b.id)}>{locale.upload} ({currentFile.name})</Button>)}
                                 </div>
                             </Col>
                             <Col md={24} lg={13} xl={14}>

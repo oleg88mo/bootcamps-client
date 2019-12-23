@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Icon} from 'antd';
-import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {URL} from "../../../configKey";
 // actions
@@ -10,6 +9,7 @@ import {setting} from '../../../components/img/iconSvg'
 // components
 import DetailMode from './mode-detail'
 import SmallMode from './mode-small'
+import {req} from "../../utils/usedFunctions";
 
 function Filter({locale}) {
     const dispatch = useDispatch();
@@ -96,25 +96,29 @@ function Filter({locale}) {
 
         const loadData = async () => {
             if (mounted) {
-                let responseBootcamps;
+                setLoaderSearch(true);
 
-                try {
-                    setLoaderSearch(true);
-                    responseBootcamps = await axios.get(`${URL}/bootcamps?${searchUrl}`);
+                const options = {
+                    url: `${URL}/bootcamps?${searchUrl}`,
+                    method: 'get',
+                };
 
-                    if (responseBootcamps && responseBootcamps.data.success) {
-                        dispatch(setBootcampsData(responseBootcamps.data));
+                req(options).then(
+                    response => {
+                        if (response && response.data.success) {
+                            dispatch(setBootcampsData(response.data));
+                            setLoaderSearch(false);
+                            setSearchSmallMode(false);
+                            if (filter && !filter.length) {
+                                setSmallMode(false);
+                            }
+                        }
+                    },
+                    () => {
                         setLoaderSearch(false);
                         setSearchSmallMode(false);
-                        if (filter && !filter.length) {
-                            setSmallMode(false);
-                        }
                     }
-                } catch (e) {
-                    setLoaderSearch(false);
-                    setSearchSmallMode(false);
-                    console.log('error:', e);
-                }
+                );
             }
         };
 

@@ -2,12 +2,10 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, Link} from "react-router-dom";
 import axios from "axios";
-import mapboxgl from 'mapbox-gl';
-import Pin from '../../../components/img/pin.png'
 import {computer, check, checkCancel} from '../../../components/img/iconSvg'
 import {PageHeader, Row, Col, Empty, Collapse, Icon, Tag, Skeleton, Button} from 'antd';
-import {mapBoxKey, PHOTO_URL, URL} from '../../../configKey';
-import {bootcampRatind} from '../../utils/usedFunctions'
+import {PHOTO_URL, URL} from '../../../configKey';
+import {bootcampRatind, mapRender} from '../../utils/usedFunctions'
 // actions
 import {
     getSingleBootcamp,
@@ -30,40 +28,10 @@ function SingleBootcapm({locale}) {
     const [loadingBootcampCourses, setLoadingBootcampCourses] = useState(true);
     const [loadingBootcamp, setLoadingBootcamp] = useState(true);
 
-    mapboxgl.accessToken = mapBoxKey;
     const mapContainer = useRef();
-    let map;
 
     if (bootcamp && bootcamp.location && mapContainer.current) {
-        map = new mapboxgl.Map({
-            container: mapContainer.current,
-            style: 'mapbox://styles/mapbox/dark-v10',
-            center: [`${bootcamp.location.coordinates[0]}`, `${bootcamp.location.coordinates[1]}`],
-            zoom: 15,
-            pitch: 30
-        });
-
-        map.on('load', function () {
-            map.loadImage(Pin, function (error, image) {
-                if (error) throw error;
-                map.addImage('icon', image);
-                map.addLayer({
-                    "id": "points",
-                    "type": "symbol",
-                    "source": {
-                        "type": "geojson",
-                        "data": {
-                            "type": "FeatureCollection",
-                            "features": [{
-                                "type": "Feature",
-                                "geometry": {"type": "Point", "coordinates": [bootcamp.location.coordinates[0], bootcamp.location.coordinates[1]]}
-                            }]
-                        }
-                    },
-                    "layout": {"icon-image": "icon", "icon-size": 0.65}
-                });
-            });
-        });
+        mapRender(mapContainer.current, bootcamp.location.coordinates[0], bootcamp.location.coordinates[1]);
     }
 
     bootcampRatind(bootcamp, setMiddleRating);
@@ -193,14 +161,14 @@ function SingleBootcapm({locale}) {
                                         </Col>
                                     </Row>
                                 </div>)}
-                                {middleRating && (<Row type="flex">
+                                <Row type="flex">
                                     <Col span={8}>{locale.reviews}:</Col>
                                     <Col span={16}>
                                         <Link to={`/bootcamps/${bootcamp.slug}/reviews`}>
                                             <Button type="primary">{locale.read_reviews} Bootcamp</Button>
                                         </Link>
                                     </Col>
-                                </Row>)}
+                                </Row>
                                 {bootcamp.website && (<div className="website">
                                     <Row type="flex">
                                         <Col span={8}>{locale.website}:</Col>

@@ -1,6 +1,9 @@
 import React from "react";
 import axios from 'axios';
 import {notification} from 'antd';
+import mapboxgl from "mapbox-gl";
+import {mapBoxKey} from "../../configKey";
+import Pin from "../img/pin.png";
 
 export const bootcampRatind = async (bootcamp, setMiddleRating) => {
     const arrayOfRatingReviews = [];
@@ -57,4 +60,45 @@ export const sortByClick = (dataSort, fieldName, payloadSortedField) => {
 
 export function req(options) {
     return axios({...options});
+}
+
+export function mapRender(container, latitude, longitude) {
+    mapboxgl.accessToken = mapBoxKey;
+
+    let map;
+    map = new mapboxgl.Map({
+        container,
+        style: 'mapbox://styles/mapbox/dark-v10',
+        center: [`${latitude}`, `${longitude}`],
+        zoom: 15,
+        pitch: 30
+    });
+
+    return map.on('load', function () {
+        map.loadImage(Pin, function (error, image) {
+            if (error) throw error;
+            map.addImage('icon', image);
+            map.addLayer({
+                "id": "points",
+                "type": "symbol",
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        "type": "FeatureCollection",
+                        "features": [{
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [`${latitude}`, `${longitude}`]
+                            }
+                        }]
+                    }
+                },
+                "layout": {
+                    "icon-image": "icon",
+                    "icon-size": 0.65
+                }
+            });
+        });
+    });
 }

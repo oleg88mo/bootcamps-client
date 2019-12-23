@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Icon, Row, Col, Switch} from 'antd';
-import {openNotification} from '../../utils/usedFunctions';
-import axios from "axios";
+import {openNotification, req} from '../../utils/usedFunctions';
 import {useDispatch} from "react-redux";
 import {URL} from "../../../configKey";
 // actions
@@ -62,23 +61,27 @@ function DetailMode(p) {
 
         const loadData = async () => {
             if (mounted) {
-                let responseBootcamps;
+                const options = {
+                    url: `${URL}/bootcamps/radius/${radiusSearchParam.zipCode}/${radiusSearchParam.distance}`,
+                    method: 'get',
+                };
 
-                try {
-                    responseBootcamps = await axios.get(`${URL}/bootcamps/radius/${radiusSearchParam.zipCode}/${radiusSearchParam.distance}`);
+                req(options).then(
+                    response => {
+                        if (response && response.data.success) {
+                            dispatch(setBootcampsData(response.data));
 
-                    if (responseBootcamps && responseBootcamps.data.success) {
-                        dispatch(setBootcampsData(responseBootcamps.data));
-
-                        if (filter && !filter.length) {
-                            handlerVisibleSmallModeFilter(false);
-                        } else {
-                            handlerVisibleSmallModeFilter(true);
+                            if (filter && !filter.length) {
+                                handlerVisibleSmallModeFilter(false);
+                            } else {
+                                handlerVisibleSmallModeFilter(true);
+                            }
                         }
+                    },
+                    error => {
+                        openNotification('error', `${locale.search_by_radius}`, error.response && error.response.data.error);
                     }
-                } catch (error) {
-                    openNotification('error', `${locale.search_by_radius}`, error.response && error.response.data.error);
-                }
+                );
             }
         };
 
